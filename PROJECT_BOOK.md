@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 3.3
+**Version:** 3.4
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -195,6 +195,12 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Original `index.html` V8 static demo remains unchanged. One unpublished TEST product with photo remains in Supabase. Stage 5D is **built, not browser user-tested**. Detailed verification in `docs/STAGE5D_CLOUD_STOREFRONT_ACCEPTANCE.md`.
 - Next: iPhone owner runs anonymous-photo security check while item remains draft; if blocked, briefly Publish, test cloud storefront on Dell/iPhone, then Unpublish and confirm disappearance. Separate signoff required before any live customer storefront migration.
 - Keep MindCare project and credentials entirely isolated.
+
+### Stage 5C direct unpublished-photo HTTP denial accepted (JBC-E048; 2026-10-24)
+- Real owner iPhone ran private photo security button. It first verified approved-owner download, then performed no-cookie HTTP Storage GET with the publishable key only. HTTP **400** returned with `NoSuchKey` / "Object not found". This is an intentional-looking private-object hiding result, not proof of file deletion.
+- Supabase edge log independently records matching image GET HTTP 400 at 20:46:28.597Z. Dedicated Jue product row stays private (US$15 stock4, photo path linked) and object still exists in bucket; simulated anon DB sees 0 downloaded objects.
+- With previous owner photo upload, public GET 200 when published, owner draft Delete and post-Unpublish preview privacy, **S5C scoped staging acceptance COMPLETE**. Do not call it full security certification or launch.
+- **S5D remains OPEN**: new `storefront-cloud-staging.html` is built but not browser tested. Test privacy empty state, publish on owner iPhone, view photo/details on Dell, then unpublish. The original V8 `index.html` remains unchanged; no orders/payments.
 
 ## 7. Testing vocabulary
 
