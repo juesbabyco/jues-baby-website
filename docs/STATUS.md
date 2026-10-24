@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
-**Overall:** V8 DEMO INTACT. S5B OWNER LOGIN, DRAFT CREATE/PRIVACY, PUBLISH, PUBLIC PREVIEW AND PRICE EDIT USER-TESTED; SUPABASE READ-BACK VERIFIED. UNPUBLISH AND INDEPENDENT CROSS-DEVICE TEST STILL OPEN.
-**Current focus:** S5B — unpublish TEST Cotton Baby Romper, verify anonymous/preview disappearance, and independently test across a different device/browser. S5 remains OPEN.
+**Overall:** V8 DEMO INTACT. S5B OWNER LOGIN, CREATE DRAFT, PUBLISH, PUBLIC PREVIEW, EDIT PRICE AND UNPUBLISH USER-TESTED; SUPABASE STATE VERIFIED. INDEPENDENT CROSS-DEVICE AND UNRELATED-ACCOUNT TESTS STILL OPEN.
+**Current focus:** S5B — independent second-browser/device verification and non-owner account denial tests. S5 remains OPEN.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -81,6 +81,13 @@
 - This proves cloud price update and public preview but **not** that an independent second device was used.
 - Next: unpublish from owner-cloud.html; confirm cloud-preview.html hides the item; verify SQL public role returns zero. Then confirm on another device and test unrelated signed-in user access.
 - Keep the test product labelled TEST and original V8 storefront separate; no checkout/payment claims.
+
+## Unpublish and private persistence verified — 2026-10-24 (JBC-E029)
+- Owner reported Unpublish worked; Jue-only Supabase read-back confirmed TEST Cotton Baby Romper still exists as **private draft**, price US$16.00, stock 2, published=false.
+- SQL run with `SET LOCAL ROLE anon` read **zero** products and no UPDATE privilege. No product deletion or accidental public listing.
+- The owner's report of public preview disappearance is accepted as user feedback; the database permissions independently confirm public invisibility. No independent second device evidence was supplied.
+- Remaining gate: repeat public preview state check from another independent browser/device, plus unrelated-authenticated-user RLS write/read denial. No real checkout, customer-data processing or stock reservations exist.
+- Jue Supabase registry E029 and GitHub evidence must remain in sync.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
