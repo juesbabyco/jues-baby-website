@@ -81,5 +81,7 @@ This log records observations, not inferred functionality. Append new rows. Date
 
 | JBC-E050 | Two iPhone screenshots 23:13 (2026-10-24); Jue Supabase readback | **STAGE 5D MOBILE SEARCH POSITIVE/NEGATIVE PASS.** Search `Romper` displayed the published TEST Cotton Baby Romper with image, US$15, stock 4; search `Towel` showed `No products match your filters`. Independent Jue DB readback showed `published=true` (updated 21:03:20 UTC), so test item is currently PUBLIC; owner should unpublish when done. | This proves iPhone search behavior for one item only, not Dell cross-device behavior, age filters, multi-item sorting, or production commerce. |
 
+| JBC-E051 | Two iPhone screenshots 23:20 (2026-10-24); Jue Supabase readback | **STAGE 5D MOBILE AGE FILTER PASS.** With search `Romper`, age `Newborn` showed published photographed US$15 test romper stock4; changing age to `3–6m` returned `No products match your filters`. Later dedicated Jue DB readback showed product `published=false`, confirming it is currently withdrawn. | iPhone only. Independent Dell browser, multi-item sorting, network failures and launch readiness remain open. |
+
 ## Evidence handling
 Write only non-sensitive observations here. Before announcing a stage complete, attach a reproducible test method plus commit/Supabase reference where applicable. Never replace lack of evidence with optimistic inferences.
