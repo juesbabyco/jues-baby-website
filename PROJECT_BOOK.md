@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 2.5
+**Version:** 2.6
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -151,6 +151,13 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Test dossier: `docs/STAGE5C_PRIVATE_PHOTO_ACCEPTANCE.md`. First user action: edit existing TEST Cotton Baby Romper, attach one product-only image while keeping Draft. Then check private preview on Dell before publishing.
 - Stage 5C OPEN; separate external/owner real-image GET, permission denial, replacement and orphan cleanup checks required. Storage currently empty and public catalogue empty. Original V8 demo intact; no live ordering, payment or customer-data workflows.
 - Jue Supabase Auth security advisor warns leaked password protection disabled; revisit before production, do not silently alter user's Auth security config.
+
+### Stage 5C — Reported upload without attached photo (JBC-E038; 2026-10-24)
+- User iPhone screenshot: TEST Cotton Baby Romper visible as Published US$16 with **No photo**, editor not in active Edit state; user reported prior upload success.
+- Direct Supabase product record shows `image_path=NULL`, `image_url=NULL`, `published=true`: no photo linked. Do not infer successful Storage upload.
+- Improved `owner-cloud.html` selection/upload feedback: picking a file displays **NOT uploaded**; upload success now requires DB readback plus private Storage download. JS syntax verified; no mobile retest evidence yet.
+- Public preview link: `cloud-preview.html`. Owner editor: `owner-cloud.html?v=5c2`. User must tap Edit before choosing/uploading. After the test unpublish the TEST listing.
+- S5C OPEN until photo linked with storage proof and public preview + draft privacy checked. Original V8 live demo still unchanged.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
