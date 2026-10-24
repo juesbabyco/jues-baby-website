@@ -31,5 +31,7 @@ This log records observations, not inferred functionality. Append new rows. Date
 
 | JBC-E023 | Owner-provided iPhone screenshots and Jue-only Supabase Auth/owner status query on 2026-10-24 | Cloud owner dashboard shows connected status, signed-in owner state, shared catalogue and Add a product draft form. Database confirms 1 Auth account with recorded sign-in and 1 allowlisted owner. | **USER-TESTED owner login**. No product created (0 cloud rows), no draft/public visibility browser test and no cross-device synchronization test yet. Owner email omitted from public records. |
 
+| JBC-E024 | Owner reported generic validation error while trying to save first cloud draft; GitHub commits `dda4c2d1dcdb14f341aca6ef637b53e8caa4062b` and `1896190c7d0072f3ac0d3bf6d4c5ada63438de8b` | Owner-cloud form now gives exact field-specific validation messages and visual invalid-field styling, accepts period/comma decimal price notation, and explains that age group does not select size. JavaScript syntax verified. | Root cause of user's particular entry not yet confirmed; fresh mobile retry and actual cloud product-save verification remain OPEN. No database product mutation. |
+
 ## Evidence handling
 Write only non-sensitive observations here. Before announcing a stage complete, attach a reproducible test method plus commit/Supabase reference where applicable. Never replace lack of evidence with optimistic inferences.
