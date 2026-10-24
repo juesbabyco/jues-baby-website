@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
-**Overall:** V8 DEMO INTACT. S5B OWNER LOGIN + FIRST CLOUD DRAFT SAVE VERIFIED; DRAFT HIDDEN FROM ANON DATABASE ROLE. PUBLISHING + CROSS-DEVICE BROWSER TEST STILL OPEN.
-**Current focus:** S5B — publish and remotely view the test item, update its price from another browser, then unpublish. S5 remains OPEN.
+**Overall:** V8 DEMO INTACT. S5B OWNER LOGIN, DRAFT CREATE, DRAFT PRIVACY, AND PUBLISHED CLOUD PREVIEW USER-TESTED / DATABASE VERIFIED. PRICE EDIT, UNPUBLISH AND INDEPENDENT CROSS-DEVICE TEST STILL OPEN.
+**Current focus:** S5B — test price edit, cloud preview refresh, unpublish and independent second-device visibility. S5 remains OPEN.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -66,6 +66,13 @@
 - Git commit `6d872cb503caf0aa9ee27e4742d4430a3c3eeeda`: **Publish/Unpublish** explicit buttons in owner list (with confirmation and Supabase returned-value check); highlighted editor banner and scroll to form heading when **Edit** tapped. Javascript syntax passed; user browser confirmation pending.
 - Post-commit DB recheck: 1 product, 0 public records, test item still draft. No server-side product publication was initiated by assistant.
 - Next test: reload `owner-cloud.html` and tap **Publish** beside `TEST Cotton Baby Romper`, confirm; then refresh `cloud-preview.html` on a different browser/device. This is STAGING only, not an order-taking website. Verify publish before proceeding to price-change/unpublish test.
+
+## First publish + anonymous visibility proof (2026-10-24, JBC-E027)
+- User supplied iPhone screenshots showing cloud preview lists 1 published **TEST Cotton Baby Romper** for US$15.00 with demo stock 2. Direct project SQL confirmed `published=true`, price 1500 cents, stock 2, Newborn/Everyday.
+- Anonymous SQL role read showed 1 published record (the matching test product) and INSERT/UPDATE privileges false. Stage 5B **publish and public display** USER-TESTED, independently database-verified.
+- No independent second-device evidence yet: screenshots alone do not prove two devices were used.
+- Still outstanding: edit from owner page to US$16, verify preview change, unpublish and check it disappears; test from another independent browser/device, unauthorized signed-in user access test.
+- This published record is **staging test content**, not a real store offering; it should be unpublished after testing. Original V8 storefront remains demo.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
