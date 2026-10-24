@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 1.8
+**Version:** 1.9
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -105,6 +105,12 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Owner used the cloud editing workflow to change TEST Cotton Baby Romper from US$15.00 to **US$16.00**, then supplied screenshot of changed public cloud preview.
 - Database confirms 1600 cents, `published=true`, unchanged test stock 2. Anonymous role reads updated product, but cannot UPDATE rows.
 - Stage still **OPEN**: next unpublish the published TEST item and check public disappearance, plus prove independent-device/browser visibility and unrelated user denial. Do not claim fully operational checkout.
+
+### Stage 5B — Unpublish and draft retention verified 2026-10-24 (JBC-E029)
+- After owner unpublishing, Jue database shows the test product retained at price US$16.00, stock 2, `published=false`.
+- Database acting as `anon` sees 0 products; no anonymous UPDATE privileges.
+- This completes owner-reported and SQL-verified draft -> publish -> edit price -> unpublish sequence.
+- **Stage 5 remains OPEN** for independent cross-device/browser acceptance and unrelated authenticated user RLS test. Keep V8 demo and private governance separate; no ordering/payment claim.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
