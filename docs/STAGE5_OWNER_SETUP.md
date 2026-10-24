@@ -1,6 +1,6 @@
 # Stage 5A — Owner access setup & cross-device acceptance
 
-**Status as of 2026-10-24:** Dedicated cloud product table, owner allowlist and browser staging pages are built. Database negative authorization tests passed. **No Supabase Auth users or approved owners exist yet, so an actual owner login and cross-device test remain OPEN.**
+**Status as of 2026-10-24:** Dedicated cloud product table, owner allowlist and browser staging pages are built. Database negative authorization tests passed. **Exactly one confirmed owner has been provisioned. Owner login, actual product save and cross-device browser testing remain OPEN.**
 
 ## Links
 - Dedicated project: https://supabase.com/dashboard/project/izeezajdiawiaweffbrh
@@ -11,7 +11,7 @@
 - Existing V8 working demo (unchanged): https://juesbabyco.github.io/jues-baby-website/
 - Existing browser-local owner demo (unchanged): https://juesbabyco.github.io/jues-baby-website/owner-demo.html
 
-## Provision the intended real owner (not completed)
+## Provision the intended real owner (COMPLETED 2026-10-24)
 1. In the **Juesbabyco** Supabase project, open **Authentication → Users**.
 2. Use **Add user / Invite user** to create or invite the intended owner with their own email. Do not share their password in ChatGPT or GitHub. Follow email verification / invitation instructions provided by Supabase. For invitation links, configure allowed site/redirect URL to the staging owner page above as needed.
 3. Obtain the created user's **Auth UUID**, verify it belongs to the intended owner, then insert that **UUID only** into the owner allowlist from Supabase's **SQL Editor** in the Jue project, or ask ChatGPT to perform that scoped change after confirmation:
@@ -24,7 +24,7 @@ VALUES ('REPLACE_WITH_VERIFIED_AUTH_USER_UUID'::uuid)
 ON CONFLICT (user_id) DO NOTHING;
 ```
 
-4. Sign in at the staging owner workspace with that account. It checks Supabase Auth plus the allowlist. Signing in is not sufficient to self-approve: RLS is enforced by Postgres.
+4. **NEXT TEST:** Sign in at the staging owner workspace with the confirmed, allowlisted account. The application checks Supabase Auth and database owner membership. RLS remains authoritative.
 5. Optionally restrict public self-signups in **Authentication → Providers** for this owner-only staging project after the owner is created. Do not disable email/password login itself.
 
 ## Actual user acceptance test (not yet performed)
@@ -48,7 +48,7 @@ ON CONFLICT (user_id) DO NOTHING;
 - `jues_internal` governance registry is a separate PRIVATE schema and remains unreachable by the public browser roles.
 
 ## Known gaps
-- Auth positive test with approved owner: **NOT PERFORMED** (0 users/owners as of 2026-10-24).
+- Auth positive test with approved owner: **NOT PERFORMED** (1 email-confirmed user, 1 approved owner as of 2026-10-24).
 - Browser end-to-end test: **NOT PERFORMED**; JavaScript syntax and database policy checks passed.
 - Supabase Storage photo uploads: **NOT IMPLEMENTED**; staging editor accepts only HTTPS image URLs.
 - Real frontend `index.html` is **NOT connected** to the cloud catalogue.
