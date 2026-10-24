@@ -1,6 +1,6 @@
 # Stage 5A — Owner access setup & cross-device acceptance
 
-**Status as of 2026-10-24:** Dedicated cloud product table, owner allowlist and browser staging pages are built. Database negative authorization tests passed. **Exactly one confirmed owner has been provisioned. Owner login USER-TESTED on iPhone on 2026-10-24; cloud draft creation PASSED (read-back verified); publishing and cloud preview USER-TESTED on iPhone. Price edit, unpublish, and independent second-device browser tests remain OPEN.**
+**Status as of 2026-10-24:** Dedicated cloud product table, owner allowlist and browser staging pages are built. Database negative authorization tests passed. **Exactly one confirmed owner has been provisioned. Owner login USER-TESTED on iPhone on 2026-10-24; cloud draft creation PASSED (read-back verified); publishing and cloud preview USER-TESTED on iPhone. Price edit and unpublish completed and database-verified; independent second-device browser and non-owner tests remain OPEN.**
 
 ## Links
 - Dedicated project: https://supabase.com/dashboard/project/izeezajdiawiaweffbrh
@@ -74,6 +74,13 @@ ON CONFLICT (user_id) DO NOTHING;
 - **NEXT:** In `owner-cloud.html`, tap **Unpublish** for TEST Cotton Baby Romper, confirm. Refresh `cloud-preview.html`: it should show **No products published yet**.
 - Then verify from a genuinely independent browser/device and test a second, non-owner account is denied access to drafts and product mutations.
 - Stage 5 remains OPEN until verified. This preview is not real checkout.
+
+## Unpublish checkpoint 2026-10-24 (JBC-E029)
+- Owner reported Unpublish worked. Supabase confirmed test record remains stored as a **draft** at US$16.00 and stock 2.
+- Anonymous SQL role now sees 0 published items; still cannot edit products.
+- Next test: open `cloud-preview.html` in a genuinely different browser/device (not the authenticated owner session), refresh, and confirm **No products published yet**. Later repeat a harmless draft/public roundtrip on both devices for cross-device synchronization evidence.
+- Still required for Stage 5 closure: verify non-owner authenticated account cannot view draft or write a product. Do not grant second user owner rights just to test.
+- No real sale/order/payment integration.
 
 ## Migration records
 - `supabase/migrations/20261024121448_jues_stage5_owner_and_product_catalogue.sql`
