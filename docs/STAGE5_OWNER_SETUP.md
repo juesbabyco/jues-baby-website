@@ -82,6 +82,12 @@ ON CONFLICT (user_id) DO NOTHING;
 - Still required for Stage 5 closure: verify non-owner authenticated account cannot view draft or write a product. Do not grant second user owner rights just to test.
 - No real sale/order/payment integration.
 
+## Follow-up 2026-10-24 — JBC-E030
+- User reported public cloud preview shows **No products published** after unpublish. Supabase confirms zero public products; saved TEST draft remains at US$16.00.
+- Synthetic unrelated authenticated UID inspected under `SET LOCAL ROLE authenticated` saw no private owner rows and no draft rows; could not self-add to owner allowlist.
+- An independent different-browser/device dynamic publish and price-update roundtrip is still OPEN. A truly separate, non-owner Auth account test is also OPEN. The simulated role is useful but does not replace an actual sign-in.
+- Do not mark Stage 5 closed or introduce real transactions yet.
+
 ## Migration records
 - `supabase/migrations/20261024121448_jues_stage5_owner_and_product_catalogue.sql`
 - `supabase/migrations/20261024122310_jues_stage5_streamline_read_policies.sql`
