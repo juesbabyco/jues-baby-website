@@ -33,5 +33,7 @@ This log records observations, not inferred functionality. Append new rows. Date
 
 | JBC-E024 | Owner reported generic validation error while trying to save first cloud draft; GitHub commits `dda4c2d1dcdb14f341aca6ef637b53e8caa4062b` and `1896190c7d0072f3ac0d3bf6d4c5ada63438de8b` | Owner-cloud form now gives exact field-specific validation messages and visual invalid-field styling, accepts period/comma decimal price notation, and explains that age group does not select size. JavaScript syntax verified. | Root cause of user's particular entry not yet confirmed; fresh mobile retry and actual cloud product-save verification remain OPEN. No database product mutation. |
 
+| JBC-E025 | User completed owner cloud draft form on iPhone; Jue-only direct Supabase SQL row read-back and transactional anonymous-role query (2026-10-24) | **First cloud product save verified**: `TEST Cotton Baby Romper`, US$15.00, stock 2, Newborn age/size, `published=false`. `SET LOCAL ROLE anon` saw 0 products, with INSERT/UPDATE denied by grants. | Positive owner write is grounded by persisted data after user operation; draft privacy passed at database layer, but public preview browser and cross-device publishing are NOT yet user-tested. |
+
 ## Evidence handling
 Write only non-sensitive observations here. Before announcing a stage complete, attach a reproducible test method plus commit/Supabase reference where applicable. Never replace lack of evidence with optimistic inferences.
