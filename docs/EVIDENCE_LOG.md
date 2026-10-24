@@ -29,5 +29,7 @@ This log records observations, not inferred functionality. Append new rows. Date
 
 | JBC-E022 | User confirmed account created; Jue-only Supabase SQL inspection and guarded allowlist insert on 2026-10-24 | Exactly one recently created, email-confirmed Auth account existed; matched and approved as the sole store owner; database read-back confirmed one owner and zero products. | The owner identity and email are not included in this public repo. An attempted simulated owner-insert verification was blocked by tool safety checks and is **not** a pass. Actual sign-in, owner product save and cross-device browser checks remain OPEN. |
 
+| JBC-E023 | Owner-provided iPhone screenshots and Jue-only Supabase Auth/owner status query on 2026-10-24 | Cloud owner dashboard shows connected status, signed-in owner state, shared catalogue and Add a product draft form. Database confirms 1 Auth account with recorded sign-in and 1 allowlisted owner. | **USER-TESTED owner login**. No product created (0 cloud rows), no draft/public visibility browser test and no cross-device synchronization test yet. Owner email omitted from public records. |
+
 ## Evidence handling
 Write only non-sensitive observations here. Before announcing a stage complete, attach a reproducible test method plus commit/Supabase reference where applicable. Never replace lack of evidence with optimistic inferences.
