@@ -1,6 +1,6 @@
 # Jue's Baby Co. — official website and development book
 
-**Current status (2026-10-24):** Live responsive **DEMO** storefront; browser-local owner demo user-tested. Stage 5A shared cloud product schema and owner allowlist installed in a separate Juesbabyco Supabase project, database security negative tests passed, but **no approved owner has been provisioned and no cross-device browser acceptance exists**.
+**Current status (2026-10-24):** The live storefront remains a **DEMO**. The Stage 5B authenticated Supabase owner workspace and cloud preview now support owner-tested draft creation, publishing, price editing, iPhone-to-Dell visibility and unpublishing. The test item is retained as a private draft and database SQL confirms public visibility is empty. **S5B is not yet closed**: real unrelated non-owner Auth access test is still required.
 
 ## Start here — always read these first
 1. [Master development book](PROJECT_BOOK.md) — vision, stages, governing rules, recovery.
@@ -26,4 +26,4 @@
 - Do not announce a stage closed without actual test evidence and a corresponding update to both GitHub and private Supabase registry.
 
 ## Latest development position
-S5A cloud backend and UI staging **BUILT**, database RLS negative tests **PASSED**, browser owner login and cross-device verification **OPEN**. The next needed action is to invite/create and explicitly allowlist the intended store owner using the dedicated Jue's Supabase project. Do not guess which identity should be trusted.
+**S5B owner cloud workflow and iPhone-to-Dell public preview** USER-TESTED; final private database state SQL-VERIFIED. **Pending S5B security gate:** use a genuinely separate, unapproved Auth test account and confirm owner dashboard denies access and database blocks private reads/writes. No real checkout or payments. See `docs/STATUS.md` and `docs/STAGE5_OWNER_SETUP.md`.
