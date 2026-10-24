@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 1.5
+**Version:** 1.6
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -86,6 +86,13 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Supabase anonymous role sees no unpublished row and cannot insert/update products.
 - Private registry state: `S5B_CLOUD_DRAFT_SAVE_VERIFIED`, 15 evidence entries; corresponding entry `JBC-E025` in `docs/EVIDENCE_LOG.md`.
 - **Do not close Stage 5** until real second-browser publication/update/unpublication and outsider denial acceptance tests.
+
+### Stage 5B — Publish/Edit UI handoff 2026-10-24
+- iPhone cloud-preview image showed correct empty public catalogue while the single draft remained unpublished.
+- Owner reported Edit appeared unresponsive; preceding code only filled a form lower on the page with weak feedback. Changes at commit `6d872cb503caf0aa9ee27e4742d4430a3c3eeeda` add explicit confirmation-gated Publish/Unpublish and highlight/scroll the Edit panel.
+- Code syntax verified; **actual new UI click and cross-device public visibility are still open**.
+- Read-only Supabase check after commit showed 1 test draft and 0 published products. Assistant did **not** publish any product.
+- Stage 5 remains OPEN until user tests visibility, edit, update and unpublish, and outsider access remains denied.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
