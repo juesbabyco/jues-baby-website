@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
-**Overall:** V8 DEMO INTACT. S5B OWNER LOGIN, DRAFT CREATE, DRAFT PRIVACY, AND PUBLISHED CLOUD PREVIEW USER-TESTED / DATABASE VERIFIED. PRICE EDIT, UNPUBLISH AND INDEPENDENT CROSS-DEVICE TEST STILL OPEN.
-**Current focus:** S5B — test price edit, cloud preview refresh, unpublish and independent second-device visibility. S5 remains OPEN.
+**Overall:** V8 DEMO INTACT. S5B OWNER LOGIN, DRAFT CREATE/PRIVACY, PUBLISH, PUBLIC PREVIEW AND PRICE EDIT USER-TESTED; SUPABASE READ-BACK VERIFIED. UNPUBLISH AND INDEPENDENT CROSS-DEVICE TEST STILL OPEN.
+**Current focus:** S5B — unpublish TEST Cotton Baby Romper, verify anonymous/preview disappearance, and independently test across a different device/browser. S5 remains OPEN.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -73,6 +73,14 @@
 - No independent second-device evidence yet: screenshots alone do not prove two devices were used.
 - Still outstanding: edit from owner page to US$16, verify preview change, unpublish and check it disappears; test from another independent browser/device, unauthorized signed-in user access test.
 - This published record is **staging test content**, not a real store offering; it should be unpublished after testing. Original V8 storefront remains demo.
+
+## Public price update passed (2026-10-24; JBC-E028)
+- Owner updated TEST Cotton Baby Romper price from US$15.00 to **US$16.00** in the owner dashboard, then supplied iPhone cloud-preview screenshot confirming new price.
+- Direct Supabase readback: price 1600 cents, stock 2, `published=true`.
+- Acting as `anon`, SQL returned 1 published row matching new price. Anonymous role lacks UPDATE permission.
+- This proves cloud price update and public preview but **not** that an independent second device was used.
+- Next: unpublish from owner-cloud.html; confirm cloud-preview.html hides the item; verify SQL public role returns zero. Then confirm on another device and test unrelated signed-in user access.
+- Keep the test product labelled TEST and original V8 storefront separate; no checkout/payment claims.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
