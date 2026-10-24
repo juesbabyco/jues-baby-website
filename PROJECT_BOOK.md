@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 3.0
+**Version:** 3.2
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -182,6 +182,12 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Public iPhone Cloud Preview screenshot shows uploaded US$15 stock4 romper image and catalogue details. Edge logs independently confirm two HTTP Storage GET 200 responses after photo RLS split. Public media delivery ACCEPTED for this test object.
 - Owner screenshot shows inline Delete form for **US$16 stock2 draft**, with disabled Confirm button. Field visually showed DELETE as **placeholder**, not entered text. New owner-cloud commit `eb4c521fe8264d2aefb8a58d072bdc3c343ed36a` uses a nonmisleading placeholder and explicit explanation. JavaScript parses.
 - No actual deletion was executed by ChatGPT or confirmed by DB; both products still present. The image-bearing US$15 product is currently **published**, so unpublish it once no longer testing. Stage 5C remains OPEN for actual Delete and privacy-after-unpublish acceptance. Original V8/demo and MindCare remain untouched.
+
+### JBC-E044/E045 — Stage 5C photo lifecycle accepted (2026-10-24)
+- On iPhone, deletion of the duplicate US$16 draft was confirmed by HTTP 200 and Supabase SQL.
+- The remaining US$15 test product now has a JPEG photo and is unpublished. Its owner thumbnail persists; public Cloud Preview reports no published items.
+- As anonymous SQL role, zero products or photo objects were visible. Owner role sees its one saved photo; unrelated Auth role sees zero.
+- Stage 5C browser functionality passed. A real anonymous direct HTTP request against the previously published private photo URL after unpublishing is still not verified. Keep Stage 5 overall open for security and real-store workflows.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
