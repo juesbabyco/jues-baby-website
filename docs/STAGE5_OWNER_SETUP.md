@@ -1,6 +1,6 @@
 # Stage 5A — Owner access setup & cross-device acceptance
 
-**Status as of 2026-10-24:** Dedicated cloud product table, owner allowlist and browser staging pages are built. Database negative authorization tests passed. **Exactly one confirmed owner has been provisioned. Owner login USER-TESTED on iPhone on 2026-10-24; actual product save and cross-device browser testing remain OPEN.**
+**Status as of 2026-10-24:** Dedicated cloud product table, owner allowlist and browser staging pages are built. Database negative authorization tests passed. **Exactly one confirmed owner has been provisioned. Owner login USER-TESTED on iPhone on 2026-10-24; cloud draft creation PASSED (read-back verified); publication and cross-device browser testing remain OPEN.**
 
 ## Links
 - Dedicated project: https://supabase.com/dashboard/project/izeezajdiawiaweffbrh
@@ -28,7 +28,7 @@ ON CONFLICT (user_id) DO NOTHING;
 5. Optionally restrict public self-signups in **Authentication → Providers** for this owner-only staging project after the owner is created. Do not disable email/password login itself.
 
 ## Actual user acceptance test (not yet performed)
-- Owner creates one harmless **test-only** product as a **draft**.
+- **PASSED 2026-10-24:** Owner created test-only product as an unpublished cloud **draft** (TEST Cotton Baby Romper, US$15, stock 2).
 - Independent private-browser/cloud-preview visit confirms the draft is **not visible**.
 - Owner publishes the test product, then checks from a **different device/browser** that cloud preview displays the same name and price after refresh.
 - Owner updates the price; different device refresh shows new price.
@@ -49,7 +49,8 @@ ON CONFLICT (user_id) DO NOTHING;
 
 ## Known gaps
 - Auth positive test with approved owner: **USER-TESTED 2026-10-24** (iPhone screenshot of signed-in cloud workspace; Jue Auth verifies a recorded login).
-- Browser end-to-end test: **NOT PERFORMED**; JavaScript syntax and database policy checks passed.
+- First cloud draft insert positive test: **VERIFIED 2026-10-24** from owner mobile save and persisted SQL record; anonymous SQL role could not view the unpublished draft.
+- Browser end-to-end: owner mobile login and first draft insert passed; multi-device published preview, price update and unpublish remain **NOT PERFORMED**.
 - Supabase Storage photo uploads: **NOT IMPLEMENTED**; staging editor accepts only HTTPS image URLs.
 - Real frontend `index.html` is **NOT connected** to the cloud catalogue.
 - Real inventory reservations, orders, fulfilment, payments and privacy/retention workflows: **NOT IMPLEMENTED**.
