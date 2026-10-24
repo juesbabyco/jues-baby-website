@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 2.9
+**Version:** 3.0
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -177,6 +177,11 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Simulated RLS: published photo visible to anonymous `object.get_authenticated` operation, unpublished photo hidden from anon and unapproved Auth account, anon object listing denied. These tests used rollback-only product state changes; they do not substitute for a real anonymous browser GET after migration.
 - Owner reported Delete button not working. Replaced native `prompt()` with inline named-product confirmation requiring typed `DELETE` on GitHub commit `7317d57bab269abe98518cfee960c84216d31f4a`. SQL transaction showed owner-role DELETE could target a private draft, unapproved user could not; all rolled back. Real iPhone Delete action still needs evidence.
 - **Stage 5C OPEN**. Next user test: refresh cloud preview while US$15 product published, check image; unpublish it; then optionally delete that draft using inline confirm. No auto-delete. Original V8 storefront and MindCare untouched.
+
+### Stage 5C — Public photo verified; inline Delete panel user-tested (JBC-E043; 2026-10-24)
+- Public iPhone Cloud Preview screenshot shows uploaded US$15 stock4 romper image and catalogue details. Edge logs independently confirm two HTTP Storage GET 200 responses after photo RLS split. Public media delivery ACCEPTED for this test object.
+- Owner screenshot shows inline Delete form for **US$16 stock2 draft**, with disabled Confirm button. Field visually showed DELETE as **placeholder**, not entered text. New owner-cloud commit `eb4c521fe8264d2aefb8a58d072bdc3c343ed36a` uses a nonmisleading placeholder and explicit explanation. JavaScript parses.
+- No actual deletion was executed by ChatGPT or confirmed by DB; both products still present. The image-bearing US$15 product is currently **published**, so unpublish it once no longer testing. Stage 5C remains OPEN for actual Delete and privacy-after-unpublish acceptance. Original V8/demo and MindCare remain untouched.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
