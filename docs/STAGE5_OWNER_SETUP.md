@@ -109,6 +109,12 @@ ON CONFLICT (user_id) DO NOTHING;
 - This is not yet a completed production-auth negative test. Do not share password here; do not add the test user to `jues_store_owners`.
 - After browser denial, record evidence and verify no products were changed. A true direct nonowner INSERT/UPDATE attempt remains to be tested or explicitly documented as pending.
 
+## Stage 5B owner access/security check accepted 2026-10-24 (JBC-E034/E035)
+- Real second confirmed Auth account signed in at owner-cloud.html and was rejected with exact expected **Access denied** owner message. Auth sign-in was independently recorded and account was not on owner allowlist.
+- Under authenticated role with test user's actual UUID, UPDATE of the private TEST product returned zero rows and INSERT rejected with RLS 42501. Both tested within rollback transactions; persistence unchanged.
+- **S5B staging acceptance PASS.** Unlike an actual HTTP/JWT write security probe, these tests use PostgreSQL role impersonation for mutation-path verification; broader production security review remains OPEN.
+- Next: S5C cloud photo uploads, safe Storage RLS, image rendering, and controlled storefront integration. Retain real-order and checkout locks. `TEST Cotton Baby Romper` is unpublished, saved at US$16 and stock 2.
+
 ## Migration records
 - `supabase/migrations/20261024121448_jues_stage5_owner_and_product_catalogue.sql`
 - `supabase/migrations/20261024122310_jues_stage5_streamline_read_policies.sql`
