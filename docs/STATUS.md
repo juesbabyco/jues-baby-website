@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
 **Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
-**Current focus:** S5C private product JPEG upload & preview BUILT, syntax checked. Owner iPhone photo upload, draft photo privacy and Dell public-image download remain USER-TEST PENDING. Original V8 storefront remains unchanged; products published=0.
+**Current focus:** S5C iPhone upload bug: 2 separate TEST drafts, none has a photo; owner UI changed to upload selected photo during Save and provide deliberate draft Delete. iPhone functional re-test PENDING; Stage 5 OPEN; no published items.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -135,6 +135,16 @@
 - Both browser scripts JavaScript syntax verified; live iPhone upload / publicly readable published image / private draft download-denial **NOT YET USER-TESTED**. A signed HTTP Storage API negative test is also pending.
 - Detailed acceptance dossier: `docs/STAGE5C_PRIVATE_PHOTO_ACCEPTANCE.md`. Original V8 customer website unchanged, test draft still private.
 - Security advisor: leaked-password protection disabled WARN; raise before production; internal no-policy INFO intentional.
+
+## Stage 5C duplicate draft / missing photo repair (JBC-E039, 2026-10-24)
+- Screenshot showed TWO saved TEST romper drafts: new one name with period, US$15, stock 4; original US$16, stock 2. Both draft, thumbnail No photo.
+- Dedicated Jue Supabase product readback confirmed 2 items and both `image_path=NULL`. Storage objects count verified 0. Edge logs 19:15–19:31Z included product POST 201 and PATCH requests but no observed Storage upload request; this supports not having actually uploaded the file, but does NOT independently establish the precise user's button sequence.
+- Implemented in owner-cloud.html: **Delete** button on draft only; requires typing DELETE, uses owner-authenticated DB `DELETE` with `published=false` predicate and readback; linked photo cleanup after successful product deletion. **No draft was deleted by assistant.**
+- Added each product's unique short reference ID, prominent NEW PRODUCT vs EDIT EXISTING banner; duplicate-normalized-name prevention for new records.
+- Form **Save product draft/Save changes** now uploads any selected photo as JPEG, saves product `image_path`, performs fresh DB readback and private Storage download before success. If product saved but photo failed, UI returns to editing that same saved record and displays exact failure text instead of encouraging another draft.
+- Commit `80a7e790a3b3a738b85c88066902643d2ae3f4ed` (with Delete precursor `db41cb1c1acc8eff9cac968d00632191fb9adce2`). GitHub fetch + JS syntax PASS; zero code changed in index.html, MindCare untouched.
+- Under actual unapproved test account UUID in a rolled-back SQL transaction, unauthorized DELETE returned 0 rows; DB confirms both drafts still remain private. Real user Delete + Save-with-photo workflows NOT YET TESTED.
+- Next: owner refresh cache-busted `owner-cloud.html?v=5c3`; delete the **US$15/stock4 duplicate** if desired; EDIT US$16/stock2 original, choose the sample photo and tap Save changes. Verify `image_path` and Storage object then Dell preview before declaring success.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
