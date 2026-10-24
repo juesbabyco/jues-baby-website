@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
-**Overall:** V8 DEMO INTACT. S5B OWNER LOGIN, DRAFT, PUBLISH, PRICE EDIT AND iPHONE-TO-DELL PREVIEW/UNPUBLISH USER-TESTED; LATEST SUPABASE STATE PRIVATE. ONLY REAL UNAPPROVED-ACCOUNT ACCESS TEST REMAINS FOR S5B.
-**Current focus:** S5B — new separate confirmed Auth test account exists and database RLS reads denied under that real UUID. Test actual browser login, owner UI denial and write restrictions; S5B remains OPEN.
+**Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
+**Current focus:** S5C — prepare secure image uploading and controlled integration to customer storefront. Do not promote staging catalogue or enable real sales until validated; keep published products at zero.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -118,6 +118,14 @@
 - The owner-cloud dashboard code requires `jues_store_owners` membership; nonowner should be signed out with **This account has not been approved as a store owner. Access denied.**
 - **NOT YET USER-TESTED:** a browser actually signing in with the new nonowner account; direct attempted nonowner product mutation from a real session. Test these before S5B closure. Do not approve test account; keep passwords private.
 - One TEST Cotton Baby Romper remains private and 0 items published.
+
+## Stage 5B security negative acceptance (2026-10-24; JBC-E034/E035)
+- User **actually signed in** to `owner-cloud.html` in separate private-browser flow as unapproved second Auth account and reported exact message: **This account has not been approved as a store owner. Access denied.**
+- Supabase confirmed second account `last_sign_in_at=2026-10-24 18:51:01 UTC`, second account **not** allowlisted; 2 Auth identities total, 1 approved owner.
+- SQL authenticated session with second user's actual Auth UUID: **UPDATE** existing private product returned 0 rows, so no row was changed. **INSERT** attempt rejected with PostgreSQL `42501` RLS violation. Both tests were wrapped in rollback transactions; follow-up SQL confirmed no unauthorized test rows, only one TEST product at US$16 and still `published=false`; owner allowlist unchanged (1).
+- **S5B staging functional/security acceptance PASS.** Distinguish real-browser UI-denial proof from DB-side simulated request identity for write checks; a signed JWT REST API penetration test has not been independently performed.
+- Do **not** call this production/launch acceptance. Stage 5 overall remains OPEN: secure photo uploads and product-image permissions, real-catalogue owner input, cloud/storefront integration, robust failure/reload behavior, checkout & customer privacy/payments are future gates.
+- Next stage: S5C. See PROJECT_BOOK.md for scope.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
