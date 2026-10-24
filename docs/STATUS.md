@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
-**Overall:** V8 DEMO INTACT. S5B OWNER LOGIN, CREATE DRAFT, PUBLISH, PUBLIC PREVIEW, EDIT PRICE AND UNPUBLISH USER-TESTED; SUPABASE STATE VERIFIED. INDEPENDENT CROSS-DEVICE AND UNRELATED-ACCOUNT TESTS STILL OPEN.
-**Current focus:** S5B — user reports iPhone-to-Dell cross-device test working. Supabase shows test product currently PUBLISHED at US$16; final unpublish pending verification. Real non-owner Auth session still untested. S5 remains OPEN.
+**Overall:** V8 DEMO INTACT. S5B OWNER LOGIN, DRAFT, PUBLISH, PRICE EDIT AND iPHONE-TO-DELL PREVIEW/UNPUBLISH USER-TESTED; LATEST SUPABASE STATE PRIVATE. ONLY REAL UNAPPROVED-ACCOUNT ACCESS TEST REMAINS FOR S5B.
+**Current focus:** S5B — iPhone-to-Dell visibility plus unpublish user-reported and verified by cloud SQL. Test a genuinely unapproved signed-in Auth account (without owner provisioning). S5B remains OPEN until this gate passes.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -103,6 +103,14 @@
 - Record **cross-device visibility user-reported PASS**, but **do not claim final unpublish complete**, because current live database state conflicts with expected `published=false`. The user may have stopped after checking visibility.
 - Next: tap Unpublish on iPhone and refresh Dell InPrivate; verify product disappears. Check Supabase flag again before closing that gate.
 - Genuine unrelated Auth identity write/read denial remains OPEN (synthetic-role checks alone are not a live login test). Existing V8 demo unchanged.
+
+## Cross-device published-to-private roundtrip completed (2026-10-24; JBC-E032)
+- User reported **Done** after follow-up instruction to unpublish on iPhone and refresh Dell InPrivate preview.
+- Exact Jue-only Supabase record read-back: TEST Cotton Baby Romper US$16.00, stock 2, `published=false`, last changed `2026-10-24 18:40:14 UTC`; published items 0.
+- SQL as `anon`: 0 visible products and UPDATE permission denied. No sample inventory moved to live V8 demo.
+- Combined with earlier positive Dell visibility user report, this is **USER-TESTED iPhone-to-Dell publish/view/unpublish** with verified final cloud state. Device screens are user-reported, not independently instrumented.
+- **Outstanding before S5B closure:** real unrelated, unapproved Supabase Auth account sign-in and negative owner/read/write authorization tests. Synthetic role simulations are positive supporting evidence only.
+- Stage 5 broad production readiness, real inventory and checkout remain OUT OF SCOPE and OPEN.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
