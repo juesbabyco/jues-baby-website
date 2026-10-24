@@ -53,6 +53,11 @@ No existing V8 storefront changes; not production checkout. One Jue-specific pri
 - Final targeted negative security action still required: using a real anonymous/no-owner HTTP Storage request against the *known previously public photo path*, verify GET is denied **after unpublishing**. No explicit service key or owner password should be exposed. Simulated database operations are not identical to direct HTTP.
 - Keep TEST product unpublished and private. Do not integrate cloud preview into the public demo storefront without its own stage, proof and owner consent.
 
+## Direct anonymous GET test UI now built (JBC-E046, 2026-10-24)
+- On `owner-cloud.html?v=5d1`, unpublished products with an attached image display **Test anonymous access to this private photo**.
+- This probes the **same actual saved photo path**. First confirms approved owner download, then sends HTTP GET using public publishable key only (no owner access token, cookies omitted). HTTP 200 => **FAIL**. HTTP 400/401/403/404 => **GET blocked**; inspect response and Jue Storage logs before final security acceptance. HTTP 5xx / fetch failure => INCONCLUSIVE.
+- Not yet executed on a real browser; do not mark Stage 5C fully closed. Next user testing instructions in `docs/STAGE5D_CLOUD_STOREFRONT_ACCEPTANCE.md`.
+
 ## Test 1 — owner photo as unpublished draft (PENDING)
 1. Sign into https://juesbabyco.github.io/jues-baby-website/owner-cloud.html on the authorized iPhone. Refresh to fetch Stage 5C changes.
 2. Confirm `TEST Cotton Baby Romper` still says **Draft**, stock 2, price US$16.00.
