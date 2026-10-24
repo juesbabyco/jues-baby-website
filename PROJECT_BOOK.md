@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 2.3
+**Version:** 2.4
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -137,6 +137,13 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - PostgreSQL session set to `authenticated` using the test user's **actual Auth UUID** showed no readable private product rows, no readable owner entries and no membership INSERT/UPDATE privileges.
 - The owner-cloud page currently signs out users lacking `jues_store_owners` membership. **Next required owner/user test**: browser sign in as the test account in a separate private window and observe access denied; verify the test session cannot create/edit products through the Data API.
 - Do not mark S5B closed until real session denial evidence. No credentials or test user's email stored in this public book. Original V8 remains a demo, no real payments/orders.
+
+### Stage 5B — Staging owner and security acceptance PASS (JBC-E034/E035, 2026-10-24)
+- Real unapproved Auth account completed browser sign-in and was denied owner dashboard access with the application's expected explicit message. Auth records confirm the second account signed in, and it is not allowlisted.
+- Under authenticated DB role with second account's actual Auth UUID, attempted UPDATE of the only private product matched/returned **zero rows**; attempted INSERT was rejected by RLS (42501). Transactions were rolled back; persisted final product and membership counts unchanged.
+- With prior successful owner login, shared cloud draft creation, public publish, cross-device read, price edit, and final unpublish, **S5B staging functional and authorization acceptance is complete**. This is not production penetration-test certification; direct browser HTTP JWT write attacks were not run.
+- S5 **overall remains OPEN**. Next workstream S5C: secure image storage/upload with owner-only policies, product images, optional production catalogue import subject to owner confirmation, cloud catalogue storefront integration and staged validation. Never turn demo data into real business stock automatically. Do not activate real orders/payments.
+- New status is visible in `docs/STATUS.md`; do not hide historical failed attempts or privacy boundaries.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
