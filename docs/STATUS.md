@@ -146,6 +146,12 @@
 - Under actual unapproved test account UUID in a rolled-back SQL transaction, unauthorized DELETE returned 0 rows; DB confirms both drafts still remain private. Real user Delete + Save-with-photo workflows NOT YET TESTED.
 - Next: owner refresh cache-busted `owner-cloud.html?v=5c3`; delete the **US$15/stock4 duplicate** if desired; EDIT US$16/stock2 original, choose the sample photo and tap Save changes. Verify `image_path` and Storage object then Dell preview before declaring success.
 
+## Mobile owner card layout repair (JBC-E040; 2026-10-24)
+- User iPhone screenshot showed shared product names rendered vertically because 3 inline actions (Edit/Publish/Delete) consumed most horizontal space in the flex row. Not a database product-name corruption.
+- Corrected `owner-cloud.html` CSS: 2-column grid for thumbnail and name/details, actions now span a full second row with even button widths; narrow phone media rule included.
+- GitHub commit `f0df770aa94f58bcf831f0482cd7024adc85f230`, source re-fetch, JavaScript syntax PASS. Browser visual re-test NOT YET CONFIRMED.
+- Existing two draft products remain as-is; owner should check updated `owner-cloud.html?v=5c4`, then optionally delete US$15/stock4 extra draft using typed DELETE. Photo upload remains Stage 5C OPEN.
+
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
 - Unexpected bill/cost -> STOP and ask.
