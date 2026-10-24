@@ -147,14 +147,16 @@ function deleteDraft(p,trigger){
  const heading=el('b',null,'Delete draft?');
  const warning=el('p',null,'PERMANENT deletion of: '+label+'. This action cannot be undone.');
  const inputLabel=el('label',null,'Type DELETE below to confirm');
- const typed=el('input','field');typed.type='text';typed.autocomplete='off';typed.placeholder='DELETE';typed.setAttribute('aria-label','Type DELETE to confirm permanent removal');typed.required=true;inputLabel.append(typed);
+ const typed=el('input','field');typed.type='text';typed.autocomplete='off';typed.placeholder='Tap here and type the word';typed.setAttribute('aria-label','Type DELETE to confirm permanent removal');typed.required=true;inputLabel.append(typed);
+ const hint=el('p','muted','No deletion yet. Type DELETE yourself (in capitals) to unlock the confirmation button. The grey hint inside the box is not entered text.');
  const buttons=el('div','delete-buttons');
  const cancel=el('button','btn alt','Cancel');cancel.type='button';
  const approve=el('button','btn danger','Confirm delete');approve.type='submit';approve.disabled=true;
- buttons.append(cancel,approve);form.append(heading,warning,inputLabel,buttons);
+ buttons.append(cancel,approve);form.append(heading,warning,inputLabel,hint,buttons);
  card.append(form);
  trigger.disabled=true;
- typed.addEventListener('input',()=>{approve.disabled=typed.value!=='DELETE'});
+ const validate=()=>{const confirmed=typed.value.trim()==='DELETE';approve.disabled=!confirmed;hint.textContent=confirmed?'Confirmation entered. Tap Confirm delete to permanently remove ONLY this draft.':'Type the word DELETE in capitals. Confirm delete stays disabled until you type it.'};
+ typed.addEventListener('input',validate);typed.addEventListener('change',validate);
  cancel.addEventListener('click',()=>{form.remove();trigger.disabled=false;msg('Deletion cancelled; product remains saved.')});
  form.addEventListener('submit',async event=>{
   event.preventDefault();if(busy||typed.value!=='DELETE'||approve.disabled)return;
