@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 2.4
+**Version:** 2.5
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -144,6 +144,13 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - With prior successful owner login, shared cloud draft creation, public publish, cross-device read, price edit, and final unpublish, **S5B staging functional and authorization acceptance is complete**. This is not production penetration-test certification; direct browser HTTP JWT write attacks were not run.
 - S5 **overall remains OPEN**. Next workstream S5C: secure image storage/upload with owner-only policies, product images, optional production catalogue import subject to owner confirmation, cloud catalogue storefront integration and staged validation. Never turn demo data into real business stock automatically. Do not activate real orders/payments.
 - New status is visible in `docs/STATUS.md`; do not hide historical failed attempts or privacy boundaries.
+
+### Stage 5C — Private product JPEG upload prototype (JBC-E036/E037; 2026-10-24)
+- Applied Jue-only migration `20261024190037_jues_stage5c_private_product_photo_storage`: bucket `jues-product-photos` **private**, MIME `image/jpeg`, max **2 MiB**; `image_path` bound to product record. RLS restricts upload to an approved owner and existing product; read by owner or public only for photo referenced by published product; deletion only by owner when unreferenced. No upsert.
+- Committed owner cloud JPEG re-encoding/upload UI and catalogue photo rendering, plus anon cloud preview Storage download code. JavaScript syntax verified and deployed files fetched; **not yet phone-tested**.
+- Test dossier: `docs/STAGE5C_PRIVATE_PHOTO_ACCEPTANCE.md`. First user action: edit existing TEST Cotton Baby Romper, attach one product-only image while keeping Draft. Then check private preview on Dell before publishing.
+- Stage 5C OPEN; separate external/owner real-image GET, permission denial, replacement and orphan cleanup checks required. Storage currently empty and public catalogue empty. Original V8 demo intact; no live ordering, payment or customer-data workflows.
+- Jue Supabase Auth security advisor warns leaked password protection disabled; revisit before production, do not silently alter user's Auth security config.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
