@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
 **Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
-**Current focus:** S5C — prepare secure image uploading and controlled integration to customer storefront. Do not promote staging catalogue or enable real sales until validated; keep published products at zero.
+**Current focus:** S5C private product JPEG upload & preview BUILT, syntax checked. Owner iPhone photo upload, draft photo privacy and Dell public-image download remain USER-TEST PENDING. Original V8 storefront remains unchanged; products published=0.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -126,6 +126,15 @@
 - **S5B staging functional/security acceptance PASS.** Distinguish real-browser UI-denial proof from DB-side simulated request identity for write checks; a signed JWT REST API penetration test has not been independently performed.
 - Do **not** call this production/launch acceptance. Stage 5 overall remains OPEN: secure photo uploads and product-image permissions, real-catalogue owner input, cloud/storefront integration, robust failure/reload behavior, checkout & customer privacy/payments are future gates.
 - Next stage: S5C. See PROJECT_BOOK.md for scope.
+
+## Stage 5C private photo storage + browser upload (JBC-E036/E037; 2026-10-24)
+- Supabase migration `20261024190037_jues_stage5c_private_product_photo_storage` APPLIED to Jue project only. Bucket `jues-product-photos` is private, JPEG-only, max 2 MiB; added nullable product-owned `jues_products.image_path`, CHECK ensures product folder.
+- Storage policies: owner-only INSERT under existing product folder, SELECT owner or published product's named photo during permitted download operation, owner DELETE only when no product references photo. No UPDATE/upsert.
+- Bucket and policies inspected in Supabase; valid JPEG storage path regex positive match, malformed and PNG paths rejected. No images uploaded (0 Storage objects) and no published products.
+- `owner-cloud.html` committed: owner Edit → select photo → confirm → JPEG resize/compress (<=1400px, <=2 MiB) → private Storage upload → product image_path update → gallery display. `cloud-preview.html` committed: download protected photos only for published products.
+- Both browser scripts JavaScript syntax verified; live iPhone upload / publicly readable published image / private draft download-denial **NOT YET USER-TESTED**. A signed HTTP Storage API negative test is also pending.
+- Detailed acceptance dossier: `docs/STAGE5C_PRIVATE_PHOTO_ACCEPTANCE.md`. Original V8 customer website unchanged, test draft still private.
+- Security advisor: leaked-password protection disabled WARN; raise before production; internal no-policy INFO intentional.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
