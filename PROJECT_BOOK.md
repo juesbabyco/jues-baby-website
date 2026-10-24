@@ -78,7 +78,7 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Tests: anon product INSERT denied; unapproved authenticated INSERT denied by RLS; transient published row visible to anon, draft hidden; test rows rolled back and DB remains empty.
 - Staging GitHub Pages owner workspace and read-only cloud preview committed. JavaScript syntax verified, live browser owner acceptance pending.
 - No auth identities or authorized owner entries yet, no actual catalogue product migrated, no checkout/payments, no upload storage bucket.
-- Developer governance registry updated to stage `S5A_CLOUD_CATALOGUE` with 10 cumulative evidence events.
+- Developer governance registry updated to stage `S5A_CLOUD_CATALOGUE` with 11 cumulative evidence events.
 - Next step: `docs/STAGE5_OWNER_SETUP.md` — invite/verify intended owner and complete positive/negative browser tests.
 
 ## 7. Testing vocabulary
