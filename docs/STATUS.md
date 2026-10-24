@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
-**Overall:** V8 LIVE DEMO INTACT; S5A CLOUD CATALOGUE + OWNER ALLOWLIST DEPLOYED AND NEGATIVE RLS TESTS PASSED; ONE EMAIL-CONFIRMED OWNER PROVISIONED; POSITIVE LOGIN AND CROSS-DEVICE BROWSER TEST STILL OPEN.
-**Current focus:** S5B — owner login user-tested; cloud draft submit validation improved after user's error. Product-save and cross-device acceptance still OPEN.
+**Overall:** V8 DEMO INTACT. S5B OWNER LOGIN + FIRST CLOUD DRAFT SAVE VERIFIED; DRAFT HIDDEN FROM ANON DATABASE ROLE. PUBLISHING + CROSS-DEVICE BROWSER TEST STILL OPEN.
+**Current focus:** S5B — publish and remotely view the test item, update its price from another browser, then unpublish. S5 remains OPEN.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -51,7 +51,14 @@
 ## Form-validation repair (2026-10-24)
 - User reported unhelpful generic 'Check the name, price, stock, at least one size, and HTTPS photo URL' message while creating first product draft.
 - `owner-cloud.html` updated to show specific validation errors, distinguish age group from size selection, and support decimal comma entry on iPhone.
-- Git commits `dda4c2d1dcdb14f341aca6ef637b53e8caa4062b` and `1896190c7d0072f3ac0d3bf6d4c5ada63438de8b`. JavaScript syntax checked. User retry and actual cloud save PENDING; do not assert fixed in the browser yet.
+- Git commits `dda4c2d1dcdb14f341aca6ef637b53e8caa4062b` and `1896190c7d0072f3ac0d3bf6d4c5ada63438de8b`. JavaScript syntax checked. User retried successfully; database read-back independently confirmed first draft save. Browser form validation repair is user-tested through successful save.
+
+## First cloud draft verified (JBC-E025, 2026-10-24)
+- User reported 'done' after saving test product; direct query verified exactly one record named **TEST Cotton Baby Romper**, price US$15.00, stock 2, age/size Newborn, category Everyday, `published=false`.
+- Anonymous SQL role query saw **zero** products, with no INSERT or UPDATE privilege. This confirms database-side draft privacy, not yet a separate unauthenticated browser check.
+- Supabase private development registry reports `S5B_CLOUD_DRAFT_SAVE_VERIFIED` and 15 evidence entries.
+- Still OPEN: public cloud preview browser check, publishing test, remote-device refreshed view, owner price update, unpublish and external user security checks. Existing `index.html` remains the demo.
+- Next work instructions: `docs/STAGE5_OWNER_SETUP.md`.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
