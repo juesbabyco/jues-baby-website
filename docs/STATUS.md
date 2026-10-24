@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
 **Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
-**Current focus:** S5C owner photo UPLOAD PASS on US$15 TEST product, PUBLIC photo download previously failed HTTP 400. Storage policies split by role and Delete UI changed to inline confirmation. Public photo browser GET and mobile Delete actions still require retest. US$15 TEST currently PUBLISHED; US$16 remains draft.
+**Current focus:** S5C photo upload and public iPhone photo display verified (Storage GET 200). Inline mobile Delete panel user-tested; typed confirmation not yet performed. Placeholder clarification shipped. US$15 photo test remains published; US$16 separate draft is private. Stage 5 overall OPEN.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -160,6 +160,14 @@
 - User reported Delete not working. Native iPhone JavaScript `prompt()` may be blocked/unreliable; no successful DELETE API request observed. Replaced it with an **inline on-page typed DELETE confirmation** in GitHub `7317d57bab269abe98518cfee960c84216d31f4a`; JS syntax PASS. Owner-only RLS DELETE SQL transaction matched a draft and rolled back; nonowner matched zero; owner delete of a published item under `published=false` guard matched zero. Actual owner iPhone DELETE test still OPEN.
 - The US$15 photo-bearing item is **currently published**. After public preview test, unpublish before deleting it. Two stored TEST records were preserved by assistant. Original V8 demo untouched.
 - Security advisor still notes [Leaked password protection disabled](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection); production gate still OPEN.
+
+## Stage 5C public photo and delete-panel acceptance (JBC-E043; 2026-10-24)
+- Owner supplied two iPhone screenshots at local 22:04-22:05 showing **US$15 stock4 TEST romper photo successfully displayed on public cloud-preview** and photo thumbnail on authenticated owner-cloud.
+- Independent edge HTTP evidence: image `GET | 200` at 20:04:34 UTC and 20:05:17 UTC, confirming Storage published-photo download fix with actual browser requests.
+- Owner tapped **Delete** on separate **US$16 stock2 no-photo draft**; on-page Delete confirmation displays exact target and text-entry field. Button appears disabled in screenshot because `DELETE` was the field **placeholder**, not yet an actual entered value. No backend DELETE request proven; SQL readback confirms both product records still exist.
+- Fixed confusing placeholder in owner-cloud commit `eb4c521fe8264d2aefb8a58d072bdc3c343ed36a`: now 'Tap here and type the word' and explicit status explaining that typing uppercase DELETE enables confirmation. JS syntax PASS; actual typed delete still OPEN.
+- Staging test product US$15 stock4 **currently published** and pictured; US$16 stock2 **draft**. Don't delete either without owner typed confirmation. If user wishes to keep photo, retain US$15 and delete US$16; alternatively transfer picture via approved editing instead of deleting photo-bearing item.
+- Next verify on iPhone clicking Confirm delete actually removes only intended draft. Afterwards unpublish US$15 test listing unless explicitly kept publicly as test. No customer checkout exists and production V8 untouched.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
