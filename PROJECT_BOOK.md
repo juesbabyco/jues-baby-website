@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 2.2
+**Version:** 2.3
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -131,6 +131,12 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - The documented user-tested cross-device publish/refresh/unpublish functional flow is accepted with final database state verified. Do not overstate as independently instrumented browser test.
 - **S5B NOT CLOSED**: actual unrelated, unapproved signed-in Auth account must be denied owner workspace, private drafts and all write actions. Existing synthetic role tests are useful but not the same as real Auth.
 - Real orders, payment, storage photos, production frontend and launch remain future stages. MindCare remains isolated.
+
+### Stage 5B — Separate non-owner account provisioned (JBC-E033; 2026-10-24)
+- User created a second confirmed Auth test identity in Jue's Supabase, not on the owner allowlist. Auth users=2, approved owners=1.
+- PostgreSQL session set to `authenticated` using the test user's **actual Auth UUID** showed no readable private product rows, no readable owner entries and no membership INSERT/UPDATE privileges.
+- The owner-cloud page currently signs out users lacking `jues_store_owners` membership. **Next required owner/user test**: browser sign in as the test account in a separate private window and observe access denied; verify the test session cannot create/edit products through the Data API.
+- Do not mark S5B closed until real session denial evidence. No credentials or test user's email stored in this public book. Original V8 remains a demo, no real payments/orders.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
