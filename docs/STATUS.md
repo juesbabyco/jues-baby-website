@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
 **Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
-**Current focus:** S5C photo upload and public iPhone photo display verified (Storage GET 200). Inline mobile Delete panel user-tested; typed confirmation not yet performed. Placeholder clarification shipped. US$15 photo test remains published; US$16 separate draft is private. Stage 5 overall OPEN.
+**Current focus:** S5C owner photo upload and public photo viewing verified; real iPhone DELETE now HTTP 200 and database verified: US$16/stock2 draft removed, US$15/stock4 photo-bearing test product preserved and still PUBLISHED. Remaining gate: owner Unpublish US$15, verify anonymous preview empty and private photo download denied. Stage 5 OPEN.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -168,6 +168,13 @@
 - Fixed confusing placeholder in owner-cloud commit `eb4c521fe8264d2aefb8a58d072bdc3c343ed36a`: now 'Tap here and type the word' and explicit status explaining that typing uppercase DELETE enables confirmation. JS syntax PASS; actual typed delete still OPEN.
 - Staging test product US$15 stock4 **currently published** and pictured; US$16 stock2 **draft**. Don't delete either without owner typed confirmation. If user wishes to keep photo, retain US$15 and delete US$16; alternatively transfer picture via approved editing instead of deleting photo-bearing item.
 - Next verify on iPhone clicking Confirm delete actually removes only intended draft. Afterwards unpublish US$15 test listing unless explicitly kept publicly as test. No customer checkout exists and production V8 untouched.
+
+## Real mobile draft Delete verified (JBC-E044; 2026-10-24)
+- User twice confirmed "Deleted." Supabase edge logs show actual iPhone `DELETE 200` of exact **US$16 / stock2** draft UUID `917d954a-69e3-4dd4-aa52-9070710484ba` with `published=false` condition at `20:11:04.812Z`.
+- Direct dedicated Jue product readback confirms this record **no longer exists**. Exactly one product remains: **US$15 / stock4 TEST Cotton Baby Romper.**, `published=true`, linked to the one uploaded JPEG. Photo Storage still has exactly 1 file. No other products deleted.
+- **Owner mobile inline typed-confirmation Delete PASSED.** Previous ambiguous placeholder repaired in `eb4c521fe8264d2aefb8a58d072bdc3c343ed36a`.
+- **NEXT:** User must tap Unpublish on remaining photo product and refresh independent Cloud Preview; read SQL draft and anonymous Storage GET negative to confirm photo no longer publicly served. Keep image and draft for future test unless owner explicitly deletes them.
+- Public Cloud Preview is staging only, and static V8 customer storefront and MindCare remain unchanged.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
