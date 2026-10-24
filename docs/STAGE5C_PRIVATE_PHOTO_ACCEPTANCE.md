@@ -20,6 +20,17 @@ No existing V8 storefront changes; not production checkout. One Jue-specific pri
 - Test safely: Open https://juesbabyco.github.io/jues-baby-website/owner-cloud.html?v=5c2, tap Edit next to product, select a photo, tap **Upload photo to this product**. Look for exact status **PHOTO SAVED AND VERIFIED**. If an error appears, report the text.
 - Current product is published; it can show in public preview once image actually attached. After verifying, tap Unpublish to restore privacy. Do not claim preview photo worked without browser proof.
 
+## Follow-up 2026-10-24 — JBC-E039
+- User screenshot showed TWO unpublished TEST rompers, priced US$15 (stock 4) and US$16 (stock 2), both No photo. Jue Supabase confirmed both photo paths NULL; bucket contained 0 files. User explicitly requested a delete option.
+- GitHub owner-cloud revised: draft-only Delete button, requires typed DELETE, does not silently delete anything; short product reference for same-name records; new/edit mode distinguished; saving details with a selected file now performs photo upload within the SAME Save action; verifies database linkage and private Storage download before success.
+- Retest using https://juesbabyco.github.io/jues-baby-website/owner-cloud.html?v=5c3 (refresh it):
+  1. Optional: delete the **US$15, stock 4** extra draft, only after inspecting the row; type DELETE to confirm.
+  2. Tap **Edit** beside the original **US$16, stock 2** draft; choose previously generated clean product photo; tap **Save changes** (not Add a product draft).
+  3. Expect **PRODUCT AND PHOTO SAVED AND VERIFIED** and a thumbnail in Shared catalogue. If error, report exact text; no duplication expected.
+  4. Do not publish until image_path and private Storage object are verified server side.
+  5. Publish briefly to view photo in Dell InPrivate cloud preview; unpublish after test; verify public image denied.
+- This is new client code, not mobile runtime proof. Server Storage policies remain to be verified through real signed requests.
+
 ## Test 1 — owner photo as unpublished draft (PENDING)
 1. Sign into https://juesbabyco.github.io/jues-baby-website/owner-cloud.html on the authorized iPhone. Refresh to fetch Stage 5C changes.
 2. Confirm `TEST Cotton Baby Romper` still says **Draft**, stock 2, price US$16.00.
