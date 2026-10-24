@@ -1,7 +1,7 @@
 # Stage 5D — Cloud Storefront Candidate: Acceptance and Safety
 
 **Status (2026-10-24): BUILT / JavaScript SYNTAX VERIFIED / USER BROWSER TEST OPEN.**
-Stage 5C direct-anonymous-photo HTTP negative test is still OPEN until user runs the new check in the owner cloud dashboard. Stage 5 overall remains OPEN.
+Stage 5C targeted anonymous-photo HTTP negative test **PASSED** via real iPhone request and Supabase edge GET 400 log (JBC-E048, 2026-10-24). Stage 5D browser acceptance and Stage 5 overall remain OPEN.
 
 ## Scope and boundaries
 
@@ -15,6 +15,8 @@ Stage 5C direct-anonymous-photo HTTP negative test is still OPEN until user runs
 - No new subscriptions, hosting fees, storage buckets, or non-Jue accounts involved.
 
 ## Before first publication: Stage 5C anonymous photo security gate
+**Completed 2026-10-24 (JBC-E048):** Owner iPhone first downloaded the private image, then a separate anonymous public-key-only Storage GET returned HTTP 400 with `NoSuchKey`; matching Supabase edge log and still-stored private JPEG verified. Do not repeat this gate unless photo policies change.
+
 
 1. Open `owner-cloud.html?v=5d1` as the approved owner; find the **US$15 stock4 TEST Cotton Baby Romper.** private draft with its saved image.
 2. Tap **Test anonymous access to this private photo** beneath its details.
