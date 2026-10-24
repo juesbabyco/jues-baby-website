@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 2.7
+**Version:** 2.8
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -165,6 +165,11 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Fixed accidental creation vs editing confusion: product reference shown, conspicuous NEW / EDIT mode, duplicate normalized-name check.
 - Crucial: saving the editor with a selected file now compresses/uploads the photo in that SAME save flow; success requires DB path readback and protected download. If product saved but image fails, stay editing the same record and display actual error.
 - GitHub latest owner-cloud commit `80a7e790a3b3a738b85c88066902643d2ae3f4ed` syntax verified; awaiting iPhone runtime test and further Storage RLS/anonymous browser photo evidence. No launched commerce, MindCare isolation intact.
+
+### Stage 5C — Mobile catalogue row repair (JBC-E040; 2026-10-24)
+- After adding Delete, the user screenshot showed severe word-by-word wrapping of item names in iPhone owner dashboard; existing flex row allowed action buttons to consume the text width.
+- Owner cloud CSS changed to thumbnail plus details grid and a second full-width row for Edit/Publish/Delete. Small-screen widths tuned. Commit `f0df770aa94f58bcf831f0482cd7024adc85f230` inspected; JS syntax PASS.
+- Stage 5C photo upload and deletion runtime remain unverified. Do not mistake appearance of Delete button for tested deletion. Existing 2 draft records must not be removed without deliberate typed confirmation by owner.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
