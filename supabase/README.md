@@ -6,7 +6,7 @@ The Supabase integration for this store MUST use Juesbabyco connection and organ
 
 Juesbabyco project **`izeezajdiawiaweffbrh`** (name `jues-baby-co`) was created on 2026-10-24 in `eu-west-1`, after explicit user agreement to the quoted **US$0/month** cost. Project was ACTIVE_HEALTHY. Do not conflate with MindCare.
 
-**Deployed migration:** `20261024115601_jues_private_development_registry_v1`. Source: `migrations/20261024115601_jues_private_development_registry_v1.sql`. Private schema: `jues_internal`, tables `project_registry` and `stage_events`. Verified RLS enabled, anonymous/authenticated schema privileges denied and table write/read grants denied. Registry was later advanced to `S5A_CLOUD_CATALOGUE` with 10 total evidence events. Migration was applied to Jue project only.
+**Deployed migration:** `20261024115601_jues_private_development_registry_v1`. Source: `migrations/20261024115601_jues_private_development_registry_v1.sql`. Private schema: `jues_internal`, tables `project_registry` and `stage_events`. Verified RLS enabled, anonymous/authenticated schema privileges denied and table write/read grants denied. Registry was later advanced to `S5A_CLOUD_CATALOGUE` with 11 total evidence events. Migration was applied to Jue project only.
 
 Security advisor: two **informational** `rls_enabled_no_policy` notices (private governance with no browser access). Performance advisor: two informational unused indexes (empty product table). A duplicate permissive SELECT policy warning was resolved by migration `20261024122310`. Revisit all notices on launch readiness.
 
