@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
-**Overall:** V8 LIVE DEMO INTACT; S5A CLOUD CATALOGUE + OWNER ALLOWLIST DEPLOYED AND NEGATIVE RLS TESTS PASSED; NO PROVISIONED OWNER, NO POSITIVE LOGIN OR CROSS-DEVICE BROWSER TEST.
-**Current focus:** S5B — approve an actual Auth owner, test login and cross-device cloud updates. S5 remains OPEN.
+**Overall:** V8 LIVE DEMO INTACT; S5A CLOUD CATALOGUE + OWNER ALLOWLIST DEPLOYED AND NEGATIVE RLS TESTS PASSED; ONE EMAIL-CONFIRMED OWNER PROVISIONED; POSITIVE LOGIN AND CROSS-DEVICE BROWSER TEST STILL OPEN.
+**Current focus:** S5B — test approved owner login, add a test draft, and verify cross-device cloud publishing. S5 remains OPEN.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -17,7 +17,7 @@
 
 ## Known boundaries
 - Public demo: **NO real purchases, payments, reservations, shipment, stock accounting or server orders**.
-- Existing `owner-demo.html` is a PUBLIC browser-local prototype with NO authentication. New `owner-cloud.html` has Supabase Auth and database-enforced owner membership but is still STAGING with no approved owners.
+- Existing `owner-demo.html` is a PUBLIC browser-local prototype with NO authentication. New `owner-cloud.html` has Supabase Auth and database-enforced owner membership but is still STAGING; exactly one owner is now approved in the database, not yet browser-tested.
 - Old demo edits use localStorage only. New staged cloud products are centrally stored in Supabase, but user-level cross-device acceptance has **NOT** been tested.
 - Demo product photos and prices are NOT verified inventory.
 - Real customer data must not be entered in demo.
@@ -28,7 +28,7 @@
 - Supabase: **only** connected Juesbabyco organization `cgqjblrthxmahtqmwzjz`; dedicated project `jues-baby-co`, id `izeezajdiawiaweffbrh`, region `eu-west-1`, created 2026-10-24, status ACTIVE_HEALTHY.
 - Quoted creation cost: **US$0/month**, explicitly approved by user and confirmed with Supabase. Recheck before enabling paid services.
 - Separate MindCare Supabase exists under a different connection; DO NOT use it.
-- Verified private schema `jues_internal` with tables `project_registry` (1 row) and `stage_events` (6 events after final status update); both RLS-enabled. Anonymous and authenticated users have no schema usage, table SELECT/INSERT/UPDATE privileges verified denied. This is internal governance only.
+- Verified private schema `jues_internal` with tables `project_registry` (1 row) and `stage_events` (12 events after latest onboarding verification); both RLS-enabled. Anonymous and authenticated users have no schema usage, table SELECT/INSERT/UPDATE privileges verified denied. This is internal governance only.
 - Supabase migration: `20261024115601_jues_private_development_registry_v1`; matching source at `supabase/migrations/20261024115601_jues_private_development_registry_v1.sql`.
 - Security advisor: 2 INFO `rls_enabled_no_policy` on intentionally inaccessible private governance tables; no other security lint returned. Performance advisor: 2 INFO unused indexes (new, empty product table). Overlapping permissive SELECT policy warning was fixed in migration `20261024122310`.
 
@@ -38,15 +38,15 @@
 - Permission tests: `anon` INSERT denied (42501); `authenticated` unapproved-user INSERT denied by RLS (42501); authenticated cannot grant itself owner membership.
 - Rolled-back public visibility test showed one temporary published record and zero temporary draft records; subsequent row count was 0 products and 0 approved owners, 0 Auth users.
 - Staged pages committed: `owner-cloud.html` and `cloud-preview.html`; both JavaScript syntax-verified, **not** browser end-to-end confirmed. Pinned supabase-js 2.118.0, publishable key only; no privileged key.
-- Supabase governance registry now reports `S5A_CLOUD_CATALOGUE`, 11 events; Stage 5 still OPEN.
+- Supabase governance registry now reports `S5B_OWNER_ONBOARDING`, 12 events; Stage 5 still OPEN.
 - Current user guide: `docs/STAGE5_OWNER_SETUP.md`.
 
 ## Next action and gates
-1. Create/invite the intended owner in **Jue's** Supabase Authentication → Users, without sharing the password; confirm actual Auth UUID.
-2. Privileged onboarding: add that *verified* Auth UUID to `public.jues_store_owners`. Do not grant on email guesswork or allow public self-assignment.
-3. Open `owner-cloud.html` and test owner login, product draft creation and update.
-4. Test a published product in `cloud-preview.html` on a **second independent browser/device**. Confirm draft remains hidden and an outsider write is denied.
-5. Record test evidence in GitHub and Supabase before marking S5 closed; keep original V8 customer demo untouched until accepted.
+1. **Done 2026-10-24:** exactly one confirmed Auth user was found in the Jue project. It was added to `public.jues_store_owners`; database read-back confirmed exactly one approved owner.
+2. Open `owner-cloud.html`, sign in as that newly confirmed owner, and report exact success/error; never post password.
+3. Owner creates one obviously fictitious product as a **draft**, then verifies it is not displayed in the public cloud preview.
+4. Publish that test item; open `cloud-preview.html` on a **different browser/device**. Change its price and verify the remote display updates after refresh. Unpublish test item.
+5. Test an unrelated Auth account cannot read drafts or mutate products; then record success/failure evidence before calling S5 closed. Existing V8 demo must remain unchanged.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
