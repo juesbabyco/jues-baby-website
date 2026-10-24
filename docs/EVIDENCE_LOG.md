@@ -47,5 +47,7 @@ This log records observations, not inferred functionality. Append new rows. Date
 
 | JBC-E031 | User answered “Working” after the instructed iPhone-to-Dell publishing workflow; Jue-only Supabase product and anonymous-role readback, 2026-10-24 | User reports cross-device flow working. Supabase confirms TEST Cotton Baby Romper is **currently published** at US$16.00, stock 2; anonymous role sees 1 listing, cannot edit. | **Cross-device publication visibility USER-REPORTED**, independent-device details not directly observable. Expected final unpublish `published=false` not verified: latest database state is **true**. Do not close dynamic publish→unpublish roundtrip or Stage 5. Real non-owner Auth test remains OPEN. |
 
+| JBC-E032 | User confirmed final Unpublish and Dell refresh “Done”; Juesbabyco Supabase SQL record read-back and anonymous-role visibility check (2026-10-24) | TEST Cotton Baby Romper now `published=false` with US$16.00 and stock 2 retained. Anonymous role sees 0 public products and cannot UPDATE. Together with prior owner reports, **iPhone-to-Dell publish/view/unpublish roundtrip USER-TESTED; final SQL state VERIFIED**. | Browser actions are user-reported and not instrumented; a real unrelated signed-in non-owner session negative test is still required for S5B closure. |
+
 ## Evidence handling
 Write only non-sensitive observations here. Before announcing a stage complete, attach a reproducible test method plus commit/Supabase reference where applicable. Never replace lack of evidence with optimistic inferences.
