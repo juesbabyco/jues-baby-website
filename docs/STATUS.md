@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
 **Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
-**Current focus:** S5C iPhone upload bug: 2 separate TEST drafts, none has a photo; owner UI changed to upload selected photo during Save and provide deliberate draft Delete. iPhone functional re-test PENDING; Stage 5 OPEN; no published items.
+**Current focus:** S5C owner photo UPLOAD PASS on US$15 TEST product, PUBLIC photo download previously failed HTTP 400. Storage policies split by role and Delete UI changed to inline confirmation. Public photo browser GET and mobile Delete actions still require retest. US$15 TEST currently PUBLISHED; US$16 remains draft.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -151,6 +151,15 @@
 - Corrected `owner-cloud.html` CSS: 2-column grid for thumbnail and name/details, actions now span a full second row with even button widths; narrow phone media rule included.
 - GitHub commit `f0df770aa94f58bcf831f0482cd7024adc85f230`, source re-fetch, JavaScript syntax PASS. Browser visual re-test NOT YET CONFIRMED.
 - Existing two draft products remain as-is; owner should check updated `owner-cloud.html?v=5c4`, then optionally delete US$15/stock4 extra draft using typed DELETE. Photo upload remains Stage 5C OPEN.
+
+## Stage 5C first real photo + public read and inline Delete repairs (JBC-E041/E042; 2026-10-24)
+- User's iPhone screenshot now shows real image on **US$15 stock4 TEST Cotton Baby Romper.**; US$16 stock2 duplicate remains without photo. Direct DB read `image_path` exists only on US$15 and Storage metadata has exactly one JPEG in the private bucket.
+- API evidence: authorized iPhone POST Storage 200, image_path PATCH 200, owner private Storage GET 200. Owner photo UI confirmed USER-TESTED.
+- After owner published US$15 item, anonymous Cloud Preview image GET requests returned **HTTP 400**. Reproduction in role-simulated SQL identified combined Storage READ policy that queried `jues_store_owners` under `anon`, resulting in `permission denied for table jues_store_owners`. Never grant anon owner-list access to work around this.
+- Supabase migration `20261024195535_jues_stage5c_separate_photo_read_policies` now separates owner-authenticated photo read from published photo read (anon and authenticated). Rolled-back SQL policy tests: published photo accessible to anon for object GET, temporarily-unpublished photo inaccessible, anon object LIST denied, non-owner cannot read draft photo. Actual public HTTP download re-test still required.
+- User reported Delete not working. Native iPhone JavaScript `prompt()` may be blocked/unreliable; no successful DELETE API request observed. Replaced it with an **inline on-page typed DELETE confirmation** in GitHub `7317d57bab269abe98518cfee960c84216d31f4a`; JS syntax PASS. Owner-only RLS DELETE SQL transaction matched a draft and rolled back; nonowner matched zero; owner delete of a published item under `published=false` guard matched zero. Actual owner iPhone DELETE test still OPEN.
+- The US$15 photo-bearing item is **currently published**. After public preview test, unpublish before deleting it. Two stored TEST records were preserved by assistant. Original V8 demo untouched.
+- Security advisor still notes [Leaked password protection disabled](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection); production gate still OPEN.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
