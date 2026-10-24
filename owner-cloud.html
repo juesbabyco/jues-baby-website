@@ -18,7 +18,7 @@
 <div id="workspace" class="hidden"><div class="row"><p id="who" class="muted"></p><button id="logout" class="btn alt">Sign out</button></div>
 <div class="layout"><section class="panel"><div class="row"><h2>Shared catalogue</h2><span class="pill">Cloud data</span></div>
 <div class="toolrow"><input id="search" class="field" placeholder="Search cloud products" aria-label="Search cloud products"><button id="reload" class="btn alt">Refresh</button></div><div id="items" aria-live="polite"></div></section>
-<section class="panel" id="editorPanel"><h2 id="editorTitle" tabindex="-1">Add a product draft</h2><p id="editNotice" class="editing-note hidden" role="status"></p>
+<section class="panel" id="editorPanel"><h2 id="editorTitle" tabindex="-1">Add a product draft</h2><p id="editNotice" class="editing-note" role="status">NEW PRODUCT MODE: saving creates another item. To change a saved product or its photo, tap Edit beside it first.</p>
 <form id="editor"><label>Name<input class="field" id="productName" required maxlength="100" placeholder="Cotton baby romper"></label>
 <div class="grid"><label>Price (US$)<input class="field" id="price" type="text" inputmode="decimal" autocomplete="off" required placeholder="15.00"></label><label>Stock quantity<input class="field" id="stock" type="number" min="0" max="9999" step="1" required value="0"></label></div>
 <div class="grid"><label>Age group<select class="field" id="age"><option>Newborn</option><option>0–3m</option><option>3–6m</option><option>6–12m</option><option>12–24m</option><option>Gifts</option></select></label>
@@ -27,7 +27,7 @@
 <label><input type="checkbox" value="Newborn"> Newborn</label><label><input type="checkbox" value="0–3m"> 0–3m</label><label><input type="checkbox" value="3–6m"> 3–6m</label><label><input type="checkbox" value="6–12m"> 6–12m</label><label><input type="checkbox" value="12–24m"> 12–24m</label></div>
 <label>Description<textarea class="field" id="description" rows="3" maxlength="1000" placeholder="Optional"></textarea></label>
 <label>Product photo URL <span class="muted">(optional HTTPS link)</span><input class="field" id="photoUrl" type="url" placeholder="https://…"></label>
-<p class="muted" style="font-size:12px">Optional external photo URL. For a private cloud upload, save the product draft first, tap Edit, then choose a photo below. Never upload customer photos.</p>
+<p class="muted" style="font-size:12px">Optional external photo URL. Choose a photo below and tap Save product draft or Save changes to save the product and photo together. Never upload customer photos.</p>
 <div class="note" style="margin:10px 0 15px"><b>Private product photo (Stage 5C)</b>
 <p class="muted" style="font-size:12px">Only an approved owner can upload. Photos stay private while a product is a draft; a published product's photo becomes downloadable in the cloud preview. The browser converts your image into a smaller JPEG and removes most image metadata.</p>
 <label>Choose a photo from your phone<input id="photoFile" class="field" type="file" accept="image/*"></label>
@@ -108,10 +108,10 @@ function openEditor(p){
  $('age').value=p.age_group;$('category').value=p.category;$('description').value=p.description||'';$('photoUrl').value=p.image_url||'';
  $('published').checked=p.published;
  $('photoUpload').disabled=false;$('photoFile').value='';
- $('photoStatus').textContent=p.image_path?'A cloud photo path is linked to this product. Select and upload a replacement only if needed.':'No photo is attached yet. Step 1: Choose a photo. Step 2: Tap Upload photo to this product. Wait for the saved confirmation.';
+ $('photoStatus').textContent=p.image_path?'A photo is linked. To replace it, choose another and tap Save changes.':'No photo attached yet. Choose a photo and tap Save changes to upload it to THIS product.';
  $('sizes').querySelectorAll('input').forEach(x=>x.checked=p.sizes.includes(x.value));
  $('editorTitle').textContent='Editing: '+p.name;
- $('editNotice').textContent='Editing '+p.name+'. Make your changes below, then tap Save changes. Current visibility: '+(p.published?'Published':'Draft')+'.';
+ $('editNotice').textContent='EDITING EXISTING PRODUCT: '+p.name+' (US$'+(p.price_cents/100).toFixed(2)+', ref '+p.id.slice(0,8)+'). Changes and any selected photo will be saved to THIS product.';
  $('editNotice').classList.remove('hidden');
  $('editorPanel').classList.add('editing-panel');
  $('saveButton').textContent='Save changes';
@@ -165,12 +165,12 @@ $('items').addEventListener('click',e=>{
  if(button.dataset.action==='delete')deleteDraft(p);
 });
 $('search').addEventListener('input',render);$('reload').addEventListener('click',()=>db&&loadProducts());
-function resetForm(){editId=null;$('photoUpload').disabled=true;$('photoFile').value='';$('photoStatus').textContent='First tap Edit beside an existing product. Selecting a photo alone does not upload it.';$('editNotice').classList.add('hidden');$('editorPanel').classList.remove('editing-panel');$('editor').reset();$('stock').value=0;$('published').checked=false;$('editorTitle').textContent='Add a product draft';$('saveButton').textContent='Save product draft';$('editorError').textContent='';for(const id of ['productName','price','stock','sizes','photoUrl'])$(id).removeAttribute('aria-invalid')}
+function resetForm(){editId=null;$('photoUpload').disabled=true;$('photoFile').value='';$('photoStatus').textContent='First tap Edit beside an existing product. Selecting a photo alone does not upload it.';$('editNotice').classList.remove('hidden');$('editNotice').textContent='NEW PRODUCT MODE: creates another item. To edit a saved product, tap Edit beside it.';$('editorPanel').classList.remove('editing-panel');$('editor').reset();$('stock').value=0;$('published').checked=false;$('editorTitle').textContent='Add a product draft';$('saveButton').textContent='Save product draft';$('editorError').textContent='';for(const id of ['productName','price','stock','sizes','photoUrl'])$(id).removeAttribute('aria-invalid')}
 $('clear').addEventListener('click',resetForm);
 $('photoFile').addEventListener('change',()=>{
  const file=$('photoFile').files?.[0];
  $('photoStatus').textContent=file
-  ?'Photo SELECTED ('+file.name+'). NOT uploaded yet. Now tap the separate “Upload photo to this product” button below.'
+  ?'Photo SELECTED ('+file.name+'). Not uploaded yet. Tap '+(editId?'Save changes':'Save product draft')+' to save the product AND photo'+(editId?', or tap the separate Upload photo button.':'.')
   :(editId?'No photo selected. Choose a file to upload.':'First tap Edit beside an existing product.');
 });
 async function makeJpeg(file){
