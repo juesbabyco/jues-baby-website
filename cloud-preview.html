@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Jue's Baby Co. — Cloud Catalogue Preview</title>
+<style>
+:root{--brown:#5c4b42;--ink:#55473f;--muted:#7e7068;--paper:#fffaf2;--bg:#efeae1;--line:#e4d8cb}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Arial,Helvetica,sans-serif}.wrap{max-width:1160px;padding:16px;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 6px 20px}.brand{font-size:31px;letter-spacing:-1.5px;line-height:1}.brand small{display:block;font-size:11px;letter-spacing:2.5px;margin-top:7px}h1{font-size:clamp(29px,4vw,50px);line-height:1.1;margin:11px 0}h2{font-size:22px}p{margin:8px 0 15px}a{color:var(--brown)}.paper{background:var(--paper);border-radius:20px;padding:clamp(18px,3vw,32px);margin-bottom:15px}.banner{background:#f3e5d2;border:1px solid #dec9b2;border-radius:12px;padding:12px 16px;margin:18px 0}.muted{color:var(--muted)}.actions{display:flex;gap:12px;flex-wrap:wrap}.actions a{background:#e8ded1;padding:10px 15px;border-radius:9px;text-decoration:none}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{min-width:0;border:1px solid var(--line);border-radius:14px;background:white;overflow:hidden}.photo{background:#e9ddcf;aspect-ratio:4/5;width:100%;object-fit:cover;display:block}.no-photo{display:grid;place-items:center;text-align:center;color:#857568}.details{padding:14px}.details strong{display:block;line-height:1.3;margin-bottom:6px;overflow-wrap:anywhere}.details small{display:block;color:var(--muted);margin-bottom:5px}.tag{font-size:12px;background:#e5ecd9;padding:4px 8px;border-radius:20px;display:inline-block;margin-top:8px}.tag.out{background:#f3dfde;color:#924845}.filter{border:1px solid #d1c0b1;border-radius:9px;padding:10px;background:white;color:var(--ink);max-width:220px}.empty{background:#fff;padding:20px;border-radius:13px;color:var(--muted)}.foot{color:var(--muted);font-size:12px;padding:15px}.row{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}@media(min-width:750px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}}@media(min-width:1050px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(max-width:380px){.wrap{padding:9px}.details{padding:10px}.grid{gap:9px}}
+</style></head><body><div class="wrap"><header class="top"><div class="brand">jue's.<small>BABY CO.</small></div><nav class="actions"><a href="index.html">View existing demo shop</a></nav></header>
+<main><section class="paper"><p class="muted" style="letter-spacing:2px;font-size:12px">STAGING · CLOUD PRODUCT CATALOGUE</p><h1>For every little you.</h1><p>See the shared product catalogue fetched from Jue's dedicated cloud database.</p>
+<div class="banner"><b>Preview only — not an ordering website.</b> Published products here are visible to anyone visiting this link, but stock, delivery, real orders and payments are not connected. Unpublished drafts stay private to the approved owner account.</div>
+<div class="row"><h2>Published products</h2><div class="row"><select class="filter" id="age" aria-label="Filter by age"><option value="">All age groups</option><option>Newborn</option><option>0–3m</option><option>3–6m</option><option>6–12m</option><option>12–24m</option><option>Gifts</option></select><button id="refresh" class="filter">Refresh</button></div></div>
+<p id="status" class="muted" role="status" aria-live="polite">Loading cloud products…</p><div id="products" class="grid"></div>
+</section><p class="foot">Stage 5A · Cloud catalogue preview only · No purchase functionality. Initial demo photos and old browser-local sample prices are NOT migrated into this database.</p></main></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0"></script>
+<script>
+'use strict';
+const $=x=>document.getElementById(x);
+const PROJECT_URL='https://izeezajdiawiaweffbrh.supabase.co', PUBLISHABLE_KEY='sb_publishable_Rn9a97ELLVzde6ziHuDKNQ_GmBUHIOv';
+const client=window.supabase?.createClient?window.supabase.createClient(PROJECT_URL,PUBLISHABLE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}}):null;
+let rows=[];const text=(tag,str,cls)=>{const e=document.createElement(tag);e.textContent=String(str??'');if(cls)e.className=cls;return e};
+const safeHttps=(v)=>{try{const u=new URL(v);return u.protocol==='https:'?u.href:null}catch(_){return null}};
+function render(){
+ const filtered=rows.filter(x=>!$('age').value||x.age_group===$('age').value);$('products').replaceChildren();
+ if(!filtered.length){$('status').textContent=rows.length?'No products match this age group.':'No products published yet. The approved owner can create and publish a catalogue item after account setup.';return}
+ $('status').textContent=filtered.length+' published '+(filtered.length===1?'product':'products')+'.';
+ for(const p of filtered){
+ const card=text('article','','card');const url=safeHttps(p.image_url);
+ if(url){const img=document.createElement('img');img.src=url;img.alt='Photo of '+p.name;img.className='photo';img.loading='lazy';card.append(img)}else card.append(text('div','Product image coming soon','photo no-photo'));
+ const d=text('div','','details');d.append(text('strong',p.name),text('small',p.age_group+' · '+p.category),text('b','US$'+(p.price_cents/100).toFixed(2)),text('small',p.description||''));d.append(text('span',p.stock_qty>0?'Demo stock: '+p.stock_qty:'Out of demo stock','tag'+(p.stock_qty>0?'':' out')));card.append(d);$('products').append(card)
+ }
+}
+async function load(){
+ $('status').textContent='Loading cloud products…';if(!client){$('status').textContent='Catalogue client unavailable. Reload the page when connected to the internet.';return}
+ const {data,error}=await client.from('jues_products').select('id,name,description,price_cents,age_group,category,stock_qty,image_url').eq('published',true).order('created_at',{ascending:false});
+ if(error){$('status').textContent='Cloud catalogue unavailable: '+error.message;return}
+ rows=data||[];render()
+}
+$('age').addEventListener('change',render);$('refresh').addEventListener('click',load);load();
+</script></body></html>
