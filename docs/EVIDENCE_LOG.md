@@ -41,5 +41,7 @@ This log records observations, not inferred functionality. Append new rows. Date
 
 | JBC-E028 | Owner iPhone screenshot of cloud-preview.html showing US$16.00 on 2026-10-24; Jue-only Supabase product read and anonymous-role query | Owner changed TEST Cotton Baby Romper price from US$15.00 to US$16.00. SQL persisted 1600 cents, stock 2, published=true. As anonymous role, query saw one matching public product with the updated price and no public UPDATE privilege. **Cloud owner price editing and public preview update USER-TESTED and database verified.** | Screenshot verifies preview update on iPhone; independent second-device synchronization is not proven. Unpublish and remote disappearance still OPEN. |
 
+| JBC-E029 | Owner confirmed unpublish worked; Juesbabyco Supabase direct readback and anonymous role query on 2026-10-24 | TEST Cotton Baby Romper remains stored at US$16.00 with stock 2 but `published=false`. Anonymous role SELECT returned 0 catalogue entries; UPDATE privilege false. **Unpublish plus retained private-draft data VERIFIED.** | Owner reported working preview, but independent second-device confirmation and unrelated signed-in user negative tests remain OPEN. Stage 5 not closed. |
+
 ## Evidence handling
 Write only non-sensitive observations here. Before announcing a stage complete, attach a reproducible test method plus commit/Supabase reference where applicable. Never replace lack of evidence with optimistic inferences.
