@@ -88,6 +88,13 @@ ON CONFLICT (user_id) DO NOTHING;
 - An independent different-browser/device dynamic publish and price-update roundtrip is still OPEN. A truly separate, non-owner Auth account test is also OPEN. The simulated role is useful but does not replace an actual sign-in.
 - Do not mark Stage 5 closed or introduce real transactions yet.
 
+## Cross-device test report and verification gap (JBC-E031, 2026-10-24)
+- User reports test between iPhone and Dell laptop **working**, following instruction to publish, refresh on Dell, unpublish and refresh again.
+- Supabase check afterward shows TEST Cotton Baby Romper still **published=true**, US$16.00, stock 2; anonymous visitor can read it. Thus publication is demonstrably live; final unpublish not confirmed in cloud.
+- Repeat last step: open `owner-cloud.html` on iPhone, tap **Unpublish**, confirm, then refresh Dell `cloud-preview.html`. Check that 0 published products remain, and record SQL readback.
+- A separate **real non-owner Auth identity** must still be tested for no access to owner dashboard or draft/write capability. Simulated non-owner role tests alone are insufficient. Keep user credentials out of chats/repository.
+- Stage 5 remains OPEN.
+
 ## Migration records
 - `supabase/migrations/20261024121448_jues_stage5_owner_and_product_catalogue.sql`
 - `supabase/migrations/20261024122310_jues_stage5_streamline_read_policies.sql`
