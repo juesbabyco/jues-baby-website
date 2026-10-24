@@ -95,6 +95,13 @@ ON CONFLICT (user_id) DO NOTHING;
 - A separate **real non-owner Auth identity** must still be tested for no access to owner dashboard or draft/write capability. Simulated non-owner role tests alone are insufficient. Keep user credentials out of chats/repository.
 - Stage 5 remains OPEN.
 
+## Second-device final unpublish verified 2026-10-24 (JBC-E032)
+- User confirmed Done after unpublishing on iPhone and refreshing Dell InPrivate cloud preview. SQL independently confirmed TEST Cotton Baby Romper at US$16 remains stored as `published=false`, with zero visible public items.
+- This completes the user-tested cross-device publication/visibility/removal acceptance with independently checked final persistence.
+- **Remaining S5B security gate:** provision a *separate unapproved test user* in Jue Supabase Auth (do not add its UUID to `jues_store_owners`), sign in and verify the owner-cloud page denies access; also test that this account cannot read the unpublished draft or mutate a product.
+- Never share real passwords with ChatGPT or commit account emails in GitHub. A synthetic UUID role read previously passed but is not a live-user substitute.
+- The public `cloud-preview.html` remains staging-only and currently empty. No real commerce.
+
 ## Migration records
 - `supabase/migrations/20261024121448_jues_stage5_owner_and_product_catalogue.sql`
 - `supabase/migrations/20261024122310_jues_stage5_streamline_read_policies.sql`
