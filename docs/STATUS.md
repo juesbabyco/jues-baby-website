@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
 **Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
-**Current focus:** S5C staged photo lifecycle, public preview and owner DELETE/UNPUBLISH user-tested. US$15 photo product remains as a private draft (published=false), Storage retains JPEG. Anon SQL cannot read product or attached photo; actual direct anonymous photo HTTP denial not independently tested. Stage 5 OVERALL OPEN: separate future storefront and checkout gates.
+**Current focus:** S5C photo privacy direct HTTP negative check UI BUILT, owner iPhone test OPEN. Stage 5D separate cloud storefront candidate BUILT / JavaScript syntax PASS, cross-device browser acceptance OPEN. Original V8 index.html unchanged, all products remain private, no checkout or payments.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -182,6 +182,15 @@
 - SQL `SET LOCAL ROLE anon` and `set_config('storage.operation','object.get_authenticated',true)` returns **0 products and 0 readable photo objects**. With `object.list`, anonymous listing also returns zero. Simulated approved owner Auth UUID can read one object; unapproved Auth UUID can read none.
 - **User-tested Stage 5C flow** owner image upload, public image GET 200 when published, mobile delete of extra draft, final unpublish + empty preview are all accepted with final DB state verified. **Remaining security limitation:** actual direct HTTP GET to the photo path as a nonowner after unpublishing has NOT been independently run. Database-role simulation does not substitute for that API negative test.
 - Keep the private TEST product for future regression proof; do not silently delete it. The original live `index.html` remains static V8 demo. No checkout, orders, payment, real stock or commercial launch authorization.
+
+## Stage 5C anonymous HTTP check + Stage 5D cloud storefront candidate (JBC-E046/E047; 2026-10-24)
+- Jue owner-cloud `ef053d8e7a330a325102e73edb1be214cd839b5f`: when a product is unpublished with `image_path`, a **Test anonymous access to this private photo** button appears under details. The test first downloads via approved owner Storage SDK (proof that object exists), then performs an independent GET with *only* Jue public publishable key, no cookies and no owner access token. Shows blocked HTTP status or FAIL for HTTP 200; inconclusive on errors. Linked to new storefront candidate via subsequent owner-cloud commit `c98b919e5f797f705eeb9a79c925e370586f12b6`.
+- **Not yet executed by user**; do not mark S5C direct unauthorised GET security gate closed.
+- New `storefront-cloud-staging.html` commit `5d930b9c71c627def132336aeb7bd409150bf48f` is a responsive Jue-branded customer storefront *candidate*. Cloud SELECT uses `published=true` only, private Storage photo downloads, filters/search/sort/product details, explicit empty state, and **no bag, checkout, orders or payments**.
+- JS source re-fetch/parser PASS, static checks confirmed no persistent Auth, no HTML injection via innerHTML, no fallback to demo products on API error, and no production index.html change. These are static/code checks **not** real browser acceptance.
+- Dedicated Jue Supabase state after implementation: 1 saved TEST product private (`published=false`), 1 linked private JPEG, 0 public products; no DB mutation was made for Stage 5D.
+- Acceptance protocol: `docs/STAGE5D_CLOUD_STOREFRONT_ACCEPTANCE.md`. Test anonymous photo GET denial while still private; then briefly publish TEST product on owner iPhone, verify cloud storefront on Dell, and unpublish again. Never treat TEST stock/photo as real merchandise.
+- Stage 5 overall remains OPEN and original V8 live customer demo remains untouched.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
