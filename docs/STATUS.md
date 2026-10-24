@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
 **Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
-**Current focus:** S5C photo privacy direct HTTP negative check UI BUILT, owner iPhone test OPEN. Stage 5D separate cloud storefront candidate BUILT / JavaScript syntax PASS, cross-device browser acceptance OPEN. Original V8 index.html unchanged, all products remain private, no checkout or payments.
+**Current focus:** Stage 5C staging photo lifecycle and targeted real anonymous HTTP GET denial USER-TESTED/LOG-VERIFIED. Stage 5D isolated cloud storefront candidate BUILT / JS syntax PASS; iPhone/Dell browser acceptance OPEN. Existing V8 live demo untouched; 1 TEST photo draft private, 0 public; real checkout/payments disabled.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -191,6 +191,13 @@
 - Dedicated Jue Supabase state after implementation: 1 saved TEST product private (`published=false`), 1 linked private JPEG, 0 public products; no DB mutation was made for Stage 5D.
 - Acceptance protocol: `docs/STAGE5D_CLOUD_STOREFRONT_ACCEPTANCE.md`. Test anonymous photo GET denial while still private; then briefly publish TEST product on owner iPhone, verify cloud storefront on Dell, and unpublish again. Never treat TEST stock/photo as real merchandise.
 - Stage 5 overall remains OPEN and original V8 live customer demo remains untouched.
+
+## Stage 5C direct anonymous HTTP denial accepted (JBC-E048; 2026-10-24)
+- Owner supplied iPhone screenshot of authenticated owner-cloud test at 22:46: saved Draft photo downloaded successfully with owner credentials; separate public-key-only anonymous photo GET returned HTTP **400** and body `{"statusCode":"404","error":"not_found","message":"Object not found","code":"NoSuchKey"}`.
+- Jue-only Supabase **edge logs** independently confirm anonymous Storage `GET | 400` against the same private object at `2026-10-24T20:46:28.597Z` (preflight OPTIONS 200 earlier). The HTTP response masked the object's existence; it was not deleted.
+- Backend SQL: exactly 1 saved `TEST Cotton Baby Romper.` US$15/stock4, `published=false`, linked to 1 private JPEG; anonymous Storage SELECT for download returns 0 objects.
+- **Stage 5C STAGING acceptance complete for targeted owner photo upload, public viewing when published, unpublish/draft retention, duplicate draft Delete and direct anonymous GET blocked while unpublished.** No guarantee about all security threats, cross-provider authorization, quotas or production readiness. Staging test content is not real commercial inventory.
+- **NEXT:** Stage 5D new candidate `storefront-cloud-staging.html` needs browser test: first empty as draft, then owner briefly publishes TEST listing, Dell/phone preview shows photo/details, then owner unpublishes and preview clears. Real checkout, payment/order systems and migrating to `index.html` remain out of scope.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
