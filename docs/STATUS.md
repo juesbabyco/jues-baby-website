@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
 **Overall:** V8 DEMO INTACT. S5B OWNER LOGIN, CREATE DRAFT, PUBLISH, PUBLIC PREVIEW, EDIT PRICE AND UNPUBLISH USER-TESTED; SUPABASE STATE VERIFIED. INDEPENDENT CROSS-DEVICE AND UNRELATED-ACCOUNT TESTS STILL OPEN.
-**Current focus:** S5B — independent second-browser/device verification and non-owner account denial tests. S5 remains OPEN.
+**Current focus:** S5B — independently establish two-device published-to-unpublished synchronization and real non-owner session permissions. User-reported secondary public preview is empty; synthetic non-owner RLS read check passed. S5 remains OPEN.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -88,6 +88,14 @@
 - The owner's report of public preview disappearance is accepted as user feedback; the database permissions independently confirm public invisibility. No independent second device evidence was supplied.
 - Remaining gate: repeat public preview state check from another independent browser/device, plus unrelated-authenticated-user RLS write/read denial. No real checkout, customer-data processing or stock reservations exist.
 - Jue Supabase registry E029 and GitHub evidence must remain in sync.
+
+## Follow-up public preview and simulated non-owner read (JBC-E030, 2026-10-24)
+- After the prior unpublish, the user reported cloud preview reads **No products published** following the request to use an independent browser/device. This is a USER-REPORTED public preview outcome, but browser/device independence is not independently established.
+- Jue Supabase read confirms the sole TEST Cotton Baby Romper is still a private draft priced US$16.00 with stock 2; 0 publicly published items.
+- SQL `SET LOCAL ROLE anon` showed 0 visible products and no public UPDATE privilege.
+- SQL simulated `authenticated` with an unrelated synthetic Auth UID showed **0 visible private product rows**, **0 visible owner rows**, and no privilege to insert itself into the owner allowlist. This is **role-simulation evidence, not a real non-owner sign-in**.
+- Still OPEN: controlled cross-device published update (not merely both devices seeing empty preview) and a real outsider-login authorization test, plus further photo/storage and production readiness.
+- Stage 5 is not closed.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
