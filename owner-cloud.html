@@ -27,21 +27,28 @@
 <label><input type="checkbox" value="Newborn"> Newborn</label><label><input type="checkbox" value="0–3m"> 0–3m</label><label><input type="checkbox" value="3–6m"> 3–6m</label><label><input type="checkbox" value="6–12m"> 6–12m</label><label><input type="checkbox" value="12–24m"> 12–24m</label></div>
 <label>Description<textarea class="field" id="description" rows="3" maxlength="1000" placeholder="Optional"></textarea></label>
 <label>Product photo URL <span class="muted">(optional HTTPS link)</span><input class="field" id="photoUrl" type="url" placeholder="https://…"></label>
-<p class="muted" style="font-size:12px">For this test leave the photo URL blank. Tick a size checkbox even after choosing an age group. Direct photo uploads will be added later.</p>
+<p class="muted" style="font-size:12px">Optional external photo URL. For a private cloud upload, save the product draft first, tap Edit, then choose a photo below. Never upload customer photos.</p>
+<div class="note" style="margin:10px 0 15px"><b>Private product photo (Stage 5C)</b>
+<p class="muted" style="font-size:12px">Only an approved owner can upload. Photos stay private while a product is a draft; a published product's photo becomes downloadable in the cloud preview. The browser converts your image into a smaller JPEG and removes most image metadata.</p>
+<label>Choose a photo from your phone<input id="photoFile" class="field" type="file" accept="image/*"></label>
+<button id="photoUpload" class="btn alt" type="button" disabled>Upload photo to this product</button>
+<p id="photoStatus" class="muted" role="status" aria-live="polite">Save a draft, then tap Edit to enable a secure upload.</p>
+</div>
 <label style="display:flex;align-items:center;gap:9px;margin:9px 0 17px"><input id="published" type="checkbox"> Publish to cloud preview</label>
 <div class="toolrow"><button class="btn" type="submit" id="saveButton">Save product draft</button><button class="btn alt" type="button" id="clear">Clear</button></div><p class="error" id="editorError" role="alert"></p></form></section></div></div>
-<p class="foot">Stage 5A · Jue's Baby Co. dedicated Supabase project · Authenticated, owner-allowlisted cloud catalogue prototype. Browser-visible publishable key is intentionally public; access control is enforced by database RLS.</p>
+<p class="foot">Stage 5C · Jue's Baby Co. dedicated Supabase project · Authenticated, owner-allowlisted cloud catalogue prototype. Browser-visible publishable key is intentionally public; access control is enforced by database RLS.</p>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0"></script>
 <script>
 'use strict';
 const PROJECT_URL='https://izeezajdiawiaweffbrh.supabase.co';
 const PUBLISHABLE_KEY='sb_publishable_Rn9a97ELLVzde6ziHuDKNQ_GmBUHIOv';
+const PHOTO_BUCKET='jues-product-photos';
 const $=id=>document.getElementById(id);
 const msg=(t,bad=false)=>{$('message').textContent=t;$('message').className=bad?'error':'muted'};
 const clean=(v)=>String(v==null?'':v);
 const safeUrl=(v)=>{try{const u=new URL(clean(v));return u.protocol==='https:'?u.href:null}catch(_){return null}};
-let db=null,rows=[],editId=null,busy=false;
+let db=null,rows=[],editId=null,busy=false,photoObjectUrls=[],renderToken=0;
 function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=clean(text);return n}
 async function initialize(){
  if(!window.supabase?.createClient){msg('The Supabase library did not load. Check your internet connection and refresh.',true);return}
@@ -63,14 +70,30 @@ $('login').addEventListener('submit',async e=>{
 $('logout').addEventListener('click',async()=>{if(db)await db.auth.signOut();rows=[];resetForm();displayLogin()});
 async function loadProducts(){
  $('items').textContent='Loading cloud products…';
- const {data,error}=await db.from('jues_products').select('id,name,description,price_cents,stock_qty,age_group,category,sizes,image_url,published').order('created_at',{ascending:false});
+ const {data,error}=await db.from('jues_products').select('id,name,description,price_cents,stock_qty,age_group,category,sizes,image_url,image_path,published').order('created_at',{ascending:false});
  if(error){$('items').textContent='Cloud read failed: '+error.message;msg('Database read failed.',true);return}
  rows=data||[];render()
 }
-function render(){const q=$('search').value.trim().toLowerCase();const list=rows.filter(x=>x.name.toLowerCase().includes(q));$('items').replaceChildren();
+async function attachPrivateThumb(placeholder,path,token){
+ try{
+  const {data,error}=await db.storage.from(PHOTO_BUCKET).download(path);
+  if(error||!data)throw error||new Error('No image downloaded');
+  const objectUrl=URL.createObjectURL(data);
+  if(token!==renderToken||!placeholder.isConnected){URL.revokeObjectURL(objectUrl);return}
+  photoObjectUrls.push(objectUrl);
+  const img=el('img','thumb');img.src=objectUrl;img.alt='Product photo';img.loading='lazy';placeholder.replaceWith(img);
+ }catch(_){if(token===renderToken&&placeholder.isConnected)placeholder.textContent='Photo unavailable'}
+}
+function render(){
+ for(const u of photoObjectUrls)URL.revokeObjectURL(u);
+ photoObjectUrls=[];const token=++renderToken;
+ const q=$('search').value.trim().toLowerCase();const list=rows.filter(x=>x.name.toLowerCase().includes(q));$('items').replaceChildren();
  if(!list.length){$('items').append(el('p','muted',rows.length?'No matching products.':'No cloud products yet. Create a draft on the right.'));return}
  for(const p of list){
- const box=el('article','item');const imageUrl=safeUrl(p.image_url);if(imageUrl){const img=el('img','thumb');img.src=imageUrl;img.alt='Product photo';img.loading='lazy';box.append(img)}else box.append(el('div','thumb fallback','No photo'));
+ const box=el('article','item');const imageUrl=safeUrl(p.image_url);
+ if(p.image_path){const placeholder=el('div','thumb fallback','Loading photo…');box.append(placeholder);attachPrivateThumb(placeholder,p.image_path,token)}
+ else if(imageUrl){const img=el('img','thumb');img.src=imageUrl;img.alt='Product photo';img.loading='lazy';box.append(img)}
+ else box.append(el('div','thumb fallback','No photo'));
  const body=el('div','itembody');const title=el('b',null,p.name);const badge=el('span','status'+(p.published?'':' draft'),p.published?'Published':'Draft');title.append(' ',badge);body.append(title,el('small',null,'US$'+(p.price_cents/100).toFixed(2)+' · '+p.age_group+' · Demo stock '+p.stock_qty));box.append(body);
  const actions=el('div','actions-cell');
  const editButton=el('button','btn alt','Edit');editButton.type='button';editButton.dataset.id=p.id;editButton.dataset.action='edit';editButton.setAttribute('aria-label','Edit '+p.name);actions.append(editButton);
@@ -83,6 +106,8 @@ function openEditor(p){
  $('productName').value=p.name;$('price').value=(p.price_cents/100).toFixed(2);$('stock').value=p.stock_qty;
  $('age').value=p.age_group;$('category').value=p.category;$('description').value=p.description||'';$('photoUrl').value=p.image_url||'';
  $('published').checked=p.published;
+ $('photoUpload').disabled=false;$('photoFile').value='';
+ $('photoStatus').textContent=p.image_path?'Private photo attached. Select a replacement only if needed.':'Choose a product photo and tap Upload photo to this product.';
  $('sizes').querySelectorAll('input').forEach(x=>x.checked=p.sizes.includes(x.value));
  $('editorTitle').textContent='Editing: '+p.name;
  $('editNotice').textContent='Editing '+p.name+'. Make your changes below, then tap Save changes. Current visibility: '+(p.published?'Published':'Draft')+'.';
@@ -118,8 +143,57 @@ $('items').addEventListener('click',e=>{
  if(button.dataset.action==='publish')togglePublication(p);
 });
 $('search').addEventListener('input',render);$('reload').addEventListener('click',()=>db&&loadProducts());
-function resetForm(){editId=null;$('editNotice').classList.add('hidden');$('editorPanel').classList.remove('editing-panel');$('editor').reset();$('stock').value=0;$('published').checked=false;$('editorTitle').textContent='Add a product draft';$('saveButton').textContent='Save product draft';$('editorError').textContent='';for(const id of ['productName','price','stock','sizes','photoUrl'])$(id).removeAttribute('aria-invalid')}
+function resetForm(){editId=null;$('photoUpload').disabled=true;$('photoFile').value='';$('photoStatus').textContent='Save a draft, then tap Edit to enable a secure upload.';$('editNotice').classList.add('hidden');$('editorPanel').classList.remove('editing-panel');$('editor').reset();$('stock').value=0;$('published').checked=false;$('editorTitle').textContent='Add a product draft';$('saveButton').textContent='Save product draft';$('editorError').textContent='';for(const id of ['productName','price','stock','sizes','photoUrl'])$(id).removeAttribute('aria-invalid')}
 $('clear').addEventListener('click',resetForm);
+async function makeJpeg(file){
+ if(!file||!file.type.startsWith('image/')||/svg|gif/i.test(file.type))throw Error('Choose a normal photo (JPEG, PNG, HEIC, or WebP), not SVG or GIF.');
+ if(file.size>15*1024*1024)throw Error('Photo is over 15 MB. Please choose a smaller image.');
+ const localUrl=URL.createObjectURL(file),photo=new Image();
+ try{
+  photo.src=localUrl;
+  await photo.decode();
+  if(!photo.naturalWidth||!photo.naturalHeight)throw Error('The photo cannot be decoded on this phone.');
+  const factor=Math.min(1,1400/Math.max(photo.naturalWidth,photo.naturalHeight));
+  const canvas=document.createElement('canvas');
+  canvas.width=Math.max(1,Math.round(photo.naturalWidth*factor));canvas.height=Math.max(1,Math.round(photo.naturalHeight*factor));
+  const ctx=canvas.getContext('2d');if(!ctx)throw Error('Photo processing is unavailable.');
+  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(photo,0,0,canvas.width,canvas.height);
+  const encode=quality=>new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',quality));
+  let blob=await encode(.8);if(blob?.size>2*1024*1024)blob=await encode(.6);
+  if(!blob||blob.type!=='image/jpeg'||blob.size<100||blob.size>2*1024*1024)throw Error('Photo could not be compressed under 2 MB. Please pick another.');
+  return blob;
+ }finally{URL.revokeObjectURL(localUrl)}
+}
+$('photoUpload').addEventListener('click',async()=>{
+ if(!db||busy||!editId)return;
+ const file=$('photoFile').files?.[0];if(!file){$('photoStatus').textContent='Choose a photo first.';return}
+ const productId=editId;const previous=rows.find(p=>p.id===productId)?.image_path||null;
+ if(!confirm('Upload this product photo to Jue’s PRIVATE cloud storage and attach it to this product?'))return;
+ busy=true;$('photoUpload').disabled=true;$('saveButton').disabled=true;
+ let uploadedPath=null;
+ try{
+  $('photoStatus').textContent='Preparing photo for upload…';
+  const jpeg=await makeJpeg(file);
+  const path='products/'+productId+'/'+crypto.randomUUID()+'.jpg';
+  $('photoStatus').textContent='Uploading compressed photo ('+Math.ceil(jpeg.size/1024)+' KB)…';
+  const up=await db.storage.from(PHOTO_BUCKET).upload(path,jpeg,{contentType:'image/jpeg',cacheControl:'3600',upsert:false});
+  if(up.error)throw up.error;
+  uploadedPath=path;
+  const {data,error}=await db.from('jues_products').update({image_path:path,image_url:null,updated_at:new Date().toISOString()}).eq('id',productId).select('id,image_path').single();
+  if(error)throw error;
+  if(data?.image_path!==path)throw Error('Could not confirm image was attached to product.');
+  $('photoFile').value='';
+  await loadProducts();
+  $('photoStatus').textContent='Private photo saved for this product. Publish only when ready for customers to see it in the cloud preview.';
+  msg('Product photo uploaded and linked in Jue’s private cloud.');
+  if(previous&&previous!==path){const rm=await db.storage.from(PHOTO_BUCKET).remove([previous]);if(rm.error)$('photoStatus').textContent+=' The older photo may require cleanup later.'}
+  uploadedPath=null;
+ }catch(err){
+  $('photoStatus').textContent='Photo upload failed: '+(err.message||'Unknown error')+'. Existing product data was kept.';
+  msg('Product photo was not confirmed.',true);
+  if(uploadedPath){try{await db.storage.from(PHOTO_BUCKET).remove([uploadedPath])}catch(_){}}
+ }finally{busy=false;$('photoUpload').disabled=!editId;$('saveButton').disabled=false}
+});
 $('editor').addEventListener('submit',async e=>{
  e.preventDefault();if(busy||!db)return;$('editorError').textContent='';
  // Report the exact invalid field; on mobile, the price field also accepts commas.
