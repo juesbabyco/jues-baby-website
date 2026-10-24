@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 1.2
+**Version:** 1.3
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -45,7 +45,7 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 | S3a | Responsive live prototype | V8 deployed; user-reported mobile/desktop success. |
 | S3b | Owner management **local demo** | `owner-demo.html` deployed; user verified local price edit reflects on same-browser storefront. |
 | S4 | Durable project governance | GitHub development book verified; dedicated Jue Supabase project and private governance registry installed, SQL privilege checks completed 2026-10-24. |
-| S5 | Cloud product catalogue & authenticated owner | **IN PROGRESS**: S5A catalogue/owner allowlist with RLS and two staging pages committed; negative security tests passed. Auth owner onboarding and cross-device browser validation OPEN. |
+| S5 | Cloud product catalogue & authenticated owner | **IN PROGRESS**: S5A catalogue/owner allowlist with RLS and two staging pages committed; negative security tests passed. Owner account allowlisted; actual owner browser login and cross-device acceptance OPEN. |
 | S6 | Production ordering, stock, delivery, payment | NOT IMPLEMENTED. Requires independent testing and approvals. |
 | S7 | Security, operational readiness, launch | NOT IMPLEMENTED. |
 
@@ -64,7 +64,7 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 ## 6. Current milestone acceptance (S5; OPEN)
 1. Dedicated backend project exists ONLY in Juesbabyco Supabase organization; ensure every future operation targets that ID, never MindCare.
 2. **Implemented:** product schema, separate owner allowlist and RLS with migration source recorded. Negative-role permissions and draft/public visibility tested via rolled-back SQL transactions; owner-positive runtime test remains open.
-3. **Partially tested:** Auth owner access cannot be self-claimed, anonymous/unauthorized writes are denied by RLS or database grants. Actual owner auth login has **not** occurred (0 users and 0 owners as of 2026-10-24).
+3. **Partially tested:** Auth owner access cannot be self-claimed, anonymous/unauthorized writes are denied by RLS or database grants. Actual owner auth login has **not** been user-tested (1 email-confirmed Auth user and 1 approved owner as of 2026-10-24).
 4. **Staging only:** `cloud-preview.html` reads published entries; SQL role simulation verifies drafts hidden. Existing customer site `index.html` remains browser-local demo until signed-off cloud integration.
 5. Owner edits from one browser show on a *second* independent browser/device after refresh; cloud audit demonstrates source record changed.
 6. Stock updates not accepted if inconsistent; no false reservations during checkout demos.
@@ -77,9 +77,9 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Migrations `20261024121448` and `20261024122310` applied for `jues_store_owners` and `jues_products` plus optimized SELECT policies.
 - Tests: anon product INSERT denied; unapproved authenticated INSERT denied by RLS; transient published row visible to anon, draft hidden; test rows rolled back and DB remains empty.
 - Staging GitHub Pages owner workspace and read-only cloud preview committed. JavaScript syntax verified, live browser owner acceptance pending.
-- No auth identities or authorized owner entries yet, no actual catalogue product migrated, no checkout/payments, no upload storage bucket.
-- Developer governance registry updated to stage `S5A_CLOUD_CATALOGUE` with 11 cumulative evidence events.
-- Next step: `docs/STAGE5_OWNER_SETUP.md` — invite/verify intended owner and complete positive/negative browser tests.
+- One email-confirmed Auth identity was provisioned in the sole owner allowlist on 2026-10-24; no actual catalogue product migrated, no checkout/payments, no upload storage bucket.
+- Developer governance registry updated to `S5B_OWNER_ONBOARDING` with 12 cumulative evidence events. Owner login and cross-device acceptance still OPEN.
+- Next step: `docs/STAGE5_OWNER_SETUP.md` — owner has been invited/verified/allowlisted; complete positive browser sign-in and separate-device catalogue test.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
