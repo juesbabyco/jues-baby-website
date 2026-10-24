@@ -14,6 +14,12 @@ No existing V8 storefront changes; not production checkout. One Jue-specific pri
 - Owner browser scales image to <=1400 px longest edge and JPEG-compresses to <=2 MiB before uploading; it re-encodes rather than forwarding the original file (most photo metadata is removed). Photos must be product-only; never use images of customers or children.
 - `owner-cloud.html` displays an upload picker after tapping **Edit** on an existing draft; uploaded path is attached to the product. `cloud-preview.html` uses authenticated Storage download and a short-lived local object URL after checking published catalogue rows.
 
+## Owner feedback 2026-10-24 — JBC-E038
+- User screenshot shows TEST Cotton Baby Romper **Published** with No photo and the separate form heading Add a product draft. Database image_url and image_path were NULL. Thus no photo was linked, regardless of previous uploader wording.
+- Fixed owner UI in commit `338223c9ac828191da964dde38447b432ac84913` to clearly distinguish selected file vs uploaded file and verify SQL product readback plus private Storage GET before claiming saved.
+- Test safely: Open https://juesbabyco.github.io/jues-baby-website/owner-cloud.html?v=5c2, tap Edit next to product, select a photo, tap **Upload photo to this product**. Look for exact status **PHOTO SAVED AND VERIFIED**. If an error appears, report the text.
+- Current product is published; it can show in public preview once image actually attached. After verifying, tap Unpublish to restore privacy. Do not claim preview photo worked without browser proof.
+
 ## Test 1 — owner photo as unpublished draft (PENDING)
 1. Sign into https://juesbabyco.github.io/jues-baby-website/owner-cloud.html on the authorized iPhone. Refresh to fetch Stage 5C changes.
 2. Confirm `TEST Cotton Baby Romper` still says **Draft**, stock 2, price US$16.00.
