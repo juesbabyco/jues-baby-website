@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
 **Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
-**Current focus:** Stage 5C staging photo lifecycle and targeted real anonymous HTTP GET denial USER-TESTED/LOG-VERIFIED. Stage 5D isolated cloud storefront candidate BUILT / JS syntax PASS; iPhone/Dell browser acceptance OPEN. Existing V8 live demo untouched; 1 TEST photo draft private, 0 public; real checkout/payments disabled.
+**Current focus:** Stage 5C scoped acceptance PASSED. Stage 5D new cloud storefront **IPHONE DYNAMIC PUBLISH/PHOTO/DETAILS/UNPUBLISH ACCEPTED**, Supabase API logs and private final DB state verified; Dell independent-device test, search/age filter & resilience remain OPEN. Original V8 untouched; 1 private photographed TEST draft, 0 published, no commerce.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -198,6 +198,14 @@
 - Backend SQL: exactly 1 saved `TEST Cotton Baby Romper.` US$15/stock4, `published=false`, linked to 1 private JPEG; anonymous Storage SELECT for download returns 0 objects.
 - **Stage 5C STAGING acceptance complete for targeted owner photo upload, public viewing when published, unpublish/draft retention, duplicate draft Delete and direct anonymous GET blocked while unpublished.** No guarantee about all security threats, cross-provider authorization, quotas or production readiness. Staging test content is not real commercial inventory.
 - **NEXT:** Stage 5D new candidate `storefront-cloud-staging.html` needs browser test: first empty as draft, then owner briefly publishes TEST listing, Dell/phone preview shows photo/details, then owner unpublishes and preview clears. Real checkout, payment/order systems and migrating to `index.html` remain out of scope.
+
+## Stage 5D first complete iPhone storefront cycle (JBC-E049; 2026-10-24)
+- User shared four iPhone screenshots (22:54–22:55): cloud storefront initially **0 published products**, published US$15 stock4 TEST romper with JPEG, functioning **View sizes & details** modal (Newborn size, category, price and no checkout), then empty catalogue after owner unpublish.
+- Independent Jue Supabase product readback: the sole item is `published=false`, stock 4 at US$15, with same protected `image_path` and updated 2026-10-24 20:55:33 UTC. SQL as `anon` sees zero products and zero readable JPEGs.
+- API logs around 20:54–20:55 UTC recorded `PATCH 200` for publish and unpublish, published-catalogue `GET 200`, and Storage photo `GET 200`. Browser screenshots plus logs corroborate **iPhone functional lifecycle PASS**.
+- **Stage 5D NOT CLOSED:** no independently verified Dell InPrivate viewing of the new storefront while it is published; no meaningful multi-item price sorting test; search/age filtering positive/negative cases and failure/offline recovery still open.
+- Customer `index.html` V8 demo remains unchanged; no live checkout, payment, ordering, customer PII or stock reservation added.
+- Next action: Dell InPrivate standalone storefront empty-state check; brief owner-controlled publish on iPhone, Dell live photo/detail & search filters; then unpublish. Keep TEST as a private draft.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
