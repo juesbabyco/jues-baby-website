@@ -1,6 +1,6 @@
 # Stage 5C — Private Product Photo Upload and Public Preview Acceptance
 
-**As of 2026-10-24: BUILT / SYNTAX-VERIFIED / DATABASE POLICY INSPECTED; MOBILE AND PUBLIC-DOWNLOAD TESTS OPEN.**
+**As of 2026-10-24: OWNER PHOTO UPLOAD USER-TESTED; PUBLIC BROWSER PHOTO DOWNLOAD AND MOBILE DELETE RETEST OPEN.**
 No existing V8 storefront changes; not production checkout. One Jue-specific private photo bucket and a new nullable `image_path` column.
 
 ## Current trusted setup
@@ -30,6 +30,15 @@ No existing V8 storefront changes; not production checkout. One Jue-specific pri
   4. Do not publish until image_path and private Storage object are verified server side.
   5. Publish briefly to view photo in Dell InPrivate cloud preview; unpublish after test; verify public image denied.
 - This is new client code, not mobile runtime proof. Server Storage policies remain to be verified through real signed requests.
+
+## First real upload / public photo & Delete incident (JBC-E041/E042, 2026-10-24)
+- Photo now uploaded to **US$15, stock4 TEST Cotton Baby Romper.** Owner iPhone thumbnail shown, JPEG Storage POST succeeded, `image_path` set, private GET200 logged. The US$16 original still has No photo.
+- Public preview photo Storage GET 400 while published. Earlier combined policy attempted to read private `jues_store_owners` for `anon`. New role-specific policy migration `20261024195535_jues_stage5c_separate_photo_read_policies` applied and mirrored to GitHub.
+- SQL role tests under rollback: anon object download sees only published photo; anon and nonowner cannot read unpublished photo; anon object listing returns 0.
+- User says Delete doesn't work. Replaced JavaScript prompt with an inline confirmation section that requires typing `DELETE`. Now commit `7317d57bab269abe98518cfee960c84216d31f4a`; JS syntax verified. Owner-only draft DELETE RLS simulation passed (ROLLBACK).
+- Open `cloud-preview.html?v=5c6` now (US$15 test item was last seen published) and verify that the uploaded photo renders. If success, unpublish this test product and refresh preview until no published items.
+- In `owner-cloud.html?v=5c6` tap Delete for the draft to delete, type `DELETE` in the visible inline input, then tap Confirm delete. The delete effect has not yet been user-tested; avoid destroying the only photo until its preview test is verified.
+- Do not call S5C closed until actual browser public GET and Delete acceptance.
 
 ## Test 1 — owner photo as unpublished draft (PENDING)
 1. Sign into https://juesbabyco.github.io/jues-baby-website/owner-cloud.html on the authorized iPhone. Refresh to fetch Stage 5C changes.
