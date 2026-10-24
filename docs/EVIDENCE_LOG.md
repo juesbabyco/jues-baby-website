@@ -49,5 +49,7 @@ This log records observations, not inferred functionality. Append new rows. Date
 
 | JBC-E032 | User confirmed final Unpublish and Dell refresh “Done”; Juesbabyco Supabase SQL record read-back and anonymous-role visibility check (2026-10-24) | TEST Cotton Baby Romper now `published=false` with US$16.00 and stock 2 retained. Anonymous role sees 0 public products and cannot UPDATE. Together with prior owner reports, **iPhone-to-Dell publish/view/unpublish roundtrip USER-TESTED; final SQL state VERIFIED**. | Browser actions are user-reported and not instrumented; a real unrelated signed-in non-owner session negative test is still required for S5B closure. |
 
+| JBC-E033 | User confirmed separate test account created; Jue Supabase Auth and membership query; SELECT-only actual-UUID authenticated role simulation, 2026-10-24 | 2 email-confirmed Auth identities, only 1 on owner allowlist. Actual new test-account UUID under authenticated database role can read **0 private drafts and 0 owner rows**, cannot insert/update owner allowlist. Existing TEST product remains private. | Database read/allowlist security checks PASS. Actual browser login as the non-owner and unauthorized product INSERT/UPDATE have **not** been performed, so Stage 5B is OPEN. |
+
 ## Evidence handling
 Write only non-sensitive observations here. Before announcing a stage complete, attach a reproducible test method plus commit/Supabase reference where applicable. Never replace lack of evidence with optimistic inferences.
