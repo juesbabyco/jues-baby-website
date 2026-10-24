@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 2.8
+**Version:** 2.9
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -170,6 +170,13 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - After adding Delete, the user screenshot showed severe word-by-word wrapping of item names in iPhone owner dashboard; existing flex row allowed action buttons to consume the text width.
 - Owner cloud CSS changed to thumbnail plus details grid and a second full-width row for Edit/Publish/Delete. Small-screen widths tuned. Commit `f0df770aa94f58bcf831f0482cd7024adc85f230` inspected; JS syntax PASS.
 - Stage 5C photo upload and deletion runtime remain unverified. Do not mistake appearance of Delete button for tested deletion. Existing 2 draft records must not be removed without deliberate typed confirmation by owner.
+
+### Stage 5C — Owner photo upload successful; public photo RLS + Delete UX repaired (JBC-E041/E042; 2026-10-24)
+- User iPhone owner dashboard shows photo for **US$15 stock4 TEST Cotton Baby Romper.**; direct Supabase read found attached `image_path` and one `image/jpeg` object in `jues-product-photos`. Edge requests independently show Storage upload POST 200 and owner private download GET 200. Original US$16 stock2 remains draft without photo.
+- After user published photo-bearing US$15 item, Cloud Preview public Storage download GET 400. SQL evaluation as `anon` reproduced `permission denied for table jues_store_owners` due to earlier combined policy. Deployed migration `20261024195535_jues_stage5c_separate_photo_read_policies` which splits authenticated owner photo reads and public published-photo reads without granting anon owner-list rights.
+- Simulated RLS: published photo visible to anonymous `object.get_authenticated` operation, unpublished photo hidden from anon and unapproved Auth account, anon object listing denied. These tests used rollback-only product state changes; they do not substitute for a real anonymous browser GET after migration.
+- Owner reported Delete button not working. Replaced native `prompt()` with inline named-product confirmation requiring typed `DELETE` on GitHub commit `7317d57bab269abe98518cfee960c84216d31f4a`. SQL transaction showed owner-role DELETE could target a private draft, unapproved user could not; all rolled back. Real iPhone Delete action still needs evidence.
+- **Stage 5C OPEN**. Next user test: refresh cloud preview while US$15 product published, check image; unpublish it; then optionally delete that draft using inline confirm. No auto-delete. Original V8 storefront and MindCare untouched.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
