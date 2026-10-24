@@ -32,7 +32,7 @@
 <p class="muted" style="font-size:12px">Only an approved owner can upload. Photos stay private while a product is a draft; a published product's photo becomes downloadable in the cloud preview. The browser converts your image into a smaller JPEG and removes most image metadata.</p>
 <label>Choose a photo from your phone<input id="photoFile" class="field" type="file" accept="image/*"></label>
 <button id="photoUpload" class="btn alt" type="button" disabled>Upload photo to this product</button>
-<p id="photoStatus" class="muted" role="status" aria-live="polite">Save a draft, then tap Edit to enable a secure upload.</p>
+<p id="photoStatus" class="muted" role="status" aria-live="polite">First tap Edit beside an existing product. Selecting a photo alone does not upload it.</p>
 </div>
 <label style="display:flex;align-items:center;gap:9px;margin:9px 0 17px"><input id="published" type="checkbox"> Publish to cloud preview</label>
 <div class="toolrow"><button class="btn" type="submit" id="saveButton">Save product draft</button><button class="btn alt" type="button" id="clear">Clear</button></div><p class="error" id="editorError" role="alert"></p></form></section></div></div>
@@ -107,7 +107,7 @@ function openEditor(p){
  $('age').value=p.age_group;$('category').value=p.category;$('description').value=p.description||'';$('photoUrl').value=p.image_url||'';
  $('published').checked=p.published;
  $('photoUpload').disabled=false;$('photoFile').value='';
- $('photoStatus').textContent=p.image_path?'Private photo attached. Select a replacement only if needed.':'Choose a product photo and tap Upload photo to this product.';
+ $('photoStatus').textContent=p.image_path?'A cloud photo path is linked to this product. Select and upload a replacement only if needed.':'No photo is attached yet. Step 1: Choose a photo. Step 2: Tap Upload photo to this product. Wait for the saved confirmation.';
  $('sizes').querySelectorAll('input').forEach(x=>x.checked=p.sizes.includes(x.value));
  $('editorTitle').textContent='Editing: '+p.name;
  $('editNotice').textContent='Editing '+p.name+'. Make your changes below, then tap Save changes. Current visibility: '+(p.published?'Published':'Draft')+'.';
@@ -143,8 +143,14 @@ $('items').addEventListener('click',e=>{
  if(button.dataset.action==='publish')togglePublication(p);
 });
 $('search').addEventListener('input',render);$('reload').addEventListener('click',()=>db&&loadProducts());
-function resetForm(){editId=null;$('photoUpload').disabled=true;$('photoFile').value='';$('photoStatus').textContent='Save a draft, then tap Edit to enable a secure upload.';$('editNotice').classList.add('hidden');$('editorPanel').classList.remove('editing-panel');$('editor').reset();$('stock').value=0;$('published').checked=false;$('editorTitle').textContent='Add a product draft';$('saveButton').textContent='Save product draft';$('editorError').textContent='';for(const id of ['productName','price','stock','sizes','photoUrl'])$(id).removeAttribute('aria-invalid')}
+function resetForm(){editId=null;$('photoUpload').disabled=true;$('photoFile').value='';$('photoStatus').textContent='First tap Edit beside an existing product. Selecting a photo alone does not upload it.';$('editNotice').classList.add('hidden');$('editorPanel').classList.remove('editing-panel');$('editor').reset();$('stock').value=0;$('published').checked=false;$('editorTitle').textContent='Add a product draft';$('saveButton').textContent='Save product draft';$('editorError').textContent='';for(const id of ['productName','price','stock','sizes','photoUrl'])$(id).removeAttribute('aria-invalid')}
 $('clear').addEventListener('click',resetForm);
+$('photoFile').addEventListener('change',()=>{
+ const file=$('photoFile').files?.[0];
+ $('photoStatus').textContent=file
+  ?'Photo SELECTED ('+file.name+'). NOT uploaded yet. Now tap the separate “Upload photo to this product” button below.'
+  :(editId?'No photo selected. Choose a file to upload.':'First tap Edit beside an existing product.');
+});
 async function makeJpeg(file){
  if(!file||!file.type.startsWith('image/')||/svg|gif/i.test(file.type))throw Error('Choose a normal photo (JPEG, PNG, HEIC, or WebP), not SVG or GIF.');
  if(file.size>15*1024*1024)throw Error('Photo is over 15 MB. Please choose a smaller image.');
@@ -182,16 +188,27 @@ $('photoUpload').addEventListener('click',async()=>{
   const {data,error}=await db.from('jues_products').update({image_path:path,image_url:null,updated_at:new Date().toISOString()}).eq('id',productId).select('id,image_path').single();
   if(error)throw error;
   if(data?.image_path!==path)throw Error('Could not confirm image was attached to product.');
+  // Read back from the cloud independently before showing any success message.
+  const check=await db.from('jues_products').select('image_path').eq('id',productId).single();
+  if(check.error||check.data?.image_path!==path)throw Error('Cloud did not retain the product photo link. Refresh and retry.');
+  const photoProof=await db.storage.from(PHOTO_BUCKET).download(path);
+  if(photoProof.error||!photoProof.data)throw Error('Product photo link was saved, but owner photo download failed: '+(photoProof.error?.message||'unknown issue'));
+  uploadedPath=null;
   $('photoFile').value='';
   await loadProducts();
-  $('photoStatus').textContent='Private photo saved for this product. Publish only when ready for customers to see it in the cloud preview.';
-  msg('Product photo uploaded and linked in Jue’s private cloud.');
-  if(previous&&previous!==path){const rm=await db.storage.from(PHOTO_BUCKET).remove([previous]);if(rm.error)$('photoStatus').textContent+=' The older photo may require cleanup later.'}
-  uploadedPath=null;
+  $('photoStatus').textContent='PHOTO SAVED AND VERIFIED in cloud storage. This product is linked to the photo. It will appear in public preview only while Published.';
+  msg('Photo verified: saved to product and downloaded again successfully. Refresh the catalogue if the thumbnail has not appeared.');
+  if(previous&&previous!==path){const rm=await db.storage.from(PHOTO_BUCKET).remove([previous]);if(rm.error)$('photoStatus').textContent+=' Older photo cleanup is still pending.'}
  }catch(err){
   $('photoStatus').textContent='Photo upload failed: '+(err.message||'Unknown error')+'. Existing product data was kept.';
   msg('Product photo was not confirmed.',true);
-  if(uploadedPath){try{await db.storage.from(PHOTO_BUCKET).remove([uploadedPath])}catch(_){}}
+  if(uploadedPath){
+   // Never delete an object still referenced by the product, even after a post-save error.
+   try{
+    const linked=await db.from('jues_products').select('image_path').eq('id',productId).single();
+    if(!linked.error&&linked.data?.image_path!==uploadedPath)await db.storage.from(PHOTO_BUCKET).remove([uploadedPath]);
+   }catch(_){}
+  }
  }finally{busy=false;$('photoUpload').disabled=!editId;$('saveButton').disabled=false}
 });
 $('editor').addEventListener('submit',async e=>{
