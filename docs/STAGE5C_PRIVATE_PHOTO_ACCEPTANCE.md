@@ -1,6 +1,6 @@
 # Stage 5C — Private Product Photo Upload and Public Preview Acceptance
 
-**As of 2026-10-24: OWNER UPLOAD AND PUBLIC PHOTO VIEW USER-TESTED; INLINE DELETE CONFIRMATION PANEL USER-TESTED; ACTUAL DELETION/UNPUBLISH PRIVACY RETEST OPEN.**
+**As of 2026-10-24: OWNER UPLOAD, PUBLIC PHOTO VIEW, ACTUAL DELETE AND FINAL UNPUBLISH/EMPTY PUBLIC PREVIEW USER-TESTED; LIVE DIRECT HTTP ANON PHOTO-DENIAL NEGATIVE TEST STILL OPEN.**
 No existing V8 storefront changes; not production checkout. One Jue-specific private photo bucket and a new nullable `image_path` column.
 
 ## Current trusted setup
@@ -45,6 +45,13 @@ No existing V8 storefront changes; not production checkout. One Jue-specific pri
 - Owner screenshot of inline Delete confirmation for US$16 stock2 private/no-photo draft. 'DELETE' displayed as placeholder so button stays disabled until user actually types it. New commit `eb4c521fe8264d2aefb8a58d072bdc3c343ed36a` replaces placeholder with 'Tap here and type the word', adds live instructions. JS syntax PASS, phone retest required.
 - If deletion intended: open refreshed `owner-cloud.html?v=5c7`; target US$16 stock2, tap Delete, tap field, manually type uppercase DELETE and confirm. Leave US$15 photo product alone.
 - Final privacy gate: unpublish US$15 photo product, refresh anonymous preview, verify zero published rows and no anonymous access to image; run HTTP negative requests where possible. No real checkout.
+
+## Final Stage 5C Unpublish checkpoint (JBC-E045; 2026-10-24)
+- Owner screenshot shows the US$15 stock4 TEST baby romper in **Draft** state with retained image thumbnail, while separate public cloud-preview shows **No products published yet**.
+- Direct database: one TEST draft, price=1500 cents, stock=4, `published=false`; same single private Storage JPEG retained. SQL as anon sees zero products and zero downloadable Storage objects; anon bucket LIST returns zero. Approved owner SQL role sees 1 JPEG; unapproved account 0.
+- User-tested positive lifecycle steps pass: owner upload, public photo display when published, separate draft deletion, unpublish and private photo retention. This is Stage 5C **functional acceptance**, not production data-security certification.
+- Final targeted negative security action still required: using a real anonymous/no-owner HTTP Storage request against the *known previously public photo path*, verify GET is denied **after unpublishing**. No explicit service key or owner password should be exposed. Simulated database operations are not identical to direct HTTP.
+- Keep TEST product unpublished and private. Do not integrate cloud preview into the public demo storefront without its own stage, proof and owner consent.
 
 ## Test 1 — owner photo as unpublished draft (PENDING)
 1. Sign into https://juesbabyco.github.io/jues-baby-website/owner-cloud.html on the authorized iPhone. Refresh to fetch Stage 5C changes.
