@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 1.0
+**Version:** 1.1
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -30,7 +30,8 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Latest verified stage ledger: `docs/STATUS.md`.
 - Evidence log: `docs/EVIDENCE_LOG.md`.
 - Decision record: `docs/DECISIONS.md`.
-- Durable Supabase database schema (draft, **not deployed**): `supabase/README.md`, `supabase/migrations/` after database is approved.
+- Dedicated Supabase project: `izeezajdiawiaweffbrh` in Juesbabyco organization `cgqjblrthxmahtqmwzjz`, created 2026-10-24 after approved US$0/month cost quote.
+- Verified private governance registry: `jues_internal.project_registry`, `jues_internal.stage_events` with RLS and no frontend-role grants. See `supabase/README.md` and `supabase/migrations/20261024115601_jues_private_development_registry_v1.sql`.
 - To resume: fetch **all** these files from GitHub before proposing work. Check recent commits and live status. State which facts are verified and what remains untested. Never assume a previous assistant turn performed an action until its evidence is in GitHub/Supabase.
 
 ## 4. Version/stage ledger (summary)
@@ -41,7 +42,7 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 | S2 | Demo shopping bag and checkout | V7 on GitHub Pages; user-reported checkout success and reference. No real order or payment. |
 | S3a | Responsive live prototype | V8 deployed; user-reported mobile/desktop success. |
 | S3b | Owner management **local demo** | `owner-demo.html` deployed; user verified local price edit reflects on same-browser storefront. |
-| S4 | Durable project governance | This master book & evidence ledger committed to GitHub. Supabase registry requires a dedicated project. |
+| S4 | Durable project governance | GitHub development book verified; dedicated Jue Supabase project and private governance registry installed, SQL privilege checks completed 2026-10-24. |
 | S5 | Cloud product catalogue & authenticated owner | NOT IMPLEMENTED; next development milestone after dedicated backend setup. |
 | S6 | Production ordering, stock, delivery, payment | NOT IMPLEMENTED. Requires independent testing and approvals. |
 | S7 | Security, operational readiness, launch | NOT IMPLEMENTED. |
@@ -59,7 +60,7 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Mobile file preview initially didn't execute button JavaScript; resolved by hosting in Safari through Pages. Image assets initially broken in preview; embedded demo photos fixed it.
 
 ## 6. Next milestone acceptance (S5)
-1. Create backend project only in Juesbabyco Supabase organization, not MindCare.
+1. Dedicated backend project exists ONLY in Juesbabyco Supabase organization; ensure every future operation targets that ID, never MindCare.
 2. Schema and migrations reviewed for permissions, explicit public visibility, validation and safe catalog authoring.
 3. Auth: owner access cannot be self-claimed. Unauthenticated/other-user writes denied by RLS.
 4. Public customer site reads only active approved products; inaccessible drafts and any sensitive fields cannot leak.
