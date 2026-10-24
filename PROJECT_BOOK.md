@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 3.4
+**Version:** 3.5
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -201,6 +201,12 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Supabase edge log independently records matching image GET HTTP 400 at 20:46:28.597Z. Dedicated Jue product row stays private (US$15 stock4, photo path linked) and object still exists in bucket; simulated anon DB sees 0 downloaded objects.
 - With previous owner photo upload, public GET 200 when published, owner draft Delete and post-Unpublish preview privacy, **S5C scoped staging acceptance COMPLETE**. Do not call it full security certification or launch.
 - **S5D remains OPEN**: new `storefront-cloud-staging.html` is built but not browser tested. Test privacy empty state, publish on owner iPhone, view photo/details on Dell, then unpublish. The original V8 `index.html` remains unchanged; no orders/payments.
+
+### Stage 5D — iPhone cloud storefront lifecycle passed (JBC-E049; 2026-10-24)
+- Four iPhone screenshots show **empty catalogue → owner published US$15 stock4 TEST romper → cloud customer JPEG card and details dialog → unpublish restores empty catalogue**.
+- Jue database final readback shows the only product private (`published=false`) with JPEG intact. Edge logs record owner PATCH 200, catalogue GET 200 and Storage photo GET 200 during the test; anon database role reads no private catalogue/photo.
+- This is **user-tested iPhone browser acceptance**, not proof of Dell/desktop sync. Stage 5D still OPEN for independent-device published preview, search and age filters (and multi-item sorting later), connectivity/error behavior, and distinct final acceptance before replacing any demo storefront.
+- Original large V8 `index.html` and MindCare remain untouched; no real orders, payment, stock reservation or real product signoff.
 
 ## 7. Testing vocabulary
 
