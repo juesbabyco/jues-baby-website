@@ -37,5 +37,7 @@ This log records observations, not inferred functionality. Append new rows. Date
 
 | JBC-E026 | User-provided cloud preview iPhone screenshot and owner Edit feedback; GitHub commit `6d872cb503caf0aa9ee27e4742d4430a3c3eeeda`; fresh Jue Supabase read-only check (2026-10-24) | Cloud preview shows **No products published yet**; DB confirms 1 draft and 0 public products. Updated owner cloud UI to add direct Publish/Unpublish confirmation and explicit highlighted editing state. JavaScript syntax verification PASS. | Fix is **BUILT / SYNTAX-VERIFIED**, not yet user-tested. No real inventory or order was published, and user must confirm visibility change. |
 
+| JBC-E027 | User provided 2 iPhone screenshots of cloud-preview.html; Jue-only Supabase product read and `SET LOCAL ROLE anon` check (2026-10-24) | Product TEST Cotton Baby Romper visible in preview at US$15.00 / demo stock 2. Persisted `published=true`; anon role saw 1 published product and had no INSERT/UPDATE permissions. **Publish and cloud preview USER-TESTED and database verified.** | Staging only. Screenshots do not establish *independent-device* testing. Price edit, preview refresh and unpublish tests remain OPEN. |
+
 ## Evidence handling
 Write only non-sensitive observations here. Before announcing a stage complete, attach a reproducible test method plus commit/Supabase reference where applicable. Never replace lack of evidence with optimistic inferences.
