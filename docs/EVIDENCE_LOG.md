@@ -16,5 +16,10 @@ This log records observations, not inferred functionality. Append new rows. Date
 | JBC-E011 | Supabase Juesbabyco organization listing | Org `cgqjblrthxmahtqmwzjz`, 0 projects | Separate Supabase connected; do not conflate with MindCare. |
 | JBC-E012 | Supabase get_cost and create_project attempt | Cost quoted $0/month; create attempt blocked by requirement for explicit confirmation ID | No evidence a Supabase project exists or project registry is deployed. |
 
+| JBC-E013 | User approval, Supabase cost confirmation, and project create response | Created dedicated `jues-baby-co` project ID `izeezajdiawiaweffbrh` in Juesbabyco org `cgqjblrthxmahtqmwzjz`, ACTIVE_HEALTHY | US$0/month quoted; only separate Juesbabyco link used; not proof of future pricing or store integration. |
+| JBC-E014 | Supabase migration `20261024115601`; SQL verification and metadata checks | `jues_internal.project_registry` and `jues_internal.stage_events` created, RLS enabled, 1 registry row and 4 bootstrap events; anon/authenticated schema privileges false and forbidden table grants false | Private developer governance only; no cross-device customer catalogue or owner authentication. |
+| JBC-E015 | Supabase SQL transaction and read-back | Registry state `PRIVATE_REGISTRY_INSTALLED_VERIFIED`; evidence log now 6 events | Historical JBC-E012 blocked event is retained, not erased. |
+| JBC-E016 | Supabase security and performance advisors | Two INFO `rls_enabled_no_policy` findings in private `jues_internal` schema; no other findings returned; performance advisors empty | No RLS policies intentionally: no browser roles have usage or table privileges. Reassess if any API access is added. Guidance: https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy |
+
 ## Evidence handling
 Write only non-sensitive observations here. Before announcing a stage complete, attach a reproducible test method plus commit/Supabase reference where applicable. Never replace lack of evidence with optimistic inferences.
