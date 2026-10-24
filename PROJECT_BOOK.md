@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 2.1
+**Version:** 2.2
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -124,6 +124,13 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - **Do not represent complete unpublish roundtrip as verified**. Ask owner to unpublish test listing again and verify DB flag `false` and Dell InPrivate disappearance.
 - Remains OPEN: verified final unpublish after independent-device update; real non-owner Auth account permission tests. No real checkout/payment claims.
 - Project isolated from MindCare, original V8 demo unchanged.
+
+### Stage 5B — Cross-device unpublish roundtrip accepted (JBC-E032, 2026-10-24)
+- User confirmed Done after following iPhone owner Unpublish + Dell InPrivate cloud-preview refresh test. Prior cross-device publication visibility had been user-reported working.
+- Independent Jue Supabase query: TEST Cotton Baby Romper is still stored at US$16.00, stock 2, **published=false**. Anonymous SQL role sees 0 products and lacks UPDATE permission.
+- The documented user-tested cross-device publish/refresh/unpublish functional flow is accepted with final database state verified. Do not overstate as independently instrumented browser test.
+- **S5B NOT CLOSED**: actual unrelated, unapproved signed-in Auth account must be denied owner workspace, private drafts and all write actions. Existing synthetic role tests are useful but not the same as real Auth.
+- Real orders, payment, storage photos, production frontend and launch remain future stages. MindCare remains isolated.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
