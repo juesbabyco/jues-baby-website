@@ -60,6 +60,13 @@
 - Still OPEN: public cloud preview browser check, publishing test, remote-device refreshed view, owner price update, unpublish and external user security checks. Existing `index.html` remains the demo.
 - Next work instructions: `docs/STAGE5_OWNER_SETUP.md`.
 
+## Mobile Edit / Publish usability repair — 2026-10-24
+- User supplied iPhone screenshot of `cloud-preview.html`: correctly displays **No products published yet** because `TEST Cotton Baby Romper` is still unpublished.
+- User reported tapping Edit in the owner flow produced no visible change. Earlier `owner-cloud.html` populated the editor farther down the page and scrolled to the form body without a strong feedback indicator; the exact device interaction failure remains unproven.
+- Git commit `6d872cb503caf0aa9ee27e4742d4430a3c3eeeda`: **Publish/Unpublish** explicit buttons in owner list (with confirmation and Supabase returned-value check); highlighted editor banner and scroll to form heading when **Edit** tapped. Javascript syntax passed; user browser confirmation pending.
+- Post-commit DB recheck: 1 product, 0 public records, test item still draft. No server-side product publication was initiated by assistant.
+- Next test: reload `owner-cloud.html` and tap **Publish** beside `TEST Cotton Baby Romper`, confirm; then refresh `cloud-preview.html` on a different browser/device. This is STAGING only, not an order-taking website. Verify publish before proceeding to price-change/unpublish test.
+
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
 - Unexpected bill/cost -> STOP and ask.
