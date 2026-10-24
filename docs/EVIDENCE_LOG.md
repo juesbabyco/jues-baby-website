@@ -27,5 +27,7 @@ This log records observations, not inferred functionality. Append new rows. Date
 | JBC-E020 | Supabase registry readback | Stage `S5A_CLOUD_CATALOGUE`, status `SCHEMA_RLS_NEGATIVE_TESTS_PASS_OWNER_ONBOARDING_OPEN`, 10 events. | Owner access not provisioned. Cloud price editing from a real account and cross-device proof OPEN. |
 | JBC-E021 | Supabase advisors 2026-10-24 | Security: 2 INFO `rls_enabled_no_policy` on intentionally private governance tables. Performance: 2 INFO unused indexes on empty products table. Authenticated overlapping SELECT warning fixed. | No additional warning reported after final policy migration. Unused index finding is expected before data. |
 
+| JBC-E022 | User confirmed account created; Jue-only Supabase SQL inspection and guarded allowlist insert on 2026-10-24 | Exactly one recently created, email-confirmed Auth account existed; matched and approved as the sole store owner; database read-back confirmed one owner and zero products. | The owner identity and email are not included in this public repo. An attempted simulated owner-insert verification was blocked by tool safety checks and is **not** a pass. Actual sign-in, owner product save and cross-device browser checks remain OPEN. |
+
 ## Evidence handling
 Write only non-sensitive observations here. Before announcing a stage complete, attach a reproducible test method plus commit/Supabase reference where applicable. Never replace lack of evidence with optimistic inferences.
