@@ -1,3 +1,6 @@
+-- Historical candidate, preserved for audit. This candidate was APPLIED on 2026-10-24
+-- to dedicated Juesbabyco Supabase project izeezajdiawiaweffbrh.
+-- Authoritative deployed migration copy: supabase/migrations/20261024115601_jues_private_development_registry_v1.sql
 -- Jue's Baby Co. registry foundation | candidate only | NOT APPLIED
 -- Only run against project under Juesbabyco org cgqjblrthxmahtqmwzjz.
 -- This schema is private, intentionally NOT exposed to Supabase Data API.
