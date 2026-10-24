@@ -27,6 +27,12 @@ ON CONFLICT (user_id) DO NOTHING;
 4. **NEXT TEST:** Sign in at the staging owner workspace with the confirmed, allowlisted account. The application checks Supabase Auth and database owner membership. RLS remains authoritative.
 5. Optionally restrict public self-signups in **Authentication → Providers** for this owner-only staging project after the owner is created. Do not disable email/password login itself.
 
+## Latest mobile editing test — 2026-10-24
+- First cloud draft save and anon privacy SQL role query PASSED. The cloud preview screenshot showed no published product, as expected.
+- Mobile Edit interaction was confusing, so the owner dashboard now has direct **Publish/Unpublish** actions beside each listing, plus a highlighted Edit form. This is a staged UI fix, not a claimed browser success.
+- **Next:** Reload `owner-cloud.html`. In Shared catalogue, tap **Publish** beside `TEST Cotton Baby Romper` and explicitly confirm. Then refresh `cloud-preview.html` on another device/browser.
+- Confirm remote product display **US$15.00** and then separately test edit price, preview refresh and unpublish.
+
 ## Actual user acceptance test (not yet performed)
 - **PASSED 2026-10-24:** Owner created test-only product as an unpublished cloud **draft** (TEST Cotton Baby Romper, US$15, stock 2).
 - Independent private-browser/cloud-preview visit confirms the draft is **not visible**.
