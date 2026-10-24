@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 1.6
+**Version:** 1.7
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -93,6 +93,13 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Code syntax verified; **actual new UI click and cross-device public visibility are still open**.
 - Read-only Supabase check after commit showed 1 test draft and 0 published products. Assistant did **not** publish any product.
 - Stage 5 remains OPEN until user tests visibility, edit, update and unpublish, and outsider access remains denied.
+
+### Stage 5B — Published cloud preview verified (2026-10-24; JBC-E027)
+- The user published the test product using the owner workflow and sent iPhone screenshots showing cloud-preview.html listing TEST Cotton Baby Romper at US$15.00 with demo stock 2.
+- SQL persisted row and anonymous role read independently proved `published=true`, visible public read, forbidden visitor writes.
+- **Publishing and public preview have passed owner functional testing.** Do not claim separate-device synchronization is proven by screenshots alone.
+- Keep stage S5 OPEN pending owner price edit and refreshed read, unpublish, and a verified independent-browser/device comparison.
+- The publicly visible item is clearly labelled TEST. Unpublish when experiment ends; do not treat staging preview as an order-taking site.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
