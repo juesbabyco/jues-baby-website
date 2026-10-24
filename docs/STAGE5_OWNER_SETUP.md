@@ -1,6 +1,6 @@
 # Stage 5A — Owner access setup & cross-device acceptance
 
-**Status as of 2026-10-24:** Dedicated cloud product table, owner allowlist and browser staging pages are built. Database negative authorization tests passed. **Exactly one confirmed owner has been provisioned. Owner login USER-TESTED on iPhone on 2026-10-24; cloud draft creation PASSED (read-back verified); publication and cross-device browser testing remain OPEN.**
+**Status as of 2026-10-24:** Dedicated cloud product table, owner allowlist and browser staging pages are built. Database negative authorization tests passed. **Exactly one confirmed owner has been provisioned. Owner login USER-TESTED on iPhone on 2026-10-24; cloud draft creation PASSED (read-back verified); publishing and cloud preview USER-TESTED on iPhone. Price edit, unpublish, and independent second-device browser tests remain OPEN.**
 
 ## Links
 - Dedicated project: https://supabase.com/dashboard/project/izeezajdiawiaweffbrh
@@ -32,6 +32,13 @@ ON CONFLICT (user_id) DO NOTHING;
 - Mobile Edit interaction was confusing, so the owner dashboard now has direct **Publish/Unpublish** actions beside each listing, plus a highlighted Edit form. This is a staged UI fix, not a claimed browser success.
 - **Next:** Reload `owner-cloud.html`. In Shared catalogue, tap **Publish** beside `TEST Cotton Baby Romper` and explicitly confirm. Then refresh `cloud-preview.html` on another device/browser.
 - Confirm remote product display **US$15.00** and then separately test edit price, preview refresh and unpublish.
+
+## Publish checkpoint 2026-10-24
+- Owner screenshots show TEST Cotton Baby Romper listed on cloud-preview.html at US$15.00 and stock 2.
+- Jue Supabase direct read confirmed `published=true`; anon role can read the published item but cannot insert/update.
+- **Next test:** In owner-cloud.html tap **Edit**, change price to **16.00**, tap **Save changes**. Refresh cloud-preview.html and verify **US$16.00**.
+- Then in owner-cloud.html tap **Unpublish**, confirm and verify cloud preview has **no published products** after refresh.
+- Repeat the cloud preview visibility check from another independent browser/device; evidence so far is iPhone screenshots only, not proven cross-device.
 
 ## Actual user acceptance test (not yet performed)
 - **PASSED 2026-10-24:** Owner created test-only product as an unpublished cloud **draft** (TEST Cotton Baby Romper, US$15, stock 2).
