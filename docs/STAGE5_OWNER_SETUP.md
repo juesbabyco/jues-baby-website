@@ -1,6 +1,6 @@
 # Stage 5A — Owner access setup & cross-device acceptance
 
-**Status as of 2026-10-24:** Dedicated cloud product table, owner allowlist and browser staging pages are built. Database negative authorization tests passed. **Exactly one confirmed owner has been provisioned. Owner login, actual product save and cross-device browser testing remain OPEN.**
+**Status as of 2026-10-24:** Dedicated cloud product table, owner allowlist and browser staging pages are built. Database negative authorization tests passed. **Exactly one confirmed owner has been provisioned. Owner login USER-TESTED on iPhone on 2026-10-24; actual product save and cross-device browser testing remain OPEN.**
 
 ## Links
 - Dedicated project: https://supabase.com/dashboard/project/izeezajdiawiaweffbrh
@@ -48,7 +48,7 @@ ON CONFLICT (user_id) DO NOTHING;
 - `jues_internal` governance registry is a separate PRIVATE schema and remains unreachable by the public browser roles.
 
 ## Known gaps
-- Auth positive test with approved owner: **NOT PERFORMED** (1 email-confirmed user, 1 approved owner as of 2026-10-24).
+- Auth positive test with approved owner: **USER-TESTED 2026-10-24** (iPhone screenshot of signed-in cloud workspace; Jue Auth verifies a recorded login).
 - Browser end-to-end test: **NOT PERFORMED**; JavaScript syntax and database policy checks passed.
 - Supabase Storage photo uploads: **NOT IMPLEMENTED**; staging editor accepts only HTTPS image URLs.
 - Real frontend `index.html` is **NOT connected** to the cloud catalogue.
