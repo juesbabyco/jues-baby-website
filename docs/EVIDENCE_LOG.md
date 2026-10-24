@@ -35,5 +35,7 @@ This log records observations, not inferred functionality. Append new rows. Date
 
 | JBC-E025 | User completed owner cloud draft form on iPhone; Jue-only direct Supabase SQL row read-back and transactional anonymous-role query (2026-10-24) | **First cloud product save verified**: `TEST Cotton Baby Romper`, US$15.00, stock 2, Newborn age/size, `published=false`. `SET LOCAL ROLE anon` saw 0 products, with INSERT/UPDATE denied by grants. | Positive owner write is grounded by persisted data after user operation; draft privacy passed at database layer, but public preview browser and cross-device publishing are NOT yet user-tested. |
 
+| JBC-E026 | User-provided cloud preview iPhone screenshot and owner Edit feedback; GitHub commit `6d872cb503caf0aa9ee27e4742d4430a3c3eeeda`; fresh Jue Supabase read-only check (2026-10-24) | Cloud preview shows **No products published yet**; DB confirms 1 draft and 0 public products. Updated owner cloud UI to add direct Publish/Unpublish confirmation and explicit highlighted editing state. JavaScript syntax verification PASS. | Fix is **BUILT / SYNTAX-VERIFIED**, not yet user-tested. No real inventory or order was published, and user must confirm visibility change. |
+
 ## Evidence handling
 Write only non-sensitive observations here. Before announcing a stage complete, attach a reproducible test method plus commit/Supabase reference where applicable. Never replace lack of evidence with optimistic inferences.
