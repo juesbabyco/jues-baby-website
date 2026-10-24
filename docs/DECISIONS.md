@@ -13,6 +13,12 @@
 | JBC-D008 | 2026-10-24 | Internal project records use dedicated private schema `jues_internal` | Neither anonymous nor signed-in frontend roles get access to the governance registry. |
 | JBC-D009 | 2026-10-24 | Historical blocked events remain recorded when unblocked | Audit trail preserves actual sequence rather than retroactively rewriting failed attempts. |
 
+| JBC-D010 | 2026-10-24 | Maintain `index.html` and local demo unchanged during Stage 5 | Prevent disruption of the user-approved working storefront before cloud acceptance. |
+| JBC-D011 | 2026-10-24 | Introduce `owner-cloud.html` and `cloud-preview.html` for staging | Distinguish centrally stored cloud products from browser-local demo data. |
+| JBC-D012 | 2026-10-24 | Owner login must match explicitly privileged `jues_store_owners` Auth UUID | No self-claim by normal signup, and all product writes controlled by database RLS. |
+| JBC-D013 | 2026-10-24 | Cloud catalogue defaults to zero records and draft-only publishing | No AI-generated placeholder photo or demo item is implicitly live stock; owner must approve public publishing. |
+| JBC-D014 | 2026-10-24 | Public client uses publishable key and pinned Supabase JS 2.118.0 | No service-role/secret key reaches public GitHub Pages. Actual browser functional validation still required. |
+
 ## Pending decisions
 - Who may be store owner/admin? Invite/provision explicitly after backend exists; do not use an open signup-as-admin flow.
 - Public product publishing workflow and inventory validation.
