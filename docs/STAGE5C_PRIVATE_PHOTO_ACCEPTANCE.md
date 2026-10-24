@@ -1,6 +1,6 @@
 # Stage 5C — Private Product Photo Upload and Public Preview Acceptance
 
-**As of 2026-10-24: OWNER UPLOAD, PUBLIC PHOTO VIEW, ACTUAL DELETE AND FINAL UNPUBLISH/EMPTY PUBLIC PREVIEW USER-TESTED; LIVE DIRECT HTTP ANON PHOTO-DENIAL NEGATIVE TEST STILL OPEN.**
+**As of 2026-10-24: STAGE 5C SCOPED STAGING ACCEPTANCE COMPLETE. Owner upload/public photo/unpublish, draft deletion, and direct anonymous unpublished-photo HTTP GET denial USER-TESTED; NOT production security or checkout acceptance.**
 No existing V8 storefront changes; not production checkout. One Jue-specific private photo bucket and a new nullable `image_path` column.
 
 ## Current trusted setup
@@ -57,6 +57,13 @@ No existing V8 storefront changes; not production checkout. One Jue-specific pri
 - On `owner-cloud.html?v=5d1`, unpublished products with an attached image display **Test anonymous access to this private photo**.
 - This probes the **same actual saved photo path**. First confirms approved owner download, then sends HTTP GET using public publishable key only (no owner access token, cookies omitted). HTTP 200 => **FAIL**. HTTP 400/401/403/404 => **GET blocked**; inspect response and Jue Storage logs before final security acceptance. HTTP 5xx / fetch failure => INCONCLUSIVE.
 - Not yet executed on a real browser; do not mark Stage 5C fully closed. Next user testing instructions in `docs/STAGE5D_CLOUD_STOREFRONT_ACCEPTANCE.md`.
+
+## Unpublished-photo HTTP request accepted (JBC-E048; 2026-10-24)
+- Owner iPhone ran **Test anonymous access to this private photo** while saved product was draft. Owner download succeeded.
+- Anonymous direct HTTP Storage object GET with only publishable key and no cookies returned HTTP 400. Response body contained `statusCode:404`, `error:not_found`, `message:Object not found`, `code:NoSuchKey`.
+- Jue Supabase edge logs independently show the matching GET 400 at 20:46:28.597 UTC. One private JPEG remains stored and linked, so blocked request did not remove image; SQL anon SELECT for photo GET returned zero.
+- This **passes Stage 5C's targeted HTTP privacy gate**, not a full penetration test. Owner-upload, published-photo viewing, draft retention, guarded deletion also previously user-tested.
+- Proceed with Stage 5D cloud storefront staging functional acceptance only, not real orders/payments or production launch.
 
 ## Test 1 — owner photo as unpublished draft (PENDING)
 1. Sign into https://juesbabyco.github.io/jues-baby-website/owner-cloud.html on the authorized iPhone. Refresh to fetch Stage 5C changes.
