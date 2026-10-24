@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
 **Overall:** V8 DEMO INTACT. S5B OWNER LOGIN, CREATE DRAFT, PUBLISH, PUBLIC PREVIEW, EDIT PRICE AND UNPUBLISH USER-TESTED; SUPABASE STATE VERIFIED. INDEPENDENT CROSS-DEVICE AND UNRELATED-ACCOUNT TESTS STILL OPEN.
-**Current focus:** S5B — independently establish two-device published-to-unpublished synchronization and real non-owner session permissions. User-reported secondary public preview is empty; synthetic non-owner RLS read check passed. S5 remains OPEN.
+**Current focus:** S5B — user reports iPhone-to-Dell cross-device test working. Supabase shows test product currently PUBLISHED at US$16; final unpublish pending verification. Real non-owner Auth session still untested. S5 remains OPEN.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -96,6 +96,13 @@
 - SQL simulated `authenticated` with an unrelated synthetic Auth UID showed **0 visible private product rows**, **0 visible owner rows**, and no privilege to insert itself into the owner allowlist. This is **role-simulation evidence, not a real non-owner sign-in**.
 - Still OPEN: controlled cross-device published update (not merely both devices seeing empty preview) and a real outsider-login authorization test, plus further photo/storage and production readiness.
 - Stage 5 is not closed.
+
+## iPhone-to-Dell visibility check (2026-10-24; JBC-E031)
+- User responded **Working** after instructed publish-on-iPhone, view-on-Dell-InPrivate, unpublish-on-iPhone and refresh-on-Dell test.
+- Jue-only Supabase readback performed immediately after report shows TEST Cotton Baby Romper **published=true**, price US$16, stock 2, updated 2026-10-24 18:36:37 UTC. Anonymous role currently sees 1 product, and cannot UPDATE.
+- Record **cross-device visibility user-reported PASS**, but **do not claim final unpublish complete**, because current live database state conflicts with expected `published=false`. The user may have stopped after checking visibility.
+- Next: tap Unpublish on iPhone and refresh Dell InPrivate; verify product disappears. Check Supabase flag again before closing that gate.
+- Genuine unrelated Auth identity write/read denial remains OPEN (synthetic-role checks alone are not a live login test). Existing V8 demo unchanged.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
