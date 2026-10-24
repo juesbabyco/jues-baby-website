@@ -7,28 +7,43 @@
 <div class="banner"><b>Preview only — not an ordering website.</b> Published products here are visible to anyone visiting this link, but stock, delivery, real orders and payments are not connected. Unpublished drafts stay private to the approved owner account.</div>
 <div class="row"><h2>Published products</h2><div class="row"><select class="filter" id="age" aria-label="Filter by age"><option value="">All age groups</option><option>Newborn</option><option>0–3m</option><option>3–6m</option><option>6–12m</option><option>12–24m</option><option>Gifts</option></select><button id="refresh" class="filter">Refresh</button></div></div>
 <p id="status" class="muted" role="status" aria-live="polite">Loading cloud products…</p><div id="products" class="grid"></div>
-</section><p class="foot">Stage 5A · Cloud catalogue preview only · No purchase functionality. Initial demo photos and old browser-local sample prices are NOT migrated into this database.</p></main></div>
+</section><p class="foot">Stage 5C · Cloud catalogue preview only · No purchase functionality. Initial demo photos and old browser-local sample prices are NOT migrated into this database.</p></main></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0"></script>
 <script>
 'use strict';
 const $=x=>document.getElementById(x);
 const PROJECT_URL='https://izeezajdiawiaweffbrh.supabase.co', PUBLISHABLE_KEY='sb_publishable_Rn9a97ELLVzde6ziHuDKNQ_GmBUHIOv';
+const PHOTO_BUCKET='jues-product-photos';
 const client=window.supabase?.createClient?window.supabase.createClient(PROJECT_URL,PUBLISHABLE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}}):null;
-let rows=[];const text=(tag,str,cls)=>{const e=document.createElement(tag);e.textContent=String(str??'');if(cls)e.className=cls;return e};
+let rows=[],photoObjectUrls=[],renderToken=0;const text=(tag,str,cls)=>{const e=document.createElement(tag);e.textContent=String(str??'');if(cls)e.className=cls;return e};
 const safeHttps=(v)=>{try{const u=new URL(v);return u.protocol==='https:'?u.href:null}catch(_){return null}};
+async function loadPrivatePhoto(placeholder,path,alt,token){
+ try{
+  const {data,error}=await client.storage.from(PHOTO_BUCKET).download(path);
+  if(error||!data)throw error||new Error('Photo not downloaded');
+  const url=URL.createObjectURL(data);
+  if(token!==renderToken||!placeholder.isConnected){URL.revokeObjectURL(url);return}
+  photoObjectUrls.push(url);
+  const img=document.createElement('img');img.src=url;img.alt=alt;img.className='photo';img.loading='lazy';placeholder.replaceWith(img);
+ }catch(_){if(token===renderToken&&placeholder.isConnected)placeholder.textContent='Photo unavailable';}
+}
 function render(){
+ for(const url of photoObjectUrls)URL.revokeObjectURL(url);
+ photoObjectUrls=[];const token=++renderToken;
  const filtered=rows.filter(x=>!$('age').value||x.age_group===$('age').value);$('products').replaceChildren();
  if(!filtered.length){$('status').textContent=rows.length?'No products match this age group.':'No products published yet. The approved owner can create and publish a catalogue item after account setup.';return}
  $('status').textContent=filtered.length+' published '+(filtered.length===1?'product':'products')+'.';
  for(const p of filtered){
  const card=text('article','','card');const url=safeHttps(p.image_url);
- if(url){const img=document.createElement('img');img.src=url;img.alt='Photo of '+p.name;img.className='photo';img.loading='lazy';card.append(img)}else card.append(text('div','Product image coming soon','photo no-photo'));
+ if(p.image_path){const loading=text('div','Loading photo…','photo no-photo');card.append(loading);loadPrivatePhoto(loading,p.image_path,'Photo of '+p.name,token);}
+ else if(url){const img=document.createElement('img');img.src=url;img.alt='Photo of '+p.name;img.className='photo';img.loading='lazy';card.append(img)}
+ else card.append(text('div','Product image coming soon','photo no-photo'));
  const d=text('div','','details');d.append(text('strong',p.name),text('small',p.age_group+' · '+p.category),text('b','US$'+(p.price_cents/100).toFixed(2)),text('small',p.description||''));d.append(text('span',p.stock_qty>0?'Demo stock: '+p.stock_qty:'Out of demo stock','tag'+(p.stock_qty>0?'':' out')));card.append(d);$('products').append(card)
  }
 }
 async function load(){
  $('status').textContent='Loading cloud products…';if(!client){$('status').textContent='Catalogue client unavailable. Reload the page when connected to the internet.';return}
- const {data,error}=await client.from('jues_products').select('id,name,description,price_cents,age_group,category,stock_qty,image_url').eq('published',true).order('created_at',{ascending:false});
+ const {data,error}=await client.from('jues_products').select('id,name,description,price_cents,age_group,category,stock_qty,image_url,image_path').eq('published',true).order('created_at',{ascending:false});
  if(error){$('status').textContent='Cloud catalogue unavailable: '+error.message;return}
  rows=data||[];render()
 }
