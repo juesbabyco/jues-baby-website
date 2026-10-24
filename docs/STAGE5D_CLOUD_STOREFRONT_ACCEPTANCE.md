@@ -1,6 +1,6 @@
 # Stage 5D — Cloud Storefront Candidate: Acceptance and Safety
 
-**Status (2026-10-24): BUILT / JavaScript SYNTAX VERIFIED / USER BROWSER TEST OPEN.**
+**Status (2026-10-24): iPHONE BROWSER PUBLISH/PHOTO/DETAILS/UNPUBLISH ACCEPTED; DELL/SEARCH/FILTER, MULTI-ITEM & FAILURE TESTS OPEN.**
 Stage 5C targeted anonymous-photo HTTP negative test **PASSED** via real iPhone request and Supabase edge GET 400 log (JBC-E048, 2026-10-24). Stage 5D browser acceptance and Stage 5 overall remain OPEN.
 
 ## Scope and boundaries
@@ -23,6 +23,12 @@ Stage 5C targeted anonymous-photo HTTP negative test **PASSED** via real iPhone 
 3. The page must first verify that owner download works, then perform a **direct GET** to the same known photo object with **only the public publishable key**, no cookies and **no owner session bearer token**.
 4. **FAIL** if HTTP 200 (photo bytes returned to anonymous visitor). **Candidate PASS** if HTTP 400/401/403/404 with owner read verified; capture the actual response text/status and independently inspect the relevant Jue Storage logs before declaring final security acceptance. Network/CORS errors and HTTP 5xx are INCONCLUSIVE.
 5. Do **not** publicize private image paths or owner credentials in public documentation or screenshots. The path is used in the owner browser check only.
+
+## First Stage 5D iPhone browser cycle (JBC-E049 — 2026-10-24)
+- User's four iPhone screenshots confirm zero-product empty state before publishing, published TEST romper visible with its JPEG, working sizes/details dialog with Newborn, stock 4, US$15 and no-checkout messaging, then empty state again after Unpublish.
+- Supabase Jue edge logs independently record catalogue GET 200, Storage GET 200 and PATCH 200 around 20:54–20:55 UTC. Final private draft `published=false` with saved image, and anon read permissions for product/photo return zero.
+- **iPhone mobile functional cycle PASSED**. NOT proof of Dell/InPrivate cross-device handling, search/age filters, multiple-item sort, or network/error resilience.
+- Next Dell verification: open `storefront-cloud-staging.html?v=5d2` in Dell InPrivate to see zero products. Temporarily publish from approved owner's iPhone; Dell refresh should show product photo and details. Search by `romper`, then `zznomatch` (should be empty); choose `Newborn` and a nonmatching age; restore All ages; then Unpublish on iPhone and refresh Dell to zero. Do not create fake extra sale inventory solely to test sorting.
 
 ## Stage 5D live browser acceptance (OPEN)
 
