@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 3.2
+**Version:** 3.3
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -189,7 +189,15 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - As anonymous SQL role, zero products or photo objects were visible. Owner role sees its one saved photo; unrelated Auth role sees zero.
 - Stage 5C browser functionality passed. A real anonymous direct HTTP request against the previously published private photo URL after unpublishing is still not verified. Keep Stage 5 overall open for security and real-store workflows.
 
+### Stage 5C direct anonymous photo GET and Stage 5D isolated storefront (JBC-E046/E047; 2026-10-24)
+- Added private-draft photo security check button to Jue's authenticated `owner-cloud.html`. It verifies actual owner download before making a **no-cookies anonymous HTTP Storage GET** using public key only; any HTTP 200 is a security failure. Code/static syntax verified; **mobile browser HTTP result still PENDING**.
+- Created `storefront-cloud-staging.html`: polished separate mobile-responsive Jue-branded page backed by `jues_products` published-only SELECT and private photo Storage downloads, with search/age/price filters and view-details dialog; **no bag, simulated checkout or real transactions**. API errors never silently switch to V8 demo products. JavaScript parses.
+- Original `index.html` V8 static demo remains unchanged. One unpublished TEST product with photo remains in Supabase. Stage 5D is **built, not browser user-tested**. Detailed verification in `docs/STAGE5D_CLOUD_STOREFRONT_ACCEPTANCE.md`.
+- Next: iPhone owner runs anonymous-photo security check while item remains draft; if blocked, briefly Publish, test cloud storefront on Dell/iPhone, then Unpublish and confirm disappearance. Separate signoff required before any live customer storefront migration.
+- Keep MindCare project and credentials entirely isolated.
+
 ## 7. Testing vocabulary
+
 - **DESIGNED:** documented intention, no code.
 - **BUILT:** code/files committed, not user tested.
 - **SYNTAX-VERIFIED:** parser/static validation, not full runtime behavior.
