@@ -20,14 +20,14 @@
 <div class="toolrow"><input id="search" class="field" placeholder="Search cloud products" aria-label="Search cloud products"><button id="reload" class="btn alt">Refresh</button></div><div id="items" aria-live="polite"></div></section>
 <section class="panel"><h2 id="editorTitle">Add a product draft</h2>
 <form id="editor"><label>Name<input class="field" id="productName" required maxlength="100" placeholder="Cotton baby romper"></label>
-<div class="grid"><label>Price (US$)<input class="field" id="price" type="number" min=".01" max="100000" step=".01" required></label><label>Stock quantity<input class="field" id="stock" type="number" min="0" max="9999" step="1" required value="0"></label></div>
+<div class="grid"><label>Price (US$)<input class="field" id="price" type="text" inputmode="decimal" autocomplete="off" required placeholder="15.00"></label><label>Stock quantity<input class="field" id="stock" type="number" min="0" max="9999" step="1" required value="0"></label></div>
 <div class="grid"><label>Age group<select class="field" id="age"><option>Newborn</option><option>0–3m</option><option>3–6m</option><option>6–12m</option><option>12–24m</option><option>Gifts</option></select></label>
 <label>Category<select class="field" id="category"><option>Everyday</option><option>Outfits</option><option>Sleepwear</option><option>Gifts</option></select></label></div>
 <label>Sizes <span class="muted">(choose at least one)</span></label><div class="choices" id="sizes">
 <label><input type="checkbox" value="Newborn"> Newborn</label><label><input type="checkbox" value="0–3m"> 0–3m</label><label><input type="checkbox" value="3–6m"> 3–6m</label><label><input type="checkbox" value="6–12m"> 6–12m</label><label><input type="checkbox" value="12–24m"> 12–24m</label></div>
 <label>Description<textarea class="field" id="description" rows="3" maxlength="1000" placeholder="Optional"></textarea></label>
 <label>Product photo URL <span class="muted">(optional HTTPS link)</span><input class="field" id="photoUrl" type="url" placeholder="https://…"></label>
-<p class="muted" style="font-size:12px">Direct photo uploads will follow after we add private owner-only storage permissions. Don't use customer photos.</p>
+<p class="muted" style="font-size:12px">For this test leave the photo URL blank. Tick a size checkbox even after choosing an age group. Direct photo uploads will be added later.</p>
 <label style="display:flex;align-items:center;gap:9px;margin:9px 0 17px"><input id="published" type="checkbox"> Publish to cloud preview</label>
 <div class="toolrow"><button class="btn" type="submit" id="saveButton">Save product draft</button><button class="btn alt" type="button" id="clear">Clear</button></div><p class="error" id="editorError" role="alert"></p></form></section></div></div>
 <p class="foot">Stage 5A · Jue's Baby Co. dedicated Supabase project · Authenticated, owner-allowlisted cloud catalogue prototype. Browser-visible publishable key is intentionally public; access control is enforced by database RLS.</p>
@@ -77,13 +77,33 @@ function render(){const q=$('search').value.trim().toLowerCase();const list=rows
 }
 $('items').addEventListener('click',e=>{const id=e.target.closest('button[data-id]')?.dataset.id;if(!id)return;const p=rows.find(r=>r.id===id);if(!p)return;editId=id;$('productName').value=p.name;$('price').value=(p.price_cents/100).toFixed(2);$('stock').value=p.stock_qty;$('age').value=p.age_group;$('category').value=p.category;$('description').value=p.description||'';$('photoUrl').value=p.image_url||'';$('published').checked=p.published;$('sizes').querySelectorAll('input').forEach(x=>x.checked=p.sizes.includes(x.value));$('editorTitle').textContent='Edit cloud product';$('saveButton').textContent='Save changes';$('editorError').textContent='';$('editor').scrollIntoView({behavior:'smooth',block:'start'})});
 $('search').addEventListener('input',render);$('reload').addEventListener('click',()=>db&&loadProducts());
-function resetForm(){editId=null;$('editor').reset();$('stock').value=0;$('published').checked=false;$('editorTitle').textContent='Add a product draft';$('saveButton').textContent='Save product draft';$('editorError').textContent=''}
+function resetForm(){editId=null;$('editor').reset();$('stock').value=0;$('published').checked=false;$('editorTitle').textContent='Add a product draft';$('saveButton').textContent='Save product draft';$('editorError').textContent='';for(const id of ['productName','price','stock','sizes','photoUrl'])$(id).removeAttribute('aria-invalid')}
 $('clear').addEventListener('click',resetForm);
 $('editor').addEventListener('submit',async e=>{
  e.preventDefault();if(busy||!db)return;$('editorError').textContent='';
- const price=Number($('price').value),stock=Number($('stock').value),name=$('productName').value.trim();
+ // Report the exact invalid field; on mobile, the price field also accepts commas.
+ const name=$('productName').value.trim();
+ const priceRaw=$('price').value.trim().replace(',','.');
+ const priceFormat=/^\d+(?:\.\d{1,2})?$/.test(priceRaw);
+ const price=priceFormat?Number(priceRaw):NaN;
+ const stockRaw=$('stock').value.trim(),stock=Number(stockRaw);
  const sizes=[...$('sizes').querySelectorAll('input:checked')].map(x=>x.value);
- const url=$('photoUrl').value.trim();if(!name||name.length<2||!Number.isFinite(price)||price<=0||price>100000||!Number.isSafeInteger(Math.round(price*100))||!Number.isInteger(stock)||stock<0||stock>9999||!sizes.length||(url&&!safeUrl(url))){$('editorError').textContent='Check the name, price, stock, at least one size, and HTTPS photo URL.';return}
+ const url=$('photoUrl').value.trim();
+ const checks=[
+   {bad:name.length<2||name.length>100,field:'productName',message:'Name: enter at least 2 characters (the grey text is only an example).'},
+   {bad:!priceFormat||!Number.isFinite(price)||price<.01||price>100000,field:'price',message:'Price: enter an amount like 15 or 15.00. Do not include US$.'},
+   {bad:!stockRaw||!Number.isInteger(stock)||stock<0||stock>9999,field:'stock',message:'Stock: enter a whole number from 0 to 9999.'},
+   {bad:sizes.length===0,field:'sizes',message:'Sizes: tick at least one size box. Choosing an age group does not tick a size.'},
+   {bad:!!url&&(!safeUrl(url)||url.length>1024),field:'photoUrl',message:'Photo URL: leave it completely blank for this test, or paste a full HTTPS link.'}
+ ];
+ const failed=checks.filter(x=>x.bad);
+ for(const c of checks){const input=$(c.field);if(input)input.setAttribute('aria-invalid',String(c.bad))}
+ if(failed.length){
+   $('editorError').textContent=failed.map(x=>x.message).join(' ');
+   const first=$(failed[0].field);
+   if(first){first.scrollIntoView({behavior:'smooth',block:'center'});if(first.focus)first.focus({preventScroll:true})}
+   return;
+ }
  const payload={name,description:$('description').value.trim(),price_cents:Math.round(price*100),stock_qty:stock,age_group:$('age').value,category:$('category').value,sizes,image_url:url||null,published:$('published').checked,updated_at:new Date().toISOString()};
  if(payload.published&&!confirm('Publish this product in the PUBLIC cloud preview? It will be visible to anyone with the link.'))return;
  busy=true;$('saveButton').disabled=true;msg('Saving cloud product…');
