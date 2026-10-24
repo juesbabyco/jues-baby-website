@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 1.1
+**Version:** 1.2
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -26,7 +26,9 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Repo: https://github.com/juesbabyco/jues-baby-website
 - Current GitHub Pages: https://juesbabyco.github.io/jues-baby-website/
 - Owner demo: https://juesbabyco.github.io/jues-baby-website/owner-demo.html
-- Main implementation: `index.html`, `owner-demo.html`.
+- Main approved demo implementation: `index.html`, `owner-demo.html`.
+- New Stage 5 cloud staging (independent): `owner-cloud.html`, `cloud-preview.html`.
+- Stage 5 Auth provision and acceptance instructions: `docs/STAGE5_OWNER_SETUP.md`.
 - Latest verified stage ledger: `docs/STATUS.md`.
 - Evidence log: `docs/EVIDENCE_LOG.md`.
 - Decision record: `docs/DECISIONS.md`.
@@ -43,7 +45,7 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 | S3a | Responsive live prototype | V8 deployed; user-reported mobile/desktop success. |
 | S3b | Owner management **local demo** | `owner-demo.html` deployed; user verified local price edit reflects on same-browser storefront. |
 | S4 | Durable project governance | GitHub development book verified; dedicated Jue Supabase project and private governance registry installed, SQL privilege checks completed 2026-10-24. |
-| S5 | Cloud product catalogue & authenticated owner | NOT IMPLEMENTED; next development milestone after dedicated backend setup. |
+| S5 | Cloud product catalogue & authenticated owner | **IN PROGRESS**: S5A catalogue/owner allowlist with RLS and two staging pages committed; negative security tests passed. Auth owner onboarding and cross-device browser validation OPEN. |
 | S6 | Production ordering, stock, delivery, payment | NOT IMPLEMENTED. Requires independent testing and approvals. |
 | S7 | Security, operational readiness, launch | NOT IMPLEMENTED. |
 
@@ -59,16 +61,25 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - User-confirmed checkout completion with sample ref `JUE-DEMO-965394`; that is **not** an actual backend transaction.
 - Mobile file preview initially didn't execute button JavaScript; resolved by hosting in Safari through Pages. Image assets initially broken in preview; embedded demo photos fixed it.
 
-## 6. Next milestone acceptance (S5)
+## 6. Current milestone acceptance (S5; OPEN)
 1. Dedicated backend project exists ONLY in Juesbabyco Supabase organization; ensure every future operation targets that ID, never MindCare.
-2. Schema and migrations reviewed for permissions, explicit public visibility, validation and safe catalog authoring.
-3. Auth: owner access cannot be self-claimed. Unauthenticated/other-user writes denied by RLS.
-4. Public customer site reads only active approved products; inaccessible drafts and any sensitive fields cannot leak.
+2. **Implemented:** product schema, separate owner allowlist and RLS with migration source recorded. Negative-role permissions and draft/public visibility tested via rolled-back SQL transactions; owner-positive runtime test remains open.
+3. **Partially tested:** Auth owner access cannot be self-claimed, anonymous/unauthorized writes are denied by RLS or database grants. Actual owner auth login has **not** occurred (0 users and 0 owners as of 2026-10-24).
+4. **Staging only:** `cloud-preview.html` reads published entries; SQL role simulation verifies drafts hidden. Existing customer site `index.html` remains browser-local demo until signed-off cloud integration.
 5. Owner edits from one browser show on a *second* independent browser/device after refresh; cloud audit demonstrates source record changed.
 6. Stock updates not accepted if inconsistent; no false reservations during checkout demos.
 7. Public credentials use only publishable/anon key. Never ship Supabase secret/service_role key.
 8. Graceful loading/error/offline states; catalogue and checkout cannot silently misrepresent unavailable products.
 9. No customer orders/PII collected until separate consent, privacy, retention and orders stage is tested.
+
+### Stage 5A delivered 2026-10-24
+- Project `izeezajdiawiaweffbrh`, organization `cgqjblrthxmahtqmwzjz` — never use MindCare.
+- Migrations `20261024121448` and `20261024122310` applied for `jues_store_owners` and `jues_products` plus optimized SELECT policies.
+- Tests: anon product INSERT denied; unapproved authenticated INSERT denied by RLS; transient published row visible to anon, draft hidden; test rows rolled back and DB remains empty.
+- Staging GitHub Pages owner workspace and read-only cloud preview committed. JavaScript syntax verified, live browser owner acceptance pending.
+- No auth identities or authorized owner entries yet, no actual catalogue product migrated, no checkout/payments, no upload storage bucket.
+- Developer governance registry updated to stage `S5A_CLOUD_CATALOGUE` with 10 cumulative evidence events.
+- Next step: `docs/STAGE5_OWNER_SETUP.md` — invite/verify intended owner and complete positive/negative browser tests.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
