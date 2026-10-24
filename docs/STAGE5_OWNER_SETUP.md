@@ -69,6 +69,12 @@ ON CONFLICT (user_id) DO NOTHING;
 - Real inventory reservations, orders, fulfilment, payments and privacy/retention workflows: **NOT IMPLEMENTED**.
 - Existing public `owner-demo.html` is browser-local and unauthenticated; DO NOT treat as real owner portal.
 
+## Price change checkpoint 2026-10-24
+- **PASSED:** mobile owner cloud editor changed TEST Cotton Baby Romper from US$15.00 to US$16.00. Public cloud preview screenshot and anonymous-role Supabase read-back agree.
+- **NEXT:** In `owner-cloud.html`, tap **Unpublish** for TEST Cotton Baby Romper, confirm. Refresh `cloud-preview.html`: it should show **No products published yet**.
+- Then verify from a genuinely independent browser/device and test a second, non-owner account is denied access to drafts and product mutations.
+- Stage 5 remains OPEN until verified. This preview is not real checkout.
+
 ## Migration records
 - `supabase/migrations/20261024121448_jues_stage5_owner_and_product_catalogue.sql`
 - `supabase/migrations/20261024122310_jues_stage5_streamline_read_policies.sql`
