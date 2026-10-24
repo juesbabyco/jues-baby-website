@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
 **Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
-**Current focus:** S5C owner photo upload and public photo viewing verified; real iPhone DELETE now HTTP 200 and database verified: US$16/stock2 draft removed, US$15/stock4 photo-bearing test product preserved and still PUBLISHED. Remaining gate: owner Unpublish US$15, verify anonymous preview empty and private photo download denied. Stage 5 OPEN.
+**Current focus:** S5C staged photo lifecycle, public preview and owner DELETE/UNPUBLISH user-tested. US$15 photo product remains as a private draft (published=false), Storage retains JPEG. Anon SQL cannot read product or attached photo; actual direct anonymous photo HTTP denial not independently tested. Stage 5 OVERALL OPEN: separate future storefront and checkout gates.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -175,6 +175,13 @@
 - **Owner mobile inline typed-confirmation Delete PASSED.** Previous ambiguous placeholder repaired in `eb4c521fe8264d2aefb8a58d072bdc3c343ed36a`.
 - **NEXT:** User must tap Unpublish on remaining photo product and refresh independent Cloud Preview; read SQL draft and anonymous Storage GET negative to confirm photo no longer publicly served. Keep image and draft for future test unless owner explicitly deletes them.
 - Public Cloud Preview is staging only, and static V8 customer storefront and MindCare remain unchanged.
+
+## Final photo unpublish / anonymous role privacy (JBC-E045; 2026-10-24)
+- Owner submitted 2 iPhone screenshots at local 22:16 showing **US$15 stock4 TEST Cotton Baby Romper.** still present in owner catalogue with photo and **Draft** badge; public cloud-preview displays **No products published yet**.
+- Jue-only Supabase readback confirms only one record, `published=false`, price 1500 cents, stock 4 and same `image_path` as before; one JPEG object remains in private `jues-product-photos` bucket.
+- SQL `SET LOCAL ROLE anon` and `set_config('storage.operation','object.get_authenticated',true)` returns **0 products and 0 readable photo objects**. With `object.list`, anonymous listing also returns zero. Simulated approved owner Auth UUID can read one object; unapproved Auth UUID can read none.
+- **User-tested Stage 5C flow** owner image upload, public image GET 200 when published, mobile delete of extra draft, final unpublish + empty preview are all accepted with final DB state verified. **Remaining security limitation:** actual direct HTTP GET to the photo path as a nonowner after unpublishing has NOT been independently run. Database-role simulation does not substitute for that API negative test.
+- Keep the private TEST product for future regression proof; do not silently delete it. The original live `index.html` remains static V8 demo. No checkout, orders, payment, real stock or commercial launch authorization.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
