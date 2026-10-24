@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 1.4
+**Version:** 1.5
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -45,7 +45,7 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 | S3a | Responsive live prototype | V8 deployed; user-reported mobile/desktop success. |
 | S3b | Owner management **local demo** | `owner-demo.html` deployed; user verified local price edit reflects on same-browser storefront. |
 | S4 | Durable project governance | GitHub development book verified; dedicated Jue Supabase project and private governance registry installed, SQL privilege checks completed 2026-10-24. |
-| S5 | Cloud product catalogue & authenticated owner | **IN PROGRESS**: S5A catalogue/owner allowlist with RLS and two staging pages committed; negative security tests passed. Owner allowlisted and login user-tested on iPhone; actual cloud product save and cross-device acceptance OPEN. |
+| S5 | Cloud product catalogue & authenticated owner | **IN PROGRESS**: S5A catalogue/owner allowlist with RLS and two staging pages committed; negative security tests passed. Owner allowlisted, login user-tested on iPhone, and first cloud draft saved and verified in Supabase. Publication and cross-device browser acceptance OPEN. |
 | S6 | Production ordering, stock, delivery, payment | NOT IMPLEMENTED. Requires independent testing and approvals. |
 | S7 | Security, operational readiness, launch | NOT IMPLEMENTED. |
 
@@ -78,8 +78,14 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Tests: anon product INSERT denied; unapproved authenticated INSERT denied by RLS; transient published row visible to anon, draft hidden; test rows rolled back and DB remains empty.
 - Staging GitHub Pages owner workspace and read-only cloud preview committed. JavaScript syntax verified, live browser owner acceptance pending.
 - One email-confirmed Auth identity was provisioned in the sole owner allowlist on 2026-10-24; no actual catalogue product migrated, no checkout/payments, no upload storage bucket.
-- Developer governance registry updated to `S5B_OWNER_LOGIN_VERIFIED` with 13 cumulative evidence events. Owner login user-tested; cloud product save and cross-device acceptance still OPEN.
-- Next step: `docs/STAGE5_OWNER_SETUP.md` — create a clearly labelled test draft, check draft hiding in cloud preview, then publish and verify from another browser/device.
+- Developer governance registry updated to `S5B_OWNER_LOGIN_VERIFIED` with 13 cumulative evidence events. Owner login and cloud draft save user-tested and database-verified. Publication and cross-device acceptance still OPEN.
+- Next step: `docs/STAGE5_OWNER_SETUP.md` — first draft saved and anon role cannot read it. Test preview in private browser, publish, verify second device, edit price, then unpublish.
+
+### Stage 5B — First cloud write verified 2026-10-24
+- Owner created TEST Cotton Baby Romper in mobile `owner-cloud.html` after validation-message repair; record persisted in Jue's Supabase as a draft, price US$15, stock 2, Newborn/Everyday/Newborn size.
+- Supabase anonymous role sees no unpublished row and cannot insert/update products.
+- Private registry state: `S5B_CLOUD_DRAFT_SAVE_VERIFIED`, 15 evidence entries; corresponding entry `JBC-E025` in `docs/EVIDENCE_LOG.md`.
+- **Do not close Stage 5** until real second-browser publication/update/unpublication and outsider denial acceptance tests.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
