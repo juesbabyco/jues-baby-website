@@ -38,7 +38,7 @@
 - Permission tests: `anon` INSERT denied (42501); `authenticated` unapproved-user INSERT denied by RLS (42501); authenticated cannot grant itself owner membership.
 - Rolled-back public visibility test showed one temporary published record and zero temporary draft records; subsequent row count was 0 products and 0 approved owners, 0 Auth users.
 - Staged pages committed: `owner-cloud.html` and `cloud-preview.html`; both JavaScript syntax-verified, **not** browser end-to-end confirmed. Pinned supabase-js 2.118.0, publishable key only; no privileged key.
-- Supabase governance registry now reports `S5A_CLOUD_CATALOGUE`, 10 events; Stage 5 still OPEN.
+- Supabase governance registry now reports `S5A_CLOUD_CATALOGUE`, 11 events; Stage 5 still OPEN.
 - Current user guide: `docs/STAGE5_OWNER_SETUP.md`.
 
 ## Next action and gates
