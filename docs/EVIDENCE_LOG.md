@@ -43,5 +43,7 @@ This log records observations, not inferred functionality. Append new rows. Date
 
 | JBC-E029 | Owner confirmed unpublish worked; Juesbabyco Supabase direct readback and anonymous role query on 2026-10-24 | TEST Cotton Baby Romper remains stored at US$16.00 with stock 2 but `published=false`. Anonymous role SELECT returned 0 catalogue entries; UPDATE privilege false. **Unpublish plus retained private-draft data VERIFIED.** | Owner reported working preview, but independent second-device confirmation and unrelated signed-in user negative tests remain OPEN. Stage 5 not closed. |
 
+| JBC-E030 | User reported “no products published” in follow-up to separate-browser preview request; Jue-only SQL read and simulated authenticated non-owner transaction 2026-10-24 | Public preview user-report agrees with cloud data: 1 retained private draft (US$16.00, stock 2), zero public rows. Synthetic signed-in non-owner UID using `SET LOCAL ROLE authenticated` saw 0 owners and 0 draft rows and had no owner-allowlist INSERT privilege. | The user's device/browser independence was not independently established. Simulated-role read is not equivalent to a real separate non-owner login; cross-device publish/unpublish roundtrip and real outsider auth test remain OPEN. |
+
 ## Evidence handling
 Write only non-sensitive observations here. Before announcing a stage complete, attach a reproducible test method plus commit/Supabase reference where applicable. Never replace lack of evidence with optimistic inferences.
