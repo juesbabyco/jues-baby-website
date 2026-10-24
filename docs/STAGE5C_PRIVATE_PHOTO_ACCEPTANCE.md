@@ -1,6 +1,6 @@
 # Stage 5C — Private Product Photo Upload and Public Preview Acceptance
 
-**As of 2026-10-24: OWNER PHOTO UPLOAD USER-TESTED; PUBLIC BROWSER PHOTO DOWNLOAD AND MOBILE DELETE RETEST OPEN.**
+**As of 2026-10-24: OWNER UPLOAD AND PUBLIC PHOTO VIEW USER-TESTED; INLINE DELETE CONFIRMATION PANEL USER-TESTED; ACTUAL DELETION/UNPUBLISH PRIVACY RETEST OPEN.**
 No existing V8 storefront changes; not production checkout. One Jue-specific private photo bucket and a new nullable `image_path` column.
 
 ## Current trusted setup
@@ -39,6 +39,12 @@ No existing V8 storefront changes; not production checkout. One Jue-specific pri
 - Open `cloud-preview.html?v=5c6` now (US$15 test item was last seen published) and verify that the uploaded photo renders. If success, unpublish this test product and refresh preview until no published items.
 - In `owner-cloud.html?v=5c6` tap Delete for the draft to delete, type `DELETE` in the visible inline input, then tap Confirm delete. The delete effect has not yet been user-tested; avoid destroying the only photo until its preview test is verified.
 - Do not call S5C closed until actual browser public GET and Delete acceptance.
+
+## First published photo proven, inline Delete pending (JBC-E043, 2026-10-24)
+- User screenshot of public preview has actual US$15 stock4 test romper image; HTTP Storage GET 200 twice confirms earlier anonymous-read RLS 400 issue resolved.
+- Owner screenshot of inline Delete confirmation for US$16 stock2 private/no-photo draft. 'DELETE' displayed as placeholder so button stays disabled until user actually types it. New commit `eb4c521fe8264d2aefb8a58d072bdc3c343ed36a` replaces placeholder with 'Tap here and type the word', adds live instructions. JS syntax PASS, phone retest required.
+- If deletion intended: open refreshed `owner-cloud.html?v=5c7`; target US$16 stock2, tap Delete, tap field, manually type uppercase DELETE and confirm. Leave US$15 photo product alone.
+- Final privacy gate: unpublish US$15 photo product, refresh anonymous preview, verify zero published rows and no anonymous access to image; run HTTP negative requests where possible. No real checkout.
 
 ## Test 1 — owner photo as unpublished draft (PENDING)
 1. Sign into https://juesbabyco.github.io/jues-baby-website/owner-cloud.html on the authorized iPhone. Refresh to fetch Stage 5C changes.
