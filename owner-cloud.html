@@ -258,10 +258,64 @@ $('editor').addEventListener('submit',async e=>{
    if(first){first.scrollIntoView({behavior:'smooth',block:'center'});if(first.focus)first.focus({preventScroll:true})}
    return;
  }
+ const file=$('photoFile').files?.[0]||null;
+ if(file&&url){$('editorError').textContent='Choose a local photo file OR an external HTTPS photo URL, not both.';return}
+ const comparable=n=>String(n).toLowerCase().replace(/[^a-z0-9]/g,'');
+ if(!editId&&rows.some(p=>comparable(p.name)===comparable(name))){
+  $('editorError').textContent='This product name already exists. Tap EDIT on an existing item rather than creating another draft.';
+  msg('Duplicate name blocked. Use Edit on the saved product.',true);return;
+ }
  const payload={name,description:$('description').value.trim(),price_cents:Math.round(price*100),stock_qty:stock,age_group:$('age').value,category:$('category').value,sizes,image_url:url||null,published:$('published').checked,updated_at:new Date().toISOString()};
- if(payload.published&&!confirm('Publish this product in the PUBLIC cloud preview? It will be visible to anyone with the link.'))return;
- busy=true;$('saveButton').disabled=true;msg('Saving cloud product…');
- try{let q=editId?db.from('jues_products').update(payload).eq('id',editId):db.from('jues_products').insert(payload);const {data,error}=await q.select('id').single();if(error)throw error;if(!data?.id)throw Error('No saved product returned');resetForm();await loadProducts();msg('Product saved in Supabase. Open cloud preview in another browser to verify a published item.')}catch(err){$('editorError').textContent='Save failed: '+(err.message||'Unknown error');msg('Save not completed.',true)}finally{busy=false;$('saveButton').disabled=false}
+ if(payload.published&&!confirm('Publish this product on the PUBLIC cloud preview? Anyone with the link can see it.'))return;
+ const existingId=editId;
+ const previous=existingId?rows.find(p=>p.id===existingId)?.image_path||null:null;
+ busy=true;$('saveButton').disabled=true;$('photoUpload').disabled=true;
+ let savedId=null,uploadedPath=null;
+ try{
+  const jpeg=file?await makeJpeg(file):null;
+  msg(existingId?'Saving changes to EXISTING product…':'Creating NEW product draft…');
+  const q=existingId?db.from('jues_products').update(payload).eq('id',existingId):db.from('jues_products').insert(payload);
+  const {data,error}=await q.select('id').single();
+  if(error||!data?.id)throw Error(error?.message||'Database did not confirm product save.');
+  savedId=data.id;
+  if(jpeg){
+   const path='products/'+savedId+'/'+crypto.randomUUID()+'.jpg';
+   $('photoStatus').textContent='Uploading product photo as JPEG ('+Math.ceil(jpeg.size/1024)+' KB)…';
+   const up=await db.storage.from(PHOTO_BUCKET).upload(path,jpeg,{contentType:'image/jpeg',cacheControl:'3600',upsert:false});
+   if(up.error)throw Error('STORAGE REJECTED photo: '+up.error.message);
+   uploadedPath=path;
+   $('photoStatus').textContent='Linking photo to saved product…';
+   const linked=await db.from('jues_products').update({image_path:path,image_url:null,updated_at:new Date().toISOString()}).eq('id',savedId).select('image_path').single();
+   if(linked.error||linked.data?.image_path!==path)throw Error('Photo link failed: '+(linked.error?.message||'No database confirmation'));
+   const readback=await db.from('jues_products').select('image_path').eq('id',savedId).single();
+   if(readback.error||readback.data?.image_path!==path)throw Error('Cloud failed independent photo-link verification.');
+   const proof=await db.storage.from(PHOTO_BUCKET).download(path);
+   if(proof.error||!proof.data)throw Error('Photo linked, but verification download failed: '+(proof.error?.message||'unknown error'));
+   uploadedPath=null;
+   if(previous&&previous!==path){const rm=await db.storage.from(PHOTO_BUCKET).remove([previous]);if(rm.error)msg('New photo verified. Previous photo cleanup is pending.',true)}
+  }
+  resetForm();await loadProducts();
+  msg(jpeg?'PRODUCT AND PHOTO SAVED AND VERIFIED. The catalogue should show your picture.':'Product saved in Supabase. No photo selected.');
+ }catch(err){
+  const errorText=err.message||'Unknown error';
+  if(savedId){
+   if(uploadedPath){
+    try{
+     const ref=await db.from('jues_products').select('image_path').eq('id',savedId).single();
+     if(!ref.error&&ref.data?.image_path!==uploadedPath)await db.storage.from(PHOTO_BUCKET).remove([uploadedPath]);
+    }catch(_){}
+   }
+   await loadProducts();
+   const item=rows.find(p=>p.id===savedId);
+   if(item)openEditor(item);
+   $('editorError').textContent='PRODUCT DETAILS SAVED, BUT PHOTO NOT VERIFIED: '+errorText+'. Keep editing THIS item and retry. Do not create a duplicate.';
+   $('photoStatus').textContent='PHOTO NOT VERIFIED: '+errorText+'. Select the photo again and retry on this same product.';
+   msg('Saved product but photo did not finish: '+errorText,true);
+  }else{
+   $('editorError').textContent='Save failed: '+errorText;
+   msg('Save was not confirmed. Refresh catalogue before retry.',true);
+  }
+ }finally{busy=false;$('saveButton').disabled=false;$('photoUpload').disabled=!editId}
 });
 initialize();
 </script></body></html>
