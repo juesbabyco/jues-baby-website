@@ -1,6 +1,6 @@
 # Jue's Baby Co. — official website and development book
 
-**Current status (2026-10-24):** The live storefront remains a **DEMO**. The Stage 5B authenticated Supabase owner workspace and cloud preview now support owner-tested draft creation, publishing, price editing, iPhone-to-Dell visibility and unpublishing. The test item is retained as a private draft and database SQL confirms public visibility is empty. **S5B staging acceptance has passed**: real unapproved account login denied, and simulated request-identity database RLS write tests blocked. Stage 5 overall remains open for owner-only photo uploads and storefront integration.
+**Current status (2026-10-24):** The live storefront remains a **DEMO**. The Stage 5B authenticated Supabase owner workspace and cloud preview now support owner-tested draft creation, publishing, price editing, iPhone-to-Dell visibility and unpublishing. The test item is retained as a private draft and database SQL confirms public visibility is empty. **S5B staging acceptance has passed**: real unapproved account login denied, and simulated request-identity database RLS write tests blocked. Stage 5 overall remains open. Stage 5C private photo upload prototype has been built but not yet phone-tested; storefront integration is a later gate.
 
 ## Start here — always read these first
 1. [Master development book](PROJECT_BOOK.md) — vision, stages, governing rules, recovery.
@@ -26,4 +26,4 @@
 - Do not announce a stage closed without actual test evidence and a corresponding update to both GitHub and private Supabase registry.
 
 ## Latest development position
-**S5B owner cloud workflow and iPhone-to-Dell public preview** USER-TESTED; final private database state SQL-VERIFIED. **Stage 5B staging functional and access-control tests PASSED**; the unapproved Auth account was rejected in the real browser and unauthorized database INSERT/UPDATE tests were denied. **Stage 5 overall OPEN:** next S5C secure photos/storage and staged storefront integration; real checkout/payment still not implemented. See `docs/STATUS.md` and `docs/STAGE5_OWNER_SETUP.md`.
+**S5B owner cloud workflow and iPhone-to-Dell public preview** USER-TESTED; final private database state SQL-VERIFIED. **Stage 5B staging functional and access-control tests PASSED**; the unapproved Auth account was rejected in the real browser and unauthorized database INSERT/UPDATE tests were denied. **Stage 5C BUILD COMPLETE / TEST OPEN:** private JPEG Storage bucket plus protected owner upload and published preview download code. Test owner iPhone upload and Dell preview first; then independently consider staged storefront integration. Real checkout/payment still not implemented. See `docs/STATUS.md` and `docs/STAGE5_OWNER_SETUP.md`.
