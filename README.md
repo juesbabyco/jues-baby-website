@@ -1,6 +1,6 @@
 # Jue's Baby Co. — official website and development book
 
-**Current status (2026-10-24):** The live storefront remains a **DEMO**. The Stage 5B authenticated Supabase owner workspace and cloud preview now support owner-tested draft creation, publishing, price editing, iPhone-to-Dell visibility and unpublishing. The test item is retained as a private draft and database SQL confirms public visibility is empty. **S5B is not yet closed**: real unrelated non-owner Auth access test is still required.
+**Current status (2026-10-24):** The live storefront remains a **DEMO**. The Stage 5B authenticated Supabase owner workspace and cloud preview now support owner-tested draft creation, publishing, price editing, iPhone-to-Dell visibility and unpublishing. The test item is retained as a private draft and database SQL confirms public visibility is empty. **S5B staging acceptance has passed**: real unapproved account login denied, and simulated request-identity database RLS write tests blocked. Stage 5 overall remains open for owner-only photo uploads and storefront integration.
 
 ## Start here — always read these first
 1. [Master development book](PROJECT_BOOK.md) — vision, stages, governing rules, recovery.
@@ -26,4 +26,4 @@
 - Do not announce a stage closed without actual test evidence and a corresponding update to both GitHub and private Supabase registry.
 
 ## Latest development position
-**S5B owner cloud workflow and iPhone-to-Dell public preview** USER-TESTED; final private database state SQL-VERIFIED. **Pending S5B security gate:** use a genuinely separate, unapproved Auth test account and confirm owner dashboard denies access and database blocks private reads/writes. No real checkout or payments. See `docs/STATUS.md` and `docs/STAGE5_OWNER_SETUP.md`.
+**S5B owner cloud workflow and iPhone-to-Dell public preview** USER-TESTED; final private database state SQL-VERIFIED. **Stage 5B staging functional and access-control tests PASSED**; the unapproved Auth account was rejected in the real browser and unauthorized database INSERT/UPDATE tests were denied. **Stage 5 overall OPEN:** next S5C secure photos/storage and staged storefront integration; real checkout/payment still not implemented. See `docs/STATUS.md` and `docs/STAGE5_OWNER_SETUP.md`.
