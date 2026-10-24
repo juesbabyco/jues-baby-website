@@ -102,6 +102,13 @@ ON CONFLICT (user_id) DO NOTHING;
 - Never share real passwords with ChatGPT or commit account emails in GitHub. A synthetic UUID role read previously passed but is not a live-user substitute.
 - The public `cloud-preview.html` remains staging-only and currently empty. No real commerce.
 
+## Non-owner account checked 2026-10-24 — JBC-E033
+- Second Supabase Auth test account created and email-confirmed; the approved owner count remains exactly one.
+- SQL under the second account's **real UUID** but simulated authenticated database role showed 0 owner rows, 0 draft rows and no owner-list insert/update privileges.
+- **Required next: browser sign in** at `owner-cloud.html` in a separate InPrivate/Incognito session with the new test user's credentials. Expect explicit **Access denied** and no Shared catalogue or editing controls.
+- This is not yet a completed production-auth negative test. Do not share password here; do not add the test user to `jues_store_owners`.
+- After browser denial, record evidence and verify no products were changed. A true direct nonowner INSERT/UPDATE attempt remains to be tested or explicitly documented as pending.
+
 ## Migration records
 - `supabase/migrations/20261024121448_jues_stage5_owner_and_product_catalogue.sql`
 - `supabase/migrations/20261024122310_jues_stage5_streamline_read_policies.sql`
