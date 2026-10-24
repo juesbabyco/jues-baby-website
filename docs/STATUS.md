@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-24
 **Overall:** V8 DEMO INTACT. S5B OWNER LOGIN, DRAFT, PUBLISH, PRICE EDIT AND iPHONE-TO-DELL PREVIEW/UNPUBLISH USER-TESTED; LATEST SUPABASE STATE PRIVATE. ONLY REAL UNAPPROVED-ACCOUNT ACCESS TEST REMAINS FOR S5B.
-**Current focus:** S5B — iPhone-to-Dell visibility plus unpublish user-reported and verified by cloud SQL. Test a genuinely unapproved signed-in Auth account (without owner provisioning). S5B remains OPEN until this gate passes.
+**Current focus:** S5B — new separate confirmed Auth test account exists and database RLS reads denied under that real UUID. Test actual browser login, owner UI denial and write restrictions; S5B remains OPEN.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -111,6 +111,13 @@
 - Combined with earlier positive Dell visibility user report, this is **USER-TESTED iPhone-to-Dell publish/view/unpublish** with verified final cloud state. Device screens are user-reported, not independently instrumented.
 - **Outstanding before S5B closure:** real unrelated, unapproved Supabase Auth account sign-in and negative owner/read/write authorization tests. Synthetic role simulations are positive supporting evidence only.
 - Stage 5 broad production readiness, real inventory and checkout remain OUT OF SCOPE and OPEN.
+
+## Newly created genuine non-owner test account (JBC-E033, 2026-10-24)
+- User created a second test Supabase Auth account in dedicated Jue project; direct query confirms **2 Auth users, 1 approved owner**. The new email-confirmed test identity has no owner membership.
+- SQL transaction using `SET LOCAL ROLE authenticated` and **new account's actual Auth UUID** as JWT sub returned **zero private product rows and zero visible owner rows**. Role has no owner-allowlist INSERT or UPDATE grant.
+- The owner-cloud dashboard code requires `jues_store_owners` membership; nonowner should be signed out with **This account has not been approved as a store owner. Access denied.**
+- **NOT YET USER-TESTED:** a browser actually signing in with the new nonowner account; direct attempted nonowner product mutation from a real session. Test these before S5B closure. Do not approve test account; keep passwords private.
+- One TEST Cotton Baby Romper remains private and 0 items published.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
