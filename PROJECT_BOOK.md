@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 2.0
+**Version:** 2.1
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -117,6 +117,13 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Unrelated synthetic authenticated user (SQL `SET LOCAL ROLE authenticated`, arbitrary nonowner UID) could read neither owner-allowlist entries nor unpublished products and lacked owner-allowlist insertion privileges.
 - These observations are positive evidence for public-hide behavior and outsider read-policy design, but **not proof** of true two-device synchronisation during a publish event or of a real second person's authenticated session.
 - Stage 5 remains OPEN. Do not promote cloud preview to live checkout or erase the saved TEST draft without owner instruction.
+
+### Stage 5B — Dell cross-device report and divergent final state (JBC-E031; 2026-10-24)
+- User reports “Working” after iPhone-to-Dell test instruction. This supports actual user experience of cross-device sharing.
+- Direct Jue Supabase readback found TEST Cotton Baby Romper still **published=true**, US$16.00, stock 2; anonymous role sees 1 entry and lacks UPDATE privilege.
+- **Do not represent complete unpublish roundtrip as verified**. Ask owner to unpublish test listing again and verify DB flag `false` and Dell InPrivate disappearance.
+- Remains OPEN: verified final unpublish after independent-device update; real non-owner Auth account permission tests. No real checkout/payment claims.
+- Project isolated from MindCare, original V8 demo unchanged.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
