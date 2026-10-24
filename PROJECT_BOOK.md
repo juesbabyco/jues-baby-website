@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 1.9
+**Version:** 2.0
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -111,6 +111,12 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Database acting as `anon` sees 0 products; no anonymous UPDATE privileges.
 - This completes owner-reported and SQL-verified draft -> publish -> edit price -> unpublish sequence.
 - **Stage 5 remains OPEN** for independent cross-device/browser acceptance and unrelated authenticated user RLS test. Keep V8 demo and private governance separate; no ordering/payment claim.
+
+### Stage 5B — Preview follow-up and outsider role simulation (JBC-E030; 2026-10-24)
+- User confirmed **No products published** in public preview after owner unpublishing. Direct Jue Supabase read also confirmed 0 public rows and 1 private draft still saved at US$16.00.
+- Unrelated synthetic authenticated user (SQL `SET LOCAL ROLE authenticated`, arbitrary nonowner UID) could read neither owner-allowlist entries nor unpublished products and lacked owner-allowlist insertion privileges.
+- These observations are positive evidence for public-hide behavior and outsider read-policy design, but **not proof** of true two-device synchronisation during a publish event or of a real second person's authenticated session.
+- Stage 5 remains OPEN. Do not promote cloud preview to live checkout or erase the saved TEST draft without owner instruction.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
