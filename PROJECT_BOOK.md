@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 2.6
+**Version:** 2.7
 **Last evidence review:** 2026-10-24
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -158,6 +158,13 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Improved `owner-cloud.html` selection/upload feedback: picking a file displays **NOT uploaded**; upload success now requires DB readback plus private Storage download. JS syntax verified; no mobile retest evidence yet.
 - Public preview link: `cloud-preview.html`. Owner editor: `owner-cloud.html?v=5c2`. User must tap Edit before choosing/uploading. After the test unpublish the TEST listing.
 - S5C OPEN until photo linked with storage proof and public preview + draft privacy checked. Original V8 live demo still unchanged.
+
+### Stage 5C — Duplicate prevention, photo Save and owner Delete (JBC-E039, 2026-10-24)
+- User screenshot: 2 privately saved TEST rompers, **US$15 / stock 4** and **US$16 / stock 2**, neither with photo. SQL confirms 2 draft records, both image_path null, 0 storage objects. No witnessed Storage upload request in limited edge-log review. Do not claim photo was ever saved.
+- Added draft **Delete** button gated behind an exact typed `DELETE`, unpublish-before-delete rule, owner-only database RLS, and cleanup of referenced photo after deletion; neither draft auto-deleted.
+- Fixed accidental creation vs editing confusion: product reference shown, conspicuous NEW / EDIT mode, duplicate normalized-name check.
+- Crucial: saving the editor with a selected file now compresses/uploads the photo in that SAME save flow; success requires DB path readback and protected download. If product saved but image fails, stay editing the same record and display actual error.
+- GitHub latest owner-cloud commit `80a7e790a3b3a738b85c88066902643d2ae3f4ed` syntax verified; awaiting iPhone runtime test and further Storage RLS/anonymous browser photo evidence. No launched commerce, MindCare isolation intact.
 
 ## 7. Testing vocabulary
 - **DESIGNED:** documented intention, no code.
