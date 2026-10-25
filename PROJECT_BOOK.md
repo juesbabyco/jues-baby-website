@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 3.7
+**Version:** 3.8
 **Last evidence review:** 2026-10-25
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -218,6 +218,14 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Backend corroboration: iPhone Unpublish `PATCH 200` at 07:14:14 UTC and a separate Windows 10 Edge published-only catalogue `GET 200` at 07:14:19 UTC. Final Jue database confirms one private US$15 stock4 TEST baby romper and attached JPEG, no public items. Anonymous Storage photo download role cannot see draft.
 - **Stage 5D core cross-device staging experience ACCEPTED** (published-only cloud source, photo, detail modal, search/age filter, owner visibility controls). **Still open**: 2+-item price sorting, offline/network recovery, wider error-path/accessibility/performance testing and any commercial checkout/inventory/payment integration.
 - Do NOT replace demo `index.html` or expose real buying paths on the strength of this pilot. True owner inventory, photographs, pricing and legal/customer policies need independent signoff. MindCare remains isolated.
+
+### Stage 5E — Isolated fixture sorting & safe offline fallback prototype (JBC-E054/E055; 2026-10-25)
+- Added `catalogue-logic.js` as shared, pure catalogue filtering/sorting function (stable prices, age and text filters); `storefront-cloud-staging.html` now uses it.
+- `catalogue-stage5e-tests.html` contains only local **fictional** 4-product fixture data, never a cloud database insertion. Executed actual test script in DOM stub: **11/11 PASS**. This is not yet user browser acceptance or multi-item production sorting.
+- Hardened staging storefront: empty old product cards/photos before refresh; hide everything on offline/API error, explicit retry/online reload, invalidate stale promises, preserve error state when filters change, 15-second bounded query via Supabase `abortSignal`.
+- Executed actual staging script with mock DOM/network: initial displayed item -> offline clears -> search input doesn't hide warning -> reconnect fetches current empty state; **5/5 PASS**. This is simulated execution, NOT real Dell network outage proof.
+- Remaining user test: `catalogue-stage5e-tests.html?v=5e1` should show all green; leave staging page open on Dell, briefly publish TEST romper, disable only Dell Wi-Fi, unpublish from iPhone, reconnect laptop; ensure stale published product does not come back. Instructions: `docs/STAGE5E_SORTING_OFFLINE_ACCEPTANCE.md`.
+- No modifications to original live demo `index.html`, no Jue schema/data/photo writes, no MindCare use, and no orders/payments/verified real stock.
 
 ## 7. Testing vocabulary
 
