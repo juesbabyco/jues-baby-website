@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-25
 **Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
-**Current focus:** Stage 5E real Dell Edge offline/reconnect flow USER-TESTED and corroborated by cloud logs: offline clears product cards, warning/retry visible; restored connection fetches 0 published items after iPhone unpublish. 11/11 fictional fixture sorting checks passed locally; browser fixture and real 2+ cloud product sorting/5xx remain OPEN. Original V8 untouched, one TEST private draft, zero public.
+**Current focus:** Stage 6A design and fictional in-memory order/stock simulator BUILT, 22/22 isolated safety tests PASS. Database product-level stock requires per-size variants before any real ordering. No order tables, endpoints, checkout, customer PII or payments deployed. Stage 5E iPhone 11/11 and manual 3-mode sorting, Dell offline/reconnect ACCEPTED as scoped tests; broader failure cases open. Original V8 untouched; one private TEST product, zero published.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -240,6 +240,14 @@
 - **Stage 5E sorting fixture local execution:** actual 11/11 local tests PASS, fictional in-memory products; not a browser confirmation or 2+ cloud-sourced merchandise test. Testing any real multi-item sort requires genuine owner-approved products or separately isolated sandbox.
 - **Unresolved:** API 5xx/timeouts, browser caching edge cases, high-volume performance, full accessibility, real products, ordering, stock reservation, payments, privacy/consumer policies, launch signoff. Stage 5 overall remains OPEN.
 - V8 original customer page `index.html` and MindCare projects unchanged.
+
+## Stage 6A — Order and inventory safety designed and simulated (JBC-E059/E060, 2026-10-25)
+- Verified dedicated Jue database schema: product table has `stock_qty` per **product** and list of sizes, not size-by-size inventory; no orders, order-items, inventory ledger or stock-hold tables. One unpublished photo-bearing TEST product remains; no sales permitted.
+- `docs/STAGE6_ORDER_INVENTORY_DESIGN.md` commit `89bdb17ef01ebb0e7f9cce996c2e68c8445bc6a4`: design proposes size-specific variants, atomic row-locked multi-item reservation, owner-controlled order state transitions, stable idempotency key + payload hash, protected immutable price snapshots, expiration/cancellation release, one-time fulfilment, server-only inventory ledger, distinct not-integrated payment state, customer privacy and approval gates.
+- `order-stage6a-engine.js` and `order-stage6a-tests.html` added as **fictional, in-memory simulator**. Executed actual test script with a DOM stub and simulated owner controls: **22/22 PASS**, including duplicate retry, stock exhaustion, independent sizes, atomic multi-line rejection, expiry, price snapshot and one-time fulfilment. Reservation/retry/confirm/fulfil interactions validated in local execution.
+- **Evidence vocabulary:** Stage 6A DESIGN COMMITTED; simulator CODE EXECUTION/SIMULATION VERIFIED, **NOT physically browser user-tested** and NOT PostgreSQL concurrency-tested. One synchronous JS simulation cannot guarantee database atomicity for concurrent real customers. No new Supabase ordering schema, API, customer PII, payment integration or stock mutation.
+- Next: user opens `order-stage6a-tests.html?v=6a1` on iPhone/Dell to verify 22/22 and reserve/retry/cancel manually. Only after independent evidence should Stage 6B propose isolated backend migrations and multi-connection stock concurrency tests.
+- Stage 5E previous fixture manual price low/high sorting now **user-visible PASSED** (JBC-E058). The fixtures were explicitly imaginary. Original `index.html` and MindCare untouched; Jue overall launch still OPEN.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
