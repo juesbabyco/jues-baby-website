@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-25
 **Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
-**Current focus:** Stage 5E **sorting fixtures and fail-closed offline/retry code BUILT**: shared catalogue sort used on new staging storefront + test page, 11/11 local fixture checks and 5 simulated offline/reconnect state assertions PASS. Real Dell network interruption USER TEST PENDING; multi-product physical inventory and live sales NOT VERIFIED. Original V8 untouched; one TEST private draft, zero public.
+**Current focus:** Stage 5E real Dell Edge offline/reconnect flow USER-TESTED and corroborated by cloud logs: offline clears product cards, warning/retry visible; restored connection fetches 0 published items after iPhone unpublish. 11/11 fictional fixture sorting checks passed locally; browser fixture and real 2+ cloud product sorting/5xx remain OPEN. Original V8 untouched, one TEST private draft, zero public.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -232,6 +232,14 @@
 - Dedicated Jue project read-only checkpoint before code change: one TEST photo-bearing product remains private, zero published. No Supabase migrations/product mutations, V8 `index.html` or MindCare modifications.
 - Owner acceptance dossier: `docs/STAGE5E_SORTING_OFFLINE_ACCEPTANCE.md`. NEXT: confirm fixture page on Dell/iPhone; with owner-controlled temporary TEST publication, unplug **Dell Wi-Fi only**, unpublish from iPhone, restore Wi-Fi, and ensure Dell does not display stale listing after reconnect. Stop/record if it does.
 - **Stage 5E OPEN.** Original core Stage 5D acceptance stands, but production storefront, verified inventory, orders, payments, legal and accessibility gates are not complete.
+
+## Stage 5E Dell offline/unpublish/reconnect acceptance (JBC-E056; 2026-10-25)
+- User provided two physical Dell Edge photos: during network outage, the storefront explicitly says **"You are offline. Previously loaded products and photos have been hidden until publication can be checked again"** with **Try connecting again**; after reconnection, it displays normal **0 published products** and no listing. User confirms tests passed.
+- Dedicated Jue Supabase edge logs independently show owner iPhone product PATCH HTTP 200 at **07:40:38 UTC**, then Windows 10 Edge published-catalogue GET 200 at **07:41:04 UTC**. Prior positive test already established catalogue+photo availability on Dell when published. Final SQL shows **only one photo-bearing TEST product**, US$15 stock4, **published=false**; one private JPEG remains.
+- **Real Dell offline UI and reconnection into current private published-state accepted**. No stale published test product remained visible. UI screenshots and request log are complementary; this does not measure every race, caching mechanism or transient server failure.
+- **Stage 5E sorting fixture local execution:** actual 11/11 local tests PASS, fictional in-memory products; not a browser confirmation or 2+ cloud-sourced merchandise test. Testing any real multi-item sort requires genuine owner-approved products or separately isolated sandbox.
+- **Unresolved:** API 5xx/timeouts, browser caching edge cases, high-volume performance, full accessibility, real products, ordering, stock reservation, payments, privacy/consumer policies, launch signoff. Stage 5 overall remains OPEN.
+- V8 original customer page `index.html` and MindCare projects unchanged.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
