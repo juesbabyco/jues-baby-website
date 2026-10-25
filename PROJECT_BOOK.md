@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 3.9
+**Version:** 4.0
 **Last evidence review:** 2026-10-25
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -232,6 +232,9 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - **Real Dell offline/reconnect core behavior USER-TESTED PASS**; the earlier 11/11 sorting fixture checks remain **local code-executed**, not real 2+ cloud product test, and no live API outage/5xx or race-condition proof exists.
 - Stage 5 core owner/photo/cloud storefront preview functionality is sufficiently proven to design the next controlled commerce phase, **not** to launch sales or replace the live demo. Keep original V8 `index.html` untouched and MindCare independent.
 - Remaining gated roadmap: real owner merchandise/images/pricing/stock verification, customer delivery/privacy/refunds terms, safe order lifecycle and inventory consistency, payment provider only after dry-run tests, and separate launch approval.
+
+### JBC-E057: iPhone fixture test
+Screenshot shows 11 of 11 fixture checks passing in Safari, with only fictional in-browser products. The sort dropdown was shown in its default state, so manual low/high selection is not yet verified. No real Jue catalogue writes were made.
 
 ## 7. Testing vocabulary
 
