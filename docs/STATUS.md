@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-25
 **Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
-**Current focus:** Stage 5C scoped acceptance PASSED. Stage 5D new cloud storefront **IPHONE DYNAMIC PUBLISH/PHOTO/DETAILS/UNPUBLISH ACCEPTED**, Supabase API logs and private final DB state verified; Dell independent-device test, search/age filter & resilience remain OPEN. Original V8 untouched; 1 private photographed TEST draft, 0 published, no commerce.
+**Current focus:** Stage 5C scoped acceptance PASSED. Stage 5D **CORE STAGING STOREFRONT ACCEPTED on iPhone and Dell**: cloud photo and details, mobile/desktop search/age filter, published-to-private sync. Final Jue product private with JPEG saved; 0 published. Multi-item sort, offline/error resilience and real sales/production still OPEN. Original V8 untouched.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -214,6 +214,15 @@
 - **Cross-device iPhone-to-Dell dynamic catalogue/photo visibility VERIFIED** by user report and distinct-device HTTP logs; not yet full Dell feature acceptance.
 - Outstanding: Dell detail modal, search positive/negative, age filter, Dell disappearance after iPhone Unpublish, multi-item price sort and failure paths. Do not invent completed tests. The remaining TEST item is public right now; ensure owner unpublishes after checks.
 - No change to original V8 `index.html`, no real stock/payment/order processing or MindCare writes.
+
+## Stage 5D Dell full basic-function acceptance (JBC-E053, 2026-10-25)
+- User reported **“done all working”** after testing Dell `View sizes & details`, positive search `Romper` and negative `Towel`, matching `Newborn` versus nonmatching `3–6m` filters, and iPhone Owner Unpublish followed by Dell Refresh/empty catalogue.
+- Jue Supabase logs independently confirm **iPhone PATCH 200** at `2026-10-25 07:14:14.238 UTC` followed by **Windows 10 Edge published-catalogue GET 200** at `07:14:19.831 UTC`.
+- Final SQL: exactly 1 TEST product, US$15, stock 4, `published=false`, same `image_path`; 1 private JPEG retained. Anonymous Storage GET-operation policy shows 0 photo objects. No live item publicly listed.
+- **Stage 5D core iPhone-and-Dell staging acceptance PASS** with actual distinct client server logs for publish/photo/unpublish. Search/filter/modal are user-tested browser reports; these events do not individually generate server calls.
+- **Not a fully closed Stage 5D production gate:** price sorting with 2+ published products, disconnection/reconnection and cloud-error handling, performance/quotas, accessibility/security regression, legal product/stock signoff and actual order/payment capability remain open. No code promotion to `index.html` or commercial launch.
+- Next: plan controlled multi-product staging data and offline/retry tests before any main storefront replacement; require owner approval for migrating real merchandise.
+- Original V8 demo and independent MindCare project remain untouched.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
