@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 3.6
+**Version:** 3.7
 **Last evidence review:** 2026-10-25
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -212,6 +212,12 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - User reports newly published US$15 stock4 TEST romper appeared on Dell. Supabase logs independently show Windows 10 Edge catalogue GET when unpublished (07:05:09Z), iPhone owner PATCH publish (07:07:11Z), then Windows 10 Edge published catalogue GET 200 and private Storage photo GET 200 (07:07:14Z). This is actual distinct-device read evidence.
 - Jue database currently shows TEST item `published=true`, photo linked. Stage 5D **Dell cross-device positive visibility PASS**; Dell modal/filters, disappearing after final unpublish on this cycle, multi-item sort and offline resilience remain unverified.
 - Do not treat public TEST listing as real merchandise; restore private draft once acceptance checks finish. Original V8 storefront and MindCare untouched, no checkout/payment/real order functionality.
+
+### Stage 5D — Full Dell core workflow user-tested, final private state verified (JBC-E053, 2026-10-25)
+- User replied “done all working” after Dell view-details, Romper/Towel searches, Newborn/3–6m filter checks and owner iPhone Unpublish → Dell Refresh. Treat UI specifics as **USER-REPORTED**.
+- Backend corroboration: iPhone Unpublish `PATCH 200` at 07:14:14 UTC and a separate Windows 10 Edge published-only catalogue `GET 200` at 07:14:19 UTC. Final Jue database confirms one private US$15 stock4 TEST baby romper and attached JPEG, no public items. Anonymous Storage photo download role cannot see draft.
+- **Stage 5D core cross-device staging experience ACCEPTED** (published-only cloud source, photo, detail modal, search/age filter, owner visibility controls). **Still open**: 2+-item price sorting, offline/network recovery, wider error-path/accessibility/performance testing and any commercial checkout/inventory/payment integration.
+- Do NOT replace demo `index.html` or expose real buying paths on the strength of this pilot. True owner inventory, photographs, pricing and legal/customer policies need independent signoff. MindCare remains isolated.
 
 ## 7. Testing vocabulary
 
