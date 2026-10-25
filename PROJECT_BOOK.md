@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 4.0
+**Version:** 4.1
 **Last evidence review:** 2026-10-25
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -46,7 +46,7 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 | S3b | Owner management **local demo** | `owner-demo.html` deployed; user verified local price edit reflects on same-browser storefront. |
 | S4 | Durable project governance | GitHub development book verified; dedicated Jue Supabase project and private governance registry installed, SQL privilege checks completed 2026-10-24. |
 | S5 | Cloud product catalogue & authenticated owner | **IN PROGRESS**: S5A catalogue/owner allowlist with RLS and two staging pages committed; negative security tests passed. Owner allowlisted, login user-tested on iPhone, and first cloud draft saved and verified in Supabase. Publication and cross-device browser acceptance OPEN. |
-| S6 | Production ordering, stock, delivery, payment | NOT IMPLEMENTED. Requires independent testing and approvals. |
+| S6 | Ordering, per-size inventory, delivery and payment | **S6A DESIGN + FICTIONAL SIMULATOR BUILT; 22/22 local checks passed.** No order backend/stock holds/customers or payments implemented. Postgres concurrency/authorization must be proven before live staging orders. |
 | S7 | Security, operational readiness, launch | NOT IMPLEMENTED. |
 
 ## 5. Current implementation: important details
@@ -235,6 +235,16 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 
 ### JBC-E057: iPhone fixture test
 Screenshot shows 11 of 11 fixture checks passing in Safari, with only fictional in-browser products. The sort dropdown was shown in its default state, so manual low/high selection is not yet verified. No real Jue catalogue writes were made.
+
+### Stage 5E iPhone interactive sorting acceptance (JBC-E058; 2026-10-25)
+- Three owner screenshots show manual **Recently added**, **Price low-to-high** and **Price high-to-low** ordering correct for 3 fictional fixture items. iPhone browser sorting interaction is USER-TESTED. This is not a test of 2+ cloud-published owner inventory items.
+
+### Stage 6A — Safe order and per-size stock rules (JBC-E059/E060; 2026-10-25)
+- Dedicated Jue Supabase schema reviewed: current shared product table has a single `stock_qty` per product plus sizes array. **Cannot claim per-size availability or transactional customer reservations.** No customer orders, inventory variants, order logs or payment tables exist.
+- Stage 6A design: `docs/STAGE6_ORDER_INVENTORY_DESIGN.md`, committed `89bdb17ef01ebb0e7f9cce996c2e68c8445bc6a4`. Requires protected server-side atomic per-variant stock holds, deterministic row locking, scoped request idempotency/fingerprint, immutable price/size snapshots, strict cancel/confirm/fulfil/expire transitions, no duplicate stock effects, privileged audit, separate payment state and customer privacy signoff.
+- **FICTIONAL in-memory, not backend:** `order-stage6a-engine.js` (`d723c8b56c275621ff61d3267216675221697f17`) and `order-stage6a-tests.html` (`edeedbf5cde75aaf3688b9899c2e0850720479f2`). Ran the actual test-page JavaScript against a DOM stub plus real engine implementation: **22/22 PASS**. Also simulated Reserve, replay, owner Confirm, Fulfil and forbidden second Cancel transitions. Price ignored when supplied by caller; no real customer data, charges or Supabase mutations.
+- **Stage 6A designed / local executable simulation verified**, **physical-device browser acceptance pending**. This does not verify parallel PostgreSQL transactions or justify opening public ordering. Stage 6B later may propose governed isolated backend tables/functions and real concurrency tests, only after review.
+- Original V8 `index.html`, authenticated owner catalogue, photo storage and MindCare unchanged; only Jue GitHub docs and deliberately isolated simulator files added.
 
 ## 7. Testing vocabulary
 
