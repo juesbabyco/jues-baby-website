@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
 **As of:** 2026-10-25
 **Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
-**Current focus:** Stage 5C scoped acceptance PASSED. Stage 5D **CORE STAGING STOREFRONT ACCEPTED on iPhone and Dell**: cloud photo and details, mobile/desktop search/age filter, published-to-private sync. Final Jue product private with JPEG saved; 0 published. Multi-item sort, offline/error resilience and real sales/production still OPEN. Original V8 untouched.
+**Current focus:** Stage 5E **sorting fixtures and fail-closed offline/retry code BUILT**: shared catalogue sort used on new staging storefront + test page, 11/11 local fixture checks and 5 simulated offline/reconnect state assertions PASS. Real Dell network interruption USER TEST PENDING; multi-product physical inventory and live sales NOT VERIFIED. Original V8 untouched; one TEST private draft, zero public.
 
 ## Proven by owner-reported testing
 - GitHub Pages storefront opens.
@@ -223,6 +223,15 @@
 - **Not a fully closed Stage 5D production gate:** price sorting with 2+ published products, disconnection/reconnection and cloud-error handling, performance/quotas, accessibility/security regression, legal product/stock signoff and actual order/payment capability remain open. No code promotion to `index.html` or commercial launch.
 - Next: plan controlled multi-product staging data and offline/retry tests before any main storefront replacement; require owner approval for migrating real merchandise.
 - Original V8 demo and independent MindCare project remain untouched.
+
+## Stage 5E local sorting and network recovery prototype (JBC-E054/E055, 2026-10-25)
+- Created `catalogue-logic.js` pure filter/sort helper shared by `storefront-cloud-staging.html` and `catalogue-stage5e-tests.html`. No Supabase writes, no fake actual merchandise or test product insertion.
+- Fixture page shows 4 explicitly fictional items; executed its actual script against a minimal DOM stub and **11/11 tests PASS**, including low/high cent-price ordering, ties retaining source order, case-insensitive search, age/size filters, no matches, empty source and no source mutation. On-phone and Dell browser UX not yet user-tested.
+- Staging storefront refresh now **clears previous cloud listings and photos before querying**, clears immediately on offline/error, aborts pending requests, shows clear warning with Try connecting again, automatically rechecks on online event; stale requests discarded. Catalogue retrieval has **15-second AbortController/Supabase `abortSignal` timeout** verified against official Supabase JS documentation.
+- Executed real staging page script in an isolated DOM+mock Supabase response: initial product rendered, offline warning/empty state, editing search while offline kept error visible, online reload fetched zero products; 5 assertions PASS. This is simulated code execution, **NOT a physical network-disconnect test**.
+- Dedicated Jue project read-only checkpoint before code change: one TEST photo-bearing product remains private, zero published. No Supabase migrations/product mutations, V8 `index.html` or MindCare modifications.
+- Owner acceptance dossier: `docs/STAGE5E_SORTING_OFFLINE_ACCEPTANCE.md`. NEXT: confirm fixture page on Dell/iPhone; with owner-controlled temporary TEST publication, unplug **Dell Wi-Fi only**, unpublish from iPhone, restore Wi-Fi, and ensure Dell does not display stale listing after reconnect. Stop/record if it does.
+- **Stage 5E OPEN.** Original core Stage 5D acceptance stands, but production storefront, verified inventory, orders, payments, legal and accessibility gates are not complete.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
