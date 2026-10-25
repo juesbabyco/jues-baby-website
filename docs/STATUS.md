@@ -1,5 +1,5 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
-**As of:** 2026-10-24
+**As of:** 2026-10-25
 **Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
 **Current focus:** Stage 5C scoped acceptance PASSED. Stage 5D new cloud storefront **IPHONE DYNAMIC PUBLISH/PHOTO/DETAILS/UNPUBLISH ACCEPTED**, Supabase API logs and private final DB state verified; Dell independent-device test, search/age filter & resilience remain OPEN. Original V8 untouched; 1 private photographed TEST draft, 0 published, no commerce.
 
@@ -206,6 +206,14 @@
 - **Stage 5D NOT CLOSED:** no independently verified Dell InPrivate viewing of the new storefront while it is published; no meaningful multi-item price sorting test; search/age filtering positive/negative cases and failure/offline recovery still open.
 - Customer `index.html` V8 demo remains unchanged; no live checkout, payment, ordering, customer PII or stock reservation added.
 - Next action: Dell InPrivate standalone storefront empty-state check; brief owner-controlled publish on iPhone, Dell live photo/detail & search filters; then unpublish. Keep TEST as a private draft.
+
+## First logged Windows Edge cross-device storefront GET (JBC-E052, 2026-10-25)
+- User confirmed **the romper appeared on the Dell** after publishing it from the approved iPhone owner dashboard. Independent Jue Supabase logs distinguish the clients by user agent and sequence.
+- Windows 10 Edge `GET jues_products?published=eq.true` HTTP 200 while initially private at **07:05:09 UTC**. Owner iPhone `PATCH published` HTTP 200 **07:07:11 UTC**.
+- After publish, Windows 10 Edge `GET published catalogue` 200 at **07:07:14 / 07:07:18 UTC**, and private Storage object photo `GET` **200** at **07:07:14 UTC**. DB readback: single US$15 stock4 `TEST Cotton Baby Romper.` is currently `published=true` with linked JPEG.
+- **Cross-device iPhone-to-Dell dynamic catalogue/photo visibility VERIFIED** by user report and distinct-device HTTP logs; not yet full Dell feature acceptance.
+- Outstanding: Dell detail modal, search positive/negative, age filter, Dell disappearance after iPhone Unpublish, multi-item price sort and failure paths. Do not invent completed tests. The remaining TEST item is public right now; ensure owner unpublishes after checks.
+- No change to original V8 `index.html`, no real stock/payment/order processing or MindCare writes.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
