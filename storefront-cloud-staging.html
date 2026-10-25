@@ -78,7 +78,7 @@ const BUCKET='jues-product-photos';
 const api=window.supabase?.createClient?window.supabase.createClient(PROJECT,KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false,storageKey:'jues-storefront-staging-anon'}}):null;
 const el=(tag,content,cls)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(content!==null&&content!==undefined)n.textContent=String(content);return n};
 const safeUrl=input=>{try{const u=new URL(input);return u.protocol==='https:'?u.href:null}catch(_){return null}};
-let products=[],loadedUrls=[],generation=0,loading=false,requestGeneration=0;
+let products=[],loadedUrls=[],generation=0,loading=false,requestGeneration=0,catalogueVerified=false;
 const money=cents=>'US$'+(cents/100).toFixed(2);
 const cleanup=()=>{for(const u of loadedUrls)URL.revokeObjectURL(u);loadedUrls=[]};
 async function imageInto(host,p,token){
@@ -102,6 +102,7 @@ function filtered(){
  return window.JuesCatalogueLogic.filterAndSort(products,{query:$('search').value,age:$('age').value,sort:$('sort').value});
 }
 function render(){
+ if(!catalogueVerified)return; // Controls must not mask offline/API errors with an empty-catalogue message.
  cleanup();const token=++generation;const rows=filtered(),target=$('catalog');target.replaceChildren();
  if(!rows.length){target.append(el('div',products.length?'No products match your filters.':'No products published yet. Please check again after the owner publishes a product.','empty'));$('status').textContent=products.length?'No matching items.':'0 published products. The private drafts stay hidden.';return}
  $('status').textContent=rows.length+' published '+(rows.length===1?'item':'items')+'. Preview data only.';
@@ -123,7 +124,7 @@ function openDetail(p){
 }
 function emptyForSafety(message){
  // Do not show stale listings/photos from an earlier successful request.
- ++requestGeneration;products=[];cleanup();++generation;
+ ++requestGeneration;catalogueVerified=false;products=[];cleanup();++generation;
  const dialog=$('detail');if(dialog.open)dialog.close();
  $('catalog').replaceChildren();
  $('status').textContent=message;
@@ -139,7 +140,7 @@ async function refresh(){
  }
  // Safety: clear the previous catalogue before fetching current published state.
  const ticket=++requestGeneration;
- products=[];cleanup();++generation;$('catalog').replaceChildren();
+ catalogueVerified=false;products=[];cleanup();++generation;$('catalog').replaceChildren();
  const dialog=$('detail');if(dialog.open)dialog.close();
  loading=true;$('refresh').disabled=true;
  $('retryPanel').hidden=true;$('status').classList.remove('problem');
@@ -151,7 +152,7 @@ async function refresh(){
   if(ticket!==requestGeneration)return; // Later offline/refresh invalidated this response.
   if(navigator.onLine===false)throw Error('Connection lost before verification completed.');
   if(error)throw error;
-  products=Array.isArray(data)?data:[];render();
+  products=Array.isArray(data)?data:[];catalogueVerified=true;render();
  }catch(error){
   if(ticket!==requestGeneration)return;
   emptyForSafety('Catalogue unavailable: '+(error.message||'Network error')+'. No cached or demo listings were shown.');
