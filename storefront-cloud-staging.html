@@ -21,7 +21,7 @@ button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.
 .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:17px}
 .control{padding:11px 12px;border:1px solid #d4c6b7;border-radius:10px;background:#fff;color:var(--ink);min-height:44px}
 .controls input{flex:2 1 220px;min-width:0}.controls select{flex:1 1 145px;min-width:0}.controls button{flex:0 0 auto;background:#e7dbce}
-#status{color:var(--muted);min-height:25px;font-size:14px}
+#status{color:var(--muted);min-height:25px;font-size:14px}#status.problem{color:#873f32;font-weight:700}.retry-panel{margin:10px 0 19px;padding:12px 14px;border:1px solid #d6aaa0;border-radius:10px;background:#fff0eb;color:#794032;font-size:14px}.retry-panel button{background:#5c4b42;color:#fff;border:0;border-radius:9px;padding:9px 13px;min-height:44px;margin-top:8px}
 .catalog{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .product{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;min-width:0;display:flex;flex-direction:column}
 .photo{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;background:#e7dacf}
@@ -60,13 +60,15 @@ dialog{padding:0;border:0;border-radius:18px;max-width:min(540px,94vw);width:100
 <select class="control" id="sort" aria-label="Sort products"><option value="recent">Recently added</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select>
 <button class="control" id="refresh" type="button">Refresh</button></div>
 <p id="status" role="status" aria-live="polite">Loading cloud catalogue…</p>
+<div id="retryPanel" class="retry-panel" role="alert" hidden>Cloud catalogue couldn't be verified. No products are shown while disconnected.<div><button id="retry" type="button">Try connecting again</button></div></div>
 <div class="catalog" id="catalog"></div>
 </section>
 </main>
-<footer class="bottom">Stage 5D · Cloud storefront candidate only. No shopping bag, checkout, customer accounts, reservations, stock locks or payment processing. <a href="cloud-preview.html">Catalogue diagnostic preview</a></footer>
+<footer class="bottom">Stage 5E · Cloud storefront resilience candidate only. No shopping bag, checkout, customer accounts, reservations, stock locks or payment processing. <a href="cloud-preview.html">Catalogue diagnostic preview</a></footer>
 </div>
 <dialog id="detail" aria-label="Product details"><div class="modal-head"><h2 id="detailTitle">Product</h2><button class="close" id="close" aria-label="Close product details" type="button">×</button></div><div class="modal-body" id="detailBody"></div></dialog>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0"></script>
+<script src="catalogue-logic.js?v=5e1"></script>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
@@ -76,7 +78,7 @@ const BUCKET='jues-product-photos';
 const api=window.supabase?.createClient?window.supabase.createClient(PROJECT,KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false,storageKey:'jues-storefront-staging-anon'}}):null;
 const el=(tag,content,cls)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(content!==null&&content!==undefined)n.textContent=String(content);return n};
 const safeUrl=input=>{try{const u=new URL(input);return u.protocol==='https:'?u.href:null}catch(_){return null}};
-let products=[],loadedUrls=[],generation=0,loading=false;
+let products=[],loadedUrls=[],generation=0,loading=false,requestGeneration=0;
 const money=cents=>'US$'+(cents/100).toFixed(2);
 const cleanup=()=>{for(const u of loadedUrls)URL.revokeObjectURL(u);loadedUrls=[]};
 async function imageInto(host,p,token){
@@ -96,11 +98,8 @@ async function imageInto(host,p,token){
  }catch(_){if(token===generation&&host.isConnected)host.textContent='Photo temporarily unavailable'}
 }
 function filtered(){
- const q=$('search').value.toLowerCase().trim(),age=$('age').value;
- const rows=products.filter(p=>(!age||p.age_group===age||Array.isArray(p.sizes)&&p.sizes.includes(age))&&(!q||[p.name,p.category,p.age_group].some(v=>String(v||'').toLowerCase().includes(q))));
- if($('sort').value==='low')rows.sort((a,b)=>a.price_cents-b.price_cents);
- if($('sort').value==='high')rows.sort((a,b)=>b.price_cents-a.price_cents);
- return rows;
+ if(!window.JuesCatalogueLogic)throw new Error('Catalogue filter library unavailable');
+ return window.JuesCatalogueLogic.filterAndSort(products,{query:$('search').value,age:$('age').value,sort:$('sort').value});
 }
 function render(){
  cleanup();const token=++generation;const rows=filtered(),target=$('catalog');target.replaceChildren();
@@ -122,18 +121,49 @@ function openDetail(p){
  body.append(el('p',p.description||'Product details will be added by the owner.'),el('strong',money(p.price_cents)),el('p',p.category+' · '+p.age_group),el('h3','Sizes shown in catalogue'));
  const tags=el('div');for(const size of Array.isArray(p.sizes)?p.sizes:[])tags.append(el('span',size,'tag'));body.append(tags,el('p','Test stock: '+p.stock_qty+'. No purchase, payment, reservation or checkout is available from this staging page.'),el('p','These details are test catalogue entries unless the owner verifies physical items.'));$('detail').showModal();
 }
+function emptyForSafety(message){
+ // Do not show stale listings/photos from an earlier successful request.
+ ++requestGeneration;products=[];cleanup();++generation;
+ const dialog=$('detail');if(dialog.open)dialog.close();
+ $('catalog').replaceChildren();
+ $('status').textContent=message;
+ $('status').classList.add('problem');
+ $('retryPanel').hidden=false;
+ $('refresh').disabled=false;loading=false;
+}
 async function refresh(){
- if(loading)return;loading=true;$('refresh').disabled=true;$('status').textContent='Checking published products…';
+ if(loading)return;
+ if(navigator.onLine===false){
+  emptyForSafety('You are offline. Published products are hidden until the cloud can be checked.');
+  return;
+ }
+ // Safety: clear the previous catalogue before fetching current published state.
+ const ticket=++requestGeneration;
+ products=[];cleanup();++generation;$('catalog').replaceChildren();
+ const dialog=$('detail');if(dialog.open)dialog.close();
+ loading=true;$('refresh').disabled=true;
+ $('retryPanel').hidden=true;$('status').classList.remove('problem');
+ $('status').textContent='Checking current published products…';
  try{
-  if(!api)throw new Error('Cloud library unavailable. Check your connection and reload.');
+  if(!api)throw Error('Cloud library unavailable. Check network and retry.');
+  if(!window.JuesCatalogueLogic)throw Error('Catalogue filters failed to load. Refresh online.');
   const {data,error}=await api.from('jues_products').select('id,name,description,price_cents,stock_qty,age_group,category,sizes,image_url,image_path').eq('published',true).order('created_at',{ascending:false});
+  if(ticket!==requestGeneration)return; // Later offline/refresh invalidated this response.
+  if(navigator.onLine===false)throw Error('Connection lost before verification completed.');
   if(error)throw error;
   products=Array.isArray(data)?data:[];render();
- }catch(error){products=[];cleanup();++generation;$('catalog').replaceChildren();$('status').textContent='Catalogue unavailable: '+(error.message||'Network error')+'. No fallback demo products were shown.'}
- finally{loading=false;$('refresh').disabled=false}
+ }catch(error){
+  if(ticket!==requestGeneration)return;
+  emptyForSafety('Catalogue unavailable: '+(error.message||'Network error')+'. No cached or demo listings were shown.');
+ }finally{
+  if(ticket===requestGeneration){loading=false;$('refresh').disabled=false}
+ }
 }
 $('search').addEventListener('input',render);$('age').addEventListener('change',render);$('sort').addEventListener('change',render);
 $('refresh').addEventListener('click',refresh);
+$('retry').addEventListener('click',refresh);
+window.addEventListener('offline',()=>emptyForSafety('You are offline. Previously loaded products and photos have been hidden until publication can be checked again.'));
+window.addEventListener('online',()=>{if(!loading)refresh()});
 $('close').addEventListener('click',()=>$('detail').close());
 $('detail').addEventListener('click',e=>{if(e.target===$('detail'))$('detail').close()});
 refresh();
