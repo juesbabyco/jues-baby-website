@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jue's Baby Co. — Stage 5E Local Sorting Tests</title>
+<style>
+:root{color-scheme:light}*{box-sizing:border-box}
+body{margin:0;background:#ebe6de;color:#55473f;font:16px/1.5 Arial,Helvetica,sans-serif}
+main{max-width:800px;margin:auto;padding:clamp(12px,4vw,35px)}.panel{background:#fffaf2;border:1px solid #e5d9cb;border-radius:17px;padding:clamp(17px,3vw,30px);margin:14px 0}
+h1{font-size:clamp(28px,5vw,43px);line-height:1.15}h2{font-size:22px}
+.warning{padding:14px;background:#f4e7d5;border-radius:12px}
+.result{padding:11px;border-bottom:1px solid #e8d9cb}.pass{color:#32603f;font-weight:bold}.fail{color:#963c34;font-weight:bold}
+code{overflow-wrap:anywhere;font-size:13px}button,select{font:inherit;border:1px solid #c6b5a3;border-radius:8px;padding:9px;background:#fff;min-height:44px}
+select{width:100%}a{color:#55473f}#samples{display:grid;gap:8px;margin-top:15px}.sample{padding:11px;border-radius:9px;background:#f1e7da}
+</style></head>
+<body><main>
+<p><a href="storefront-cloud-staging.html?v=5e1">Return to staged customer storefront</a></p>
+<div class="panel">
+<h1>Stage 5E · Local catalogue tests</h1>
+<p class="warning"><strong>Diagnostics only — no real inventory.</strong> All products on this page are made-up fixtures stored only inside this browser page. Nothing here is written to or read from Supabase, and nothing can be purchased.</p>
+<p>These tests use the exact same sorting/filtering helper as the cloud storefront. Run them on your phone or Dell; all tests should say PASS.</p>
+<p id="summary" role="status" aria-live="polite">Checking catalogue logic…</p>
+<div id="tests"></div>
+</div>
+<div class="panel">
+<h2>Try sample prices yourself</h2>
+<label for="order">Sort the three fictitious items</label>
+<select id="order"><option value="recent">Recently added</option><option value="low">Price low to high</option><option value="high">Price high to low</option></select>
+<div id="samples"></div>
+</div>
+</main>
+<script src="catalogue-logic.js?v=5e1"></script>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const data=[
+ {name:'FIXTURE Blanket',price_cents:2000,age_group:'Gifts',sizes:['Gifts'],category:'Accessories'},
+ {name:'FIXTURE Romper',price_cents:1200,age_group:'Newborn',sizes:['Newborn'],category:'Everyday'},
+ {name:'FIXTURE Socks',price_cents:1500,age_group:'0–3m',sizes:['0–3m','Newborn'],category:'Essentials'},
+ {name:'FIXTURE Equal price',price_cents:1500,age_group:'3–6m',sizes:['3–6m'],category:'Essentials'}
+];
+function names(items){return items.map(p=>p.name).join('|')}
+const check=(label,opts,expected)=>({label,ok:names(window.JuesCatalogueLogic.filterAndSort(data,opts))===expected});
+const tests=[
+ check('Newest-first input order preserved',{sort:'recent'},'FIXTURE Blanket|FIXTURE Romper|FIXTURE Socks|FIXTURE Equal price'),
+ check('Price ascending',{sort:'low'},'FIXTURE Romper|FIXTURE Socks|FIXTURE Equal price|FIXTURE Blanket'),
+ check('Price descending',{sort:'high'},'FIXTURE Blanket|FIXTURE Socks|FIXTURE Equal price|FIXTURE Romper'),
+ check('Tied prices keep their original order',{sort:'low',query:'fixture'},'FIXTURE Romper|FIXTURE Socks|FIXTURE Equal price|FIXTURE Blanket'),
+ check('Case insensitive Romper query',{query:'rOmPeR'},'FIXTURE Romper'),
+ check('Newborn age includes sizes',{age:'Newborn'},'FIXTURE Romper|FIXTURE Socks'),
+ check('3–6m age exact match',{age:'3–6m'},'FIXTURE Equal price'),
+ check('Combined search, age and low price',{query:'fixture',age:'Newborn',sort:'low'},'FIXTURE Romper|FIXTURE Socks'),
+ check('No matches is empty',{query:'no-match'},''),
+ check('Empty catalogue is empty',{sort:'high'},names(window.JuesCatalogueLogic.filterAndSort([],{})))
+];
+const t=$('tests');
+let passed=0;
+for(const test of tests){
+ const row=document.createElement('div');row.className='result';
+ const status=document.createElement('strong');status.className=test.ok?'pass':'fail';status.textContent=test.ok?'PASS':'FAIL';
+ row.append(status,document.createTextNode(' — '+test.label));t.append(row);
+ if(test.ok)passed++;
+}
+$('summary').textContent=passed+'/'+tests.length+' local sorting/filter checks passed. Database requests: zero.';
+function showSamples(){
+ const rows=window.JuesCatalogueLogic.filterAndSort(data.slice(0,3),{sort:$('order').value});
+ $('samples').replaceChildren();
+ for(const p of rows){
+  const row=document.createElement('div');row.className='sample';row.textContent=p.name+' — US$'+(p.price_cents/100).toFixed(2)+' (fictional test fixture)';
+  $('samples').append(row);
+ }
+}
+$('order').addEventListener('change',showSamples);showSamples();
+</script></body></html>
