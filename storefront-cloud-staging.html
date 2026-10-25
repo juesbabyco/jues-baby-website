@@ -78,7 +78,7 @@ const BUCKET='jues-product-photos';
 const api=window.supabase?.createClient?window.supabase.createClient(PROJECT,KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false,storageKey:'jues-storefront-staging-anon'}}):null;
 const el=(tag,content,cls)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(content!==null&&content!==undefined)n.textContent=String(content);return n};
 const safeUrl=input=>{try{const u=new URL(input);return u.protocol==='https:'?u.href:null}catch(_){return null}};
-let products=[],loadedUrls=[],generation=0,loading=false,requestGeneration=0,catalogueVerified=false;
+let products=[],loadedUrls=[],generation=0,loading=false,requestGeneration=0,catalogueVerified=false,inflightController=null;
 const money=cents=>'US$'+(cents/100).toFixed(2);
 const cleanup=()=>{for(const u of loadedUrls)URL.revokeObjectURL(u);loadedUrls=[]};
 async function imageInto(host,p,token){
@@ -124,7 +124,9 @@ function openDetail(p){
 }
 function emptyForSafety(message){
  // Do not show stale listings/photos from an earlier successful request.
- ++requestGeneration;catalogueVerified=false;products=[];cleanup();++generation;
+ ++requestGeneration;
+ if(inflightController){inflightController.abort();inflightController=null}
+ catalogueVerified=false;products=[];cleanup();++generation;
  const dialog=$('detail');if(dialog.open)dialog.close();
  $('catalog').replaceChildren();
  $('status').textContent=message;
@@ -140,6 +142,8 @@ async function refresh(){
  }
  // Safety: clear the previous catalogue before fetching current published state.
  const ticket=++requestGeneration;
+ const controller=new AbortController();inflightController=controller;
+ const timeout=setTimeout(()=>controller.abort(),15000);
  catalogueVerified=false;products=[];cleanup();++generation;$('catalog').replaceChildren();
  const dialog=$('detail');if(dialog.open)dialog.close();
  loading=true;$('refresh').disabled=true;
@@ -148,7 +152,7 @@ async function refresh(){
  try{
   if(!api)throw Error('Cloud library unavailable. Check network and retry.');
   if(!window.JuesCatalogueLogic)throw Error('Catalogue filters failed to load. Refresh online.');
-  const {data,error}=await api.from('jues_products').select('id,name,description,price_cents,stock_qty,age_group,category,sizes,image_url,image_path').eq('published',true).order('created_at',{ascending:false});
+  const {data,error}=await api.from('jues_products').select('id,name,description,price_cents,stock_qty,age_group,category,sizes,image_url,image_path').eq('published',true).order('created_at',{ascending:false}).abortSignal(controller.signal);
   if(ticket!==requestGeneration)return; // Later offline/refresh invalidated this response.
   if(navigator.onLine===false)throw Error('Connection lost before verification completed.');
   if(error)throw error;
@@ -157,6 +161,8 @@ async function refresh(){
   if(ticket!==requestGeneration)return;
   emptyForSafety('Catalogue unavailable: '+(error.message||'Network error')+'. No cached or demo listings were shown.');
  }finally{
+  clearTimeout(timeout);
+  if(inflightController===controller)inflightController=null;
   if(ticket===requestGeneration){loading=false;$('refresh').disabled=false}
  }
 }
