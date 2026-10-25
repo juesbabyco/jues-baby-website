@@ -1,6 +1,6 @@
 # Stage 5D — Cloud Storefront Candidate: Acceptance and Safety
 
-**Status (2026-10-25): IPHONE SEARCH/FILTER/MODAL PASSED; WINDOWS DELL EDGE CATALOGUE + PHOTO CROSS-DEVICE POSITIVE PASS. DELL OTHER UI, FINAL UNPUBLISH, MULTI-ITEM SORT, FAILURE TESTS OPEN.**
+**Status (2026-10-25): CORE IPHONE + DELL STAGING FUNCTIONAL ACCEPTANCE PASSED; MULTI-ITEM SORTING, OFFLINE/RETRY AND PRODUCTION SECURITY/COMMERCE GATES OPEN.**
 Stage 5C targeted anonymous-photo HTTP negative test **PASSED** via real iPhone request and Supabase edge GET 400 log (JBC-E048, 2026-10-24). Stage 5D browser acceptance and Stage 5 overall remain OPEN.
 
 ## Scope and boundaries
@@ -34,6 +34,12 @@ Stage 5C targeted anonymous-photo HTTP negative test **PASSED** via real iPhone 
 - Owner iPhone published US$15 stock4 TEST item. User confirms it appeared on Dell; Jue Supabase edge logs prove separate Windows 10 Edge and iPhone Safari clients with Windows published product GET200 and Storage photo GET200 after owner PATCH.
 - Remaining run steps: Dell click View sizes & details; Dell search `Romper` / `Towel`, Newborn / 3–6m filter; unpublish from iPhone; Dell Refresh confirms no products. Do not leave test listing published.
 - Sorting cannot be meaningfully tested with one product; do not invent fake physical stock or mark sort accepted.
+
+## Dell full core roundtrip accepted (JBC-E053, 2026-10-25)
+- Owner reported all Dell tests working: sizes/details dialog, positive Romper and negative Towel search, matching Newborn and nonmatching 3–6m age filters, then owner iPhone Unpublish followed by Dell empty list.
+- Logs show iPhone product PATCH 200 at 07:14:14 UTC and independent Windows Edge catalogue GET 200 at 07:14:19 UTC. SQL verifies TEST product published=false, photo path retained and object still private. Browser UI interaction reports are not instrumented per control.
+- **Core functional acceptance for Stage 5D candidate now PASS**. Do not mark all production readiness complete: multi-item sorting never validated with 2+ published products; offline/reconnect, 5xx/network errors, quota/performance, accessibility and real product/legal stock checks remain OPEN.
+- Keep the TEST product unpublished until specific controlled future trials; never advertise stock4 as real availability. No real checkout/orders/payments.
 
 ## Stage 5D live browser acceptance (OPEN)
 
