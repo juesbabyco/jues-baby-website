@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 3.5
-**Last evidence review:** 2026-10-24
+**Version:** 3.6
+**Last evidence review:** 2026-10-25
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
 **Founder/operator intent:** Store owner should manage babywear products, prices, photos, sizes and stock without code changes.
@@ -207,6 +207,11 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Jue database final readback shows the only product private (`published=false`) with JPEG intact. Edge logs record owner PATCH 200, catalogue GET 200 and Storage photo GET 200 during the test; anon database role reads no private catalogue/photo.
 - This is **user-tested iPhone browser acceptance**, not proof of Dell/desktop sync. Stage 5D still OPEN for independent-device published preview, search and age filters (and multi-item sorting later), connectivity/error behavior, and distinct final acceptance before replacing any demo storefront.
 - Original large V8 `index.html` and MindCare remain untouched; no real orders, payment, stock reservation or real product signoff.
+
+### Stage 5D — Dell Windows Edge synced publish/photo from iPhone (JBC-E052, 2026-10-25)
+- User reports newly published US$15 stock4 TEST romper appeared on Dell. Supabase logs independently show Windows 10 Edge catalogue GET when unpublished (07:05:09Z), iPhone owner PATCH publish (07:07:11Z), then Windows 10 Edge published catalogue GET 200 and private Storage photo GET 200 (07:07:14Z). This is actual distinct-device read evidence.
+- Jue database currently shows TEST item `published=true`, photo linked. Stage 5D **Dell cross-device positive visibility PASS**; Dell modal/filters, disappearing after final unpublish on this cycle, multi-item sort and offline resilience remain unverified.
+- Do not treat public TEST listing as real merchandise; restore private draft once acceptance checks finish. Original V8 storefront and MindCare untouched, no checkout/payment/real order functionality.
 
 ## 7. Testing vocabulary
 
