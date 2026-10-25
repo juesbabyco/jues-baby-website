@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 3.8
+**Version:** 3.9
 **Last evidence review:** 2026-10-25
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -226,6 +226,12 @@ Make a usable, approachable babywear shopping website with calm cream/chocolate 
 - Executed actual staging script with mock DOM/network: initial displayed item -> offline clears -> search input doesn't hide warning -> reconnect fetches current empty state; **5/5 PASS**. This is simulated execution, NOT real Dell network outage proof.
 - Remaining user test: `catalogue-stage5e-tests.html?v=5e1` should show all green; leave staging page open on Dell, briefly publish TEST romper, disable only Dell Wi-Fi, unpublish from iPhone, reconnect laptop; ensure stale published product does not come back. Instructions: `docs/STAGE5E_SORTING_OFFLINE_ACCEPTANCE.md`.
 - No modifications to original live demo `index.html`, no Jue schema/data/photo writes, no MindCare use, and no orders/payments/verified real stock.
+
+### Stage 5E — Dell offline/reconnect acceptance (JBC-E056, 2026-10-25)
+- Owner supplied physical Dell Edge screenshots proving offline warning + retry visible with product cards hidden, followed by normal empty published catalogue when Wi-Fi restored after iPhone Unpublish. Backend edge log supports iPhone PATCH 200 at 07:40:38 UTC and distinct Windows Edge published-only GET200 at 07:41:04 UTC. Final dedicated Jue SQL: one TEST US$15 stock4 with photo, published=false; 0 public products.
+- **Real Dell offline/reconnect core behavior USER-TESTED PASS**; the earlier 11/11 sorting fixture checks remain **local code-executed**, not real 2+ cloud product test, and no live API outage/5xx or race-condition proof exists.
+- Stage 5 core owner/photo/cloud storefront preview functionality is sufficiently proven to design the next controlled commerce phase, **not** to launch sales or replace the live demo. Keep original V8 `index.html` untouched and MindCare independent.
+- Remaining gated roadmap: real owner merchandise/images/pricing/stock verification, customer delivery/privacy/refunds terms, safe order lifecycle and inventory consistency, payment provider only after dry-run tests, and separate launch approval.
 
 ## 7. Testing vocabulary
 
