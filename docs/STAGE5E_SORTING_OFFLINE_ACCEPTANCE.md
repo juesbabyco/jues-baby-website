@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Stage 5E Sorting and Offline Recovery
 
-**As of 2026-10-25: BUILT, SCRIPT-CHECKED AND LOCAL SIMULATION PASSED. Real iPhone/Dell offline-browser acceptance OPEN.**
+**As of 2026-10-25: REAL DELL OFFLINE/RECONNECT USER-TESTED PASS. Local 11/11 fixture sorting logic passed; 2+ cloud product sort, live 5xx/timeout cases and launch remain OPEN.**
 This stage adds NO merchandise, fake stock, production checkout or costs to Jue Supabase. The only real TEST product remains unpublished. Stage 5 overall stays OPEN.
 
 ## Dedicated scope and boundaries
@@ -37,6 +37,13 @@ This stage adds NO merchandise, fake stock, production checkout or costs to Jue 
 6. If Dell cannot reconnect, keep TEST product unpublished and report exact warning; do not silently republish. Do not use Wi-Fi disconnection if it disconnects the iPhone too unless phone cellular data is still available.
 7. Cross-check Supabase one TEST draft `published=false` and one retained private JPEG. No checkout or payment capability.
 8. Record screenshots or user observation and Supabase activity logs. Do not conflate simulated results with actual browser proof.
+
+## Verified real Dell offline/reconnect evidence — JBC-E056 (2026-10-25)
+- User sent two physical Dell Edge photos showing the tab with **offline warning / Retry button and no products**, followed by **normal 0 published products** after reconnect. Owner stated tests passed.
+- Supabase logs show iPhone owner PATCH200 at 07:40:38 UTC and subsequent Windows Edge published-only catalogue GET200 at 07:41:04 UTC. DB confirms only one unpublished TEST product with photo retained.
+- This **passes Test B** for actual Dell network loss/recovery after owner unpublish. Does NOT establish every browser/network failure or mid-request race.
+- **Test A** pure sort tests executed in a DOM shim (11/11 PASS); actual Dell or iPhone browser test page feedback wasn't provided yet, and real 2+ distinct published products remain untested.
+- No fake products inserted into Jue's database. Existing V8 page unchanged.
 
 ## Remaining after Stage 5E
 - Real HTTP 5xx / transient CDN/library loading, 15-second abort, repeated retry behavior, accessibility and multi-product sorting with owner-verified actual items all need future separate evidence.
