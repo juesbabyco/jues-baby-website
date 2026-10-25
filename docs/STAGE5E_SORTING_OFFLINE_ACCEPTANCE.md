@@ -45,6 +45,9 @@ This stage adds NO merchandise, fake stock, production checkout or costs to Jue 
 - **Test A** pure sort tests executed in a DOM shim (11/11 PASS); actual Dell or iPhone browser test page feedback wasn't provided yet, and real 2+ distinct published products remain untested.
 - No fake products inserted into Jue's database. Existing V8 page unchanged.
 
+## JBC-E057 — iPhone fixture browser test (2026-10-25)
+Owner supplied iPhone screenshots of the fixture page with all 11 of 11 tests marked PASS. This independently confirms browser execution of the pure test logic on iPhone, not just prior local simulation. The sample price dropdown remained on Recently added in visible screenshots, so interactive low/high selection is not yet verified by this evidence. The fixture records are fictional and never inserted into cloud products. Stage 5E remains open for untested network failures and live multi-item sorting.
+
 ## Remaining after Stage 5E
 - Real HTTP 5xx / transient CDN/library loading, 15-second abort, repeated retry behavior, accessibility and multi-product sorting with owner-verified actual items all need future separate evidence.
 - This never authorizes production storefront replacement, stock deductions, payment webhooks, checkout or customer personal data collection.
