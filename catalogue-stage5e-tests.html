@@ -49,7 +49,8 @@ const tests=[
  check('3–6m age exact match',{age:'3–6m'},'FIXTURE Equal price'),
  check('Combined search, age and low price',{query:'fixture',age:'Newborn',sort:'low'},'FIXTURE Romper|FIXTURE Socks'),
  check('No matches is empty',{query:'no-match'},''),
- check('Empty catalogue is empty',{sort:'high'},names(window.JuesCatalogueLogic.filterAndSort([],{})))
+ {label:'Empty catalogue is empty',ok:window.JuesCatalogueLogic.filterAndSort([],{sort:'high'}).length===0},
+ {label:'Sorting does not mutate source records',ok:(()=>{const copy=data.slice();window.JuesCatalogueLogic.filterAndSort(copy,{sort:'high'});return names(copy)===names(data)})()}
 ];
 const t=$('tests');
 let passed=0;
