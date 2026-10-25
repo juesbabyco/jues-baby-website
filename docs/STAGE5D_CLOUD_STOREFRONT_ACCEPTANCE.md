@@ -56,6 +56,11 @@ Stage 5C targeted anonymous-photo HTTP negative test **PASSED** via real iPhone 
 - Full actual request-level unauthorised Storage tests; failure and offline recovery; rate limits, quotas and costs.
 - Production launch requires distinct founder acceptance. Avoid publishing TEST/demo products as real stock.
 
+## Stage 5E hardening (2026-10-25)
+- Stage 5D core iPhone + Dell browsing remains accepted, but sort required 2+ items and network-error cases were unverified.
+- A follow-on Stage 5E creates an isolated four-fixture test page and shared sort routine, and adds fail-closed offline/retry logic to the same staging storefront. **Code/isolated simulations passed**, but real Dell network-recovery acceptance is OPEN. Details: `docs/STAGE5E_SORTING_OFFLINE_ACCEPTANCE.md`.
+- No real extra TEST products were created and the original V8 remains untouched.
+
 ## Evidence and stop conditions
 
 - Record HTML commit and JS parser output as `SYNTAX_VERIFIED`, not `USER_TESTED`.
