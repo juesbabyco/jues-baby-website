@@ -1,6 +1,6 @@
 # Stage 5D — Cloud Storefront Candidate: Acceptance and Safety
 
-**Status (2026-10-24): iPHONE BROWSER PUBLISH/PHOTO/DETAILS/UNPUBLISH ACCEPTED; DELL/SEARCH/FILTER, MULTI-ITEM & FAILURE TESTS OPEN.**
+**Status (2026-10-25): IPHONE SEARCH/FILTER/MODAL PASSED; WINDOWS DELL EDGE CATALOGUE + PHOTO CROSS-DEVICE POSITIVE PASS. DELL OTHER UI, FINAL UNPUBLISH, MULTI-ITEM SORT, FAILURE TESTS OPEN.**
 Stage 5C targeted anonymous-photo HTTP negative test **PASSED** via real iPhone request and Supabase edge GET 400 log (JBC-E048, 2026-10-24). Stage 5D browser acceptance and Stage 5 overall remain OPEN.
 
 ## Scope and boundaries
@@ -29,6 +29,11 @@ Stage 5C targeted anonymous-photo HTTP negative test **PASSED** via real iPhone 
 - Supabase Jue edge logs independently record catalogue GET 200, Storage GET 200 and PATCH 200 around 20:54–20:55 UTC. Final private draft `published=false` with saved image, and anon read permissions for product/photo return zero.
 - **iPhone mobile functional cycle PASSED**. NOT proof of Dell/InPrivate cross-device handling, search/age filters, multiple-item sort, or network/error resilience.
 - Next Dell verification: open `storefront-cloud-staging.html?v=5d2` in Dell InPrivate to see zero products. Temporarily publish from approved owner's iPhone; Dell refresh should show product photo and details. Search by `romper`, then `zznomatch` (should be empty); choose `Newborn` and a nonmatching age; restore All ages; then Unpublish on iPhone and refresh Dell to zero. Do not create fake extra sale inventory solely to test sorting.
+
+## Dell Edge shared-cloud sync first accepted (JBC-E052, 2026-10-25)
+- Owner iPhone published US$15 stock4 TEST item. User confirms it appeared on Dell; Jue Supabase edge logs prove separate Windows 10 Edge and iPhone Safari clients with Windows published product GET200 and Storage photo GET200 after owner PATCH.
+- Remaining run steps: Dell click View sizes & details; Dell search `Romper` / `Towel`, Newborn / 3–6m filter; unpublish from iPhone; Dell Refresh confirms no products. Do not leave test listing published.
+- Sorting cannot be meaningfully tested with one product; do not invent fake physical stock or mark sort accepted.
 
 ## Stage 5D live browser acceptance (OPEN)
 
