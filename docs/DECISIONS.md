@@ -19,6 +19,10 @@
 | JBC-D013 | 2026-10-24 | Cloud catalogue defaults to zero records and draft-only publishing | No AI-generated placeholder photo or demo item is implicitly live stock; owner must approve public publishing. |
 | JBC-D014 | 2026-10-24 | Public client uses publishable key and pinned Supabase JS 2.118.0 | No service-role/secret key reaches public GitHub Pages. Actual browser functional validation still required. |
 
+| JBC-D011 | 2026-10-25 | Order stock must be per sellable size/variant; no purchase against product-level `stock_qty` demo field | Existing product stores one stock number despite multiple sizes. Server should hold/reserve per size with atomic concurrency tests before enabling orders. |
+| JBC-D012 | 2026-10-25 | Idempotent transactional order attempt and immutable price snapshot | Prevent double-tap/retry duplication, changed cart under same key, partial multiline orders, oversell and price tampering. Transaction must lock affected variants and commit effects together. |
+| JBC-D013 | 2026-10-25 | Stage 6A begins as offline fictional simulator, not a customer checkout or real Supabase migration | Do not collect PII, trust browser authority or activate money flows before order backend/RLS/concurrency, consumer policies and founder review. |
+
 ## Pending decisions
 - Who may be store owner/admin? Invite/provision explicitly after backend exists; do not use an open signup-as-admin flow.
 - Public product publishing workflow and inventory validation.
