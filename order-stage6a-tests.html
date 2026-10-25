@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jue's Baby Co. · Stage 6A Order-Safety Tests</title>
+<style>
+*{box-sizing:border-box}body{font:16px/1.55 Arial,Helvetica,sans-serif;background:#ebe6de;color:#51443e;margin:0}main{max-width:850px;margin:auto;padding:clamp(12px,3vw,35px)}.panel{background:#fffaf2;border-radius:18px;padding:clamp(16px,3vw,28px);margin:13px 0}h1{font-size:clamp(29px,5vw,44px);line-height:1.1;margin:12px 0}h2{font-size:23px}.label{font-size:12px;letter-spacing:2px;color:#927f71}
+.warning{background:#f2e5d3;border:1px solid #d9bea3;padding:14px;border-radius:11px;margin:16px 0}.test{border-bottom:1px solid #e5d9cb;padding:10px 4px;display:flex;gap:10px}.test:last-child{border-bottom:0}.pass{color:#336342;font-weight:bold}.fail{color:#9a3030;font-weight:bold}.controls{display:flex;flex-wrap:wrap;gap:9px}
+button{font:inherit;background:#574a43;color:white;border:0;border-radius:9px;padding:11px 14px;min-height:44px;cursor:pointer}button.alt{background:#e8ddcf;color:#51443e}.muted{color:#7e7167;font-size:14px}#demoResult{background:white;border-radius:11px;padding:12px;margin:14px 0;min-height:70px;white-space:pre-line}
+.stat{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e7d8cc}.stat span{color:#74675f}
+a{color:inherit}code{font-size:13px}
+</style></head><body><main>
+<p><a href="storefront-cloud-staging.html?v=5e1">Return to Jue's staged storefront</a></p>
+<section class="panel"><div class="label">STAGE 6A · ORDERS & INVENTORY</div><h1>Safety before selling.</h1>
+<div class="warning"><strong>FICTIONAL SIMULATION ONLY.</strong> No real products, customer accounts, orders, personal details, stock changes, payment methods or charges are involved. This page runs only on your device, using made-up product sizes and prices. It does not connect to Jue's Supabase database.</div>
+<p>These tests check the same proposed rules that a future secure server would need to enforce. They are <strong>not</strong> a concurrency test of a real database.</p>
+<strong id="summary" role="status" aria-live="polite">Checking order safety…</strong>
+<div id="testResults"></div>
+</section>
+<section class="panel"><h2>Try a fictional order yourself</h2>
+<p class="muted">Pretend the Newborn romper costs US$12.00, with 2 units in stock. Reservation holds a unit; fulfilment would deduct it, but here nothing leaves this page.</p>
+<div class="stat"><span>Fixture on-hand stock</span><strong id="onHand">2</strong></div>
+<div class="stat"><span>Fixture reserved</span><strong id="held">0</strong></div>
+<div class="stat"><span>Fixture available</span><strong id="available">2</strong></div>
+<div class="stat"><span>Order state</span><strong id="orderState">No order</strong></div>
+<div id="demoResult" role="status" aria-live="polite">Choose Reserve one item to begin the simulation.</div>
+<div class="controls">
+<button type="button" id="reserve">Reserve one item</button>
+<button type="button" id="retry" class="alt">Retry same request</button>
+<button type="button" id="confirm" class="alt">Owner confirm (fake)</button>
+<button type="button" id="fulfill" class="alt">Fulfil (fake)</button>
+<button type="button" id="cancel" class="alt">Cancel / release</button>
+<button type="button" id="reset" class="alt">Reset test</button>
+</div></section>
+<footer class="muted">Stage 6A · Browser-local safety simulator. No active checkout. No real reservations. <a href="https://github.com/juesbabyco/jues-baby-website/blob/main/docs/STAGE6_ORDER_INVENTORY_DESIGN.md">View the engineering design</a>.</footer>
+</main>
+<script src="order-stage6a-engine.js?v=6a1"></script>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const engine=window.JuesOrderSimulation;
+const fixture=()=>[{id:'newborn-romper',name:'FICTIONAL Romper',size:'Newborn',on_hand:2,price_cents:1200},{id:'three-six-romper',name:'FICTIONAL Romper',size:'3–6m',on_hand:1,price_cents:1200},{id:'socks',name:'FICTIONAL Socks',size:'Newborn',on_hand:3,price_cents:500}];
+const key=n=>'stage6a-fixture-request-'+n;
+const line=(id,qty)=>({variant_id:id,qty});
+const make=()=>engine.makeSandbox(fixture());
+const tests=[];
+function test(name,callback){let passed=false;try{passed=!!callback()}catch(_){passed=false}tests.push({name,passed})}
+const stock=(s,id)=>s.snapshot().stock.find(v=>v.id===id);
+const request=(k,lines)=>({key:key(k),lines});
+test('Reserving holds stock without deducting on-hand',()=>{const s=make(),r=s.attempt(request(1,[line('newborn-romper',1)]));return r.ok&&stock(s,'newborn-romper').on_hand===2&&stock(s,'newborn-romper').reserved===1});
+test('A duplicate request key returns the SAME order',()=>{const s=make(),r=s.attempt(request(2,[line('newborn-romper',1)])),t=s.attempt(request(2,[line('newborn-romper',1)]));return r.ok&&t.ok&&t.replayed&&r.order.id===t.order.id&&stock(s,'newborn-romper').reserved===1});
+test('Reordered equivalent cart lines replay idempotently',()=>{const s=make(),r=s.attempt(request(3,[line('socks',1),line('newborn-romper',1)])),t=s.attempt(request(3,[line('newborn-romper',1),line('socks',1)]));return t.ok&&t.replayed&&r.order.id===t.order.id});
+test('Same key with different quantity gets a conflict',()=>{const s=make();s.attempt(request(4,[line('newborn-romper',1)]));return s.attempt(request(4,[line('newborn-romper',2)])).code==='IDEMPOTENCY_CONFLICT'});
+test('Customer price field cannot override server price',()=>{const s=make(),r=s.attempt({...request(5,[line('newborn-romper',1)]),price_cents:1,total_cents:1});return r.ok&&r.order.total_cents===1200&&r.order.items[0].unit_price_cents===1200});
+test('Unpublished size cannot be reserved',()=>{const s=engine.makeSandbox([{id:'secret',name:'Secret',size:'Newborn',on_hand:2,price_cents:200,published:false}]);return s.attempt(request(6,[line('secret',1)])).code==='UNAVAILABLE_VARIANT'});
+test('Unknown item cannot be ordered',()=>{const s=make();return s.attempt(request(7,[line('missing',1)])).code==='UNKNOWN_VARIANT'});
+test('Zero, negative and fractional quantities are rejected',()=>{const s=make();return [0,-1,1.5].every((q,i)=>s.attempt(request('invalid'+i,[line('socks',q)])).code==='BAD_QUANTITY')});
+test('Repeated size line is rejected',()=>{const s=make();return s.attempt(request(8,[line('socks',1),line('socks',1)])).code==='DUPLICATE_VARIANT_LINE'});
+test('Multi-line unavailable order has ZERO partial reservations',()=>{const s=make(),r=s.attempt(request(9,[line('socks',2),line('three-six-romper',2)]));return r.code==='OUT_OF_STOCK'&&stock(s,'socks').reserved===0&&stock(s,'three-six-romper').reserved===0});
+test('The last available unit cannot be held twice',()=>{const s=make();const one=s.attempt(request(10,[line('three-six-romper',1)])),two=s.attempt(request(11,[line('three-six-romper',1)]));return one.ok&&two.code==='OUT_OF_STOCK'&&stock(s,'three-six-romper').reserved===1});
+test('Newborn and 3–6m have independent stock',()=>{const s=make();s.attempt(request(12,[line('three-six-romper',1)]));const r=s.attempt(request(13,[line('newborn-romper',1)]));return r.ok&&stock(s,'newborn-romper').reserved===1});
+test('Cancel releases a hold exactly once',()=>{const s=make(),o=s.attempt(request(14,[line('socks',2)])).order;const a=s.transition(o.id,'cancel'),b=s.transition(o.id,'cancel');return a.ok&&!b.ok&&stock(s,'socks').reserved===0&&stock(s,'socks').on_hand===3});
+test('Expired hold releases stock and stays terminal',()=>{const s=make(),o=s.attempt(request(15,[line('newborn-romper',1)])).order;return s.transition(o.id,'expire').ok&&stock(s,'newborn-romper').reserved===0&&s.transition(o.id,'confirm').code==='INVALID_TRANSITION'});
+test('Retry after expiry cannot create a second reservation',()=>{const s=make(),q=request(16,[line('socks',2)]),o=s.attempt(q).order;s.transition(o.id,'expire');const x=s.attempt(q);return x.replayed&&x.order.state==='EXPIRED'&&stock(s,'socks').reserved===0});
+test('Owner confirmation preserves the stock hold',()=>{const s=make(),o=s.attempt(request(17,[line('socks',1)])).order;return s.transition(o.id,'confirm').ok&&stock(s,'socks').on_hand===3&&stock(s,'socks').reserved===1});
+test('Fulfilment deducts on-hand and hold ONCE',()=>{const s=make(),o=s.attempt(request(18,[line('socks',2)])).order;s.transition(o.id,'confirm');const a=s.transition(o.id,'fulfill'),b=s.transition(o.id,'fulfill');return a.ok&&!b.ok&&stock(s,'socks').on_hand===1&&stock(s,'socks').reserved===0});
+test('Cannot fulfil a cancelled order',()=>{const s=make(),o=s.attempt(request(19,[line('socks',1)])).order;s.transition(o.id,'cancel');return s.transition(o.id,'fulfill').code==='INVALID_TRANSITION'});
+test('Owner cannot lower on-hand below reserved stock',()=>{const s=make();s.attempt(request(20,[line('newborn-romper',2)]));return s.setFixtureStock('newborn-romper',1).code==='BELOW_RESERVED'&&stock(s,'newborn-romper').on_hand===2});
+test('Saved unit price snapshot survives fixture price change',()=>{const s=make(),r=s.attempt(request(21,[line('socks',1)]));s.changeFixturePrice('socks',750);return r.order.total_cents===500&&s.snapshot().orders[0].items[0].unit_price_cents===500});
+test('Order payment state never becomes PAID automatically',()=>{const s=make(),o=s.attempt(request(22,[line('socks',1)])).order;s.transition(o.id,'confirm');s.transition(o.id,'fulfill');return s.snapshot().orders[0].payment_state==='NOT_INTEGRATED'});
+test('All tested operations preserve nonnegative stock invariant',()=>{const s=make(),o=s.attempt(request(23,[line('newborn-romper',2)])).order;s.transition(o.id,'confirm');s.transition(o.id,'fulfill');return s.invariant()});
+const results=$('testResults');let passed=0;
+for(const t of tests){const row=document.createElement('div');row.className='test';const label=document.createElement('strong');label.className=t.passed?'pass':'fail';label.textContent=t.passed?'PASS':'FAIL';const name=document.createElement('span');name.textContent=t.name;row.append(label,name);results.append(row);if(t.passed)passed++}
+$('summary').textContent=passed+'/'+tests.length+' fictional in-memory order-safety checks passed. Database/API requests: zero.';
+let demo,activeId=null;
+const demoKey=key('interactive');
+function renderDemo(message){
+ const s=demo.snapshot(),v=s.stock.find(x=>x.id==='newborn-romper'),o=s.orders.find(x=>x.id===activeId);
+ $('onHand').textContent=v.on_hand;$('held').textContent=v.reserved;$('available').textContent=v.on_hand-v.reserved;$('orderState').textContent=o?o.state:'No order';$('demoResult').textContent=message;
+}
+function resetDemo(){demo=make();activeId=null;renderDemo('Fictional stock reset. No real order or money exists.')}
+function out(r){if(r.ok&&r.order)activeId=r.order.id;return r.ok?(r.replayed?'REPLAYED same order: ':'Simulation OK: ')+(r.order?r.order.id+' — '+r.order.state:''):'Simulation rejected: '+r.code}
+$('reserve').addEventListener('click',()=>{const r=demo.attempt(request('interactive',[line('newborn-romper',1)]));renderDemo(out(r))});
+$('retry').addEventListener('click',()=>{const r=demo.attempt(request('interactive',[line('newborn-romper',1)]));renderDemo(out(r))});
+$('confirm').addEventListener('click',()=>{renderDemo(activeId?out(demo.transition(activeId,'confirm')):'No fictional order yet. Reserve first.')});
+$('cancel').addEventListener('click',()=>{renderDemo(activeId?out(demo.transition(activeId,'cancel')):'No fictional order yet. Reserve first.')});
+$('fulfill').addEventListener('click',()=>{renderDemo(activeId?out(demo.transition(activeId,'fulfill')):'No fictional order yet. Reserve first.')});
+$('reset').addEventListener('click',resetDemo);
+resetDemo();
+</script></body></html>
