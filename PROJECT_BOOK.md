@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 4.1
+**Version:** 4.2
 **Last evidence review:** 2026-10-25
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -245,6 +245,9 @@ Screenshot shows 11 of 11 fixture checks passing in Safari, with only fictional 
 - **FICTIONAL in-memory, not backend:** `order-stage6a-engine.js` (`d723c8b56c275621ff61d3267216675221697f17`) and `order-stage6a-tests.html` (`edeedbf5cde75aaf3688b9899c2e0850720479f2`). Ran the actual test-page JavaScript against a DOM stub plus real engine implementation: **22/22 PASS**. Also simulated Reserve, replay, owner Confirm, Fulfil and forbidden second Cancel transitions. Price ignored when supplied by caller; no real customer data, charges or Supabase mutations.
 - **Stage 6A designed / local executable simulation verified**, **physical-device browser acceptance pending**. This does not verify parallel PostgreSQL transactions or justify opening public ordering. Stage 6B later may propose governed isolated backend tables/functions and real concurrency tests, only after review.
 - Original V8 `index.html`, authenticated owner catalogue, photo storage and MindCare unchanged; only Jue GitHub docs and deliberately isolated simulator files added.
+
+### Stage 6A iPhone acceptance — JBC-E061, 2026-10-26
+Four iPhone screenshots verify simulated reserve (2 on hand, 1 held), same-key replay without second hold, owner confirmation preserving the hold and cancellation releasing it. **Fulfilment on iPhone has not been shown.** The 22/22 scripted checks were already verified separately in local execution. No real customer/order/transaction/payment was created. Evidence synchronized to GitHub log and Jue private stage events (50 events); registry current-stage update blocked. Keep production launch closed.
 
 ## 7. Testing vocabulary
 
