@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 4.2
+**Version:** 4.3
 **Last evidence review:** 2026-10-25
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -248,6 +248,9 @@ Screenshot shows 11 of 11 fixture checks passing in Safari, with only fictional 
 
 ### Stage 6A iPhone acceptance — JBC-E061, 2026-10-26
 Four iPhone screenshots verify simulated reserve (2 on hand, 1 held), same-key replay without second hold, owner confirmation preserving the hold and cancellation releasing it. **Fulfilment on iPhone has not been shown.** The 22/22 scripted checks were already verified separately in local execution. No real customer/order/transaction/payment was created. Evidence synchronized to GitHub log and Jue private stage events (50 events); registry current-stage update blocked. Keep production launch closed.
+
+### JBC-E062: Stage 6A iPhone fulfilment
+Screenshot evidence: reset stock 2, reserve 1, confirm then fulfil leaves stock 1, zero reserved, state FULFILLED. Post-fulfil cancel has not been shown. Fictional only; no database order or stock movement.
 
 ## 7. Testing vocabulary
 
