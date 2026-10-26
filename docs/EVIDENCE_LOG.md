@@ -100,5 +100,7 @@ This log records observations, not inferred functionality. Append new rows. Date
 
 | JBC-E061 | Four iPhone screenshots 2026-10-26 | Browser simulation: reserve holds 1 of 2; retry returns same order; confirm keeps hold; cancel restores available quantity to 2. | Fictional only. Fulfil and post-fulfil cancel are not shown. |
 
+| JBC-E062 | Four owner iPhone screenshots at local 11:15 on 2026-10-26, Stage 6A fictional order simulator | **BROWSER FULFILMENT VERIFIED:** After Reset (on-hand 2, reserved 0), Reserve (on-hand 2, reserved 1), Confirm (on-hand 2, reserved 1), Fulfil produces FULFILLED, on-hand 1, reserved 0, available 1. | Fictional in-memory test only; no PostgreSQL or real stock changes. A subsequent Cancel on the FULFILLED order was not shown, so terminal-state rejection still requires user evidence. |
+
 ## Evidence handling
 Write only non-sensitive observations here. Before announcing a stage complete, attach a reproducible test method plus commit/Supabase reference where applicable. Never replace lack of evidence with optimistic inferences.
