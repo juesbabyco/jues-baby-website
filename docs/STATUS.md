@@ -249,6 +249,12 @@
 - Next: user opens `order-stage6a-tests.html?v=6a1` on iPhone/Dell to verify 22/22 and reserve/retry/cancel manually. Only after independent evidence should Stage 6B propose isolated backend migrations and multi-connection stock concurrency tests.
 - Stage 5E previous fixture manual price low/high sorting now **user-visible PASSED** (JBC-E058). The fixtures were explicitly imaginary. Original `index.html` and MindCare untouched; Jue overall launch still OPEN.
 
+## Stage 6A phone acceptance — 2026-10-26 (JBC-E061)
+- Four owner iPhone screenshots show fictional RESERVED stock: 2 on hand, 1 held, 1 available; same-key retry returned same order, confirmation retained hold, and cancellation released the hold back to 2 available.
+- Scoped iPhone tests passed: reserve, replay, confirm and cancel. Fulfil, one-time physical deduction and rejection of cancel after fulfil are not shown and remain open for device testing.
+- This is an in-browser simulator, not an actual concurrent database order system. Dedicated Jue Supabase still has one unpublished stock4 TEST product; no order tables or real payments exist.
+- The supporting evidence is recorded as JBC-E061 in GitHub and private Supabase events. The separate Supabase current-stage registry update was blocked and remains at its previous stage value.
+
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
 - Unexpected bill/cost -> STOP and ask.
