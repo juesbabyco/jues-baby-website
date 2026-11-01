@@ -270,6 +270,14 @@
 - **Concurrent client overlap NOT YET PROVEN.** Existing GitHub `docs/STAGE6B_TWO_SESSION_RACE_PROTOCOL.md` prepares independent session test using seeded fake `S6B-RACE_MANUAL_01` (stock1). Connector dispatches were serialized; no extension/paid branch enabled. No claim of closed Stage 6B.
 - Still missing: overlapping Postgres sessions, exactly-once database cancel/expire/confirm/fulfil ledger, real stock signoff, privacy and order/payments. Supabase Auth leaked-password protection warning remains open; no Auth change.
 
+## Stage 6B — Private order lifecycle and ledger SQL (JBC-E069/E070; 2026-11-01)
+- Dedicated Jue-only migration `jues_stage6b_private_cart_lifecycle_lab` applied from GitHub `supabase/stage6b_private_cart_lifecycle_lab.sql`. Private fiction-only cart rows now accept RESERVED, CONFIRMED, CANCELLED, EXPIRED, FULFILLED; `payment_state=NOT_INTEGRATED` enforced; test-only 15-min expiry timestamp. RLS/no public grants; no customer-facing checkout endpoints.
+- Created restricted `fixture_cart_movements` (HOLD/RELEASE/CONSUME per order/size, one unique occurrence per effect) and non-exposed SECURITY INVOKER `transition_cart_fixture`, using order and sorted variant row locks.
+- **REAL PostgreSQL sequential tests PASSED:** confirm retains hold; fulfil two sizes consumes once; reserved/confirmed cancellation and overdue expiration release stock once; premature expiry rejected, expired hold cannot be confirmed, confirmed order cannot expire, repeated terminal actions/cancel-after-fulfil rejected; explicit SQL ROLLBACK undid attempted confirm and fulfil with zero lasting stock or event mutation. Audit movement totals reconciled. All payment flags remain NOT_INTEGRATED.
+- Private lab checkpoint: six fictional cart orders, fourteen movement entries; original real TEST product remains unpublished at US$15 stock4 with photo; zero public orders/payments. Anon/auth have no schema/table/function access.
+- **Stage 6B STILL OPEN:** genuinely overlapping PostgreSQL client sessions, repeatable idempotency race proof, autonomous expiry worker, real actor authorization, stock reconciliations and settlement/consumer rules not proven. A fictitious 15-minute hold is not an approved business policy. Private admin ledger is not tamperproof production accounting.
+- Supabase advisor WARN Auth leaked-password protection disabled; private no-policy RLS and missing fictional FK indexes INFO. Source detail `docs/STAGE6B_ORDER_LIFECYCLE_SQL_TESTS.md`; concurrency protocol `docs/STAGE6B_TWO_SESSION_RACE_PROTOCOL.md`. No V8/MindCare changes.
+
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
 - Unexpected bill/cost -> STOP and ask.
