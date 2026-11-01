@@ -34,6 +34,30 @@
 - INFO: private `jues_stage6b` tables have RLS but no policies; **intended denial** because public and signed-in roles have no grants.
 - Performance INFO: `jues_stage6b.fixture_orders.sku` foreign key has no separate index; very small fictional test table only. No index was added yet. Reference: https://supabase.com/docs/guides/database/database-linter?lint=0001_unindexed_foreign_keys .
 
+## Stage 6B extension — private multi-line cart transactions (JBC-E066 / E067, 2026-11-01)
+
+Applied source-controlled migration `jues_stage6b_private_multiline_cart_harness` from GitHub `supabase/stage6b_private_multiline_cart_harness.sql` (commit `23e244ab4f0369e15156e6fc94c0ca5229af7f36`). This adds *only* private RLS fixture-cart header/item tables and an invoker-only, no-public-grants transactional function. Three new fictional size variants were seeded: A on_hand2 US$12, B on_hand1 US$13, C on_hand3 US$5.
+
+Actual PostgreSQL outcomes:
+- A1+B2 => **OUT_OF_STOCK**, both reserved counts remain zero and no cart row created.
+- A1+B1 => **RESERVED**, one cart ID, item snapshots 1200+1300 cents = US$25 total; reserved A1 and B1.
+- B1+A1 same request key => **REPLAYED** same ID, no repeat holds.
+- A2+B1 same request key => **IDEMPOTENCY_CONFLICT**.
+- C1+B1 with a different key when B is held => **OUT_OF_STOCK**; C remains unreserved.
+- Repeating SKU and zero quantity => **DUPLICATE_VARIANT** and **INVALID_LINE**, respectively.
+- `BEGIN; reserve_cart_fixture(A1+C1); ROLLBACK;` returned RESERVED inside transaction but **no order persisted**, A/C reserved figures unchanged afterward.
+- Inside a separate ROLLBACK transaction, update A current fixture price to 9999 cents: previous order still records A=1200 cents and subtotal=2500 cents. Fixture price reverted automatically after rollback.
+- Postcheck: **one fictional cart, two lines**, four private lab order rows from initial single-SKU tests, zero real published products. Anonymous and signed-in ordinary roles cannot use the new tables/function; RLS remains active.
+- **All this is serial DB testing and explicit rollback, not concurrent sessions.** Locking strategy is source-audited but no genuine overlapping request timestamps exist yet.
+
+A new fake last-unit SKU `S6B-RACE_MANUAL_01` (on_hand1, reserved0) is prepared for a later true overlapping-session test. Exact reproducible instructions are in `docs/STAGE6B_TWO_SESSION_RACE_PROTOCOL.md`. Do not activate extensions or paid branches to test concurrency without separate approval.
+
+### Remaining transaction-safety gaps
+
+- Independent overlapping PostgreSQL session test of different request keys and same key, with timestamps and real backend PID evidence: **OPEN**.
+- Database CANCEL / EXPIRE / CONFIRM / FULFIL exactly-once effects, protected audit ledger, expiry cleanup: **NOT IMPLEMENTED in the new private cart harness**.
+- Actual owner-verified merchandise stock, customer data privacy/delivery policies, rate limits, payment settlement and public order API: **NOT IMPLEMENTED**.
+
 ## What must pass before Stage 6B can be closed
 
 1. Execute same-stock different-key and same-key repeat tests using **two independently connected PostgreSQL sessions with overlapping database timestamps**, ideally through a secure staging-only harness with no exposed DB password. Do not use a new paid database branch without consent.
