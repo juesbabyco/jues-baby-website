@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 4.5
+**Version:** 4.6
 **Last evidence review:** 2026-11-01
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -267,6 +267,12 @@ Screenshot evidence: reset stock 2, reserve 1, confirm then fulfil leaves stock 
 - One fictional cart with two lines is persisted, alongside four earlier private single-line test orders, all unrelated to real merchandise. Anonymous and ordinary signed-in roles have no access to test schema or reserve function. Real catalog remains one unpublished US$15 TEST with stock4.
 - **Genuine simultaneous two-session overselling race is still UNPROVEN**. `docs/STAGE6B_TWO_SESSION_RACE_PROTOCOL.md` defines two independent Postgres SQL connections, lock-hold timing, result assertions, and documentation requirements. One fake stock1 SKU is prepared; test not run. `pg_cron` / `dblink` not enabled. Do not close Stage 6B or enable public checkout.
 - Remaining: true parallel Postgres contention and idempotency race, database cancel/expiry/confirm/fulfil transactions + audit ledger, privacy/delivery/real product signoff, Auth password-protection warning and eventual payment integration.
+
+### Stage 6B — Private order state-machine / audited stock test (JBC-E069/E070, 2026-11-01)
+- Applied dedicated Jue Supabase private `jues_stage6b` migration adding strict RESERVED/CONFIRMED/CANCELLED/EXPIRED/FULFILLED transitions and HOLD/RELEASE/CONSUME movement events; `payment_state=NOT_INTEGRATED` always. All created records fictional and inaccessible to anon/auth.
+- Real Postgres test: two-item CONFIRMED→FULFILLED reduced on-hand one per item and cleared holds exactly once; reserved/confirmed cancellation released once; expired fake hold released once; early expiry, expired hold confirmation, invalid and repeated terminal actions rejected. ROLLBACK of actual SQL CONFIRM and FULFIL correctly erased their effects; ledger movements reconciled to final stock.
+- **Stage 6B partial acceptance:** sequential SQL lifecycle and stock ledger PASS; 6 private fake carts, 14 private movements, zero real published products. Independent overlapping-session reservation race remains **NOT PROVEN**, and auto-expiry job/customer authorization/real payment remain OPEN.
+- Source/evidence: `docs/STAGE6B_ORDER_LIFECYCLE_SQL_TESTS.md`, `docs/STAGE6B_TWO_SESSION_RACE_PROTOCOL.md`, `docs/EVIDENCE_LOG.md` events JBC-E069/E070. Original demo V8, owner product and MindCare untouched.
 
 ## 7. Testing vocabulary
 
