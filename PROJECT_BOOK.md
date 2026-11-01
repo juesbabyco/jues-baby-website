@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 4.6
+**Version:** 4.7
 **Last evidence review:** 2026-11-01
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -273,6 +273,11 @@ Screenshot evidence: reset stock 2, reserve 1, confirm then fulfil leaves stock 
 - Real Postgres test: two-item CONFIRMED→FULFILLED reduced on-hand one per item and cleared holds exactly once; reserved/confirmed cancellation released once; expired fake hold released once; early expiry, expired hold confirmation, invalid and repeated terminal actions rejected. ROLLBACK of actual SQL CONFIRM and FULFIL correctly erased their effects; ledger movements reconciled to final stock.
 - **Stage 6B partial acceptance:** sequential SQL lifecycle and stock ledger PASS; 6 private fake carts, 14 private movements, zero real published products. Independent overlapping-session reservation race remains **NOT PROVEN**, and auto-expiry job/customer authorization/real payment remain OPEN.
 - Source/evidence: `docs/STAGE6B_ORDER_LIFECYCLE_SQL_TESTS.md`, `docs/STAGE6B_TWO_SESSION_RACE_PROTOCOL.md`, `docs/EVIDENCE_LOG.md` events JBC-E069/E070. Original demo V8, owner product and MindCare untouched.
+
+### Stage 6B — Independent connections test runner BUILT but NOT executed (JBC-E071, 2026-11-01)
+- Added `scripts/stage6b_concurrency_probe.py` with independent two-connection psycopg threads, start barrier, 1.8s fake row hold, new private last-item stock fixtures, distinct-key and identical-key race checks, true backend timestamp overlap + different PIDs, persisted one-order results and PASS/FAIL/INCONCLUSIVE states. Includes 4 offline verdict self-tests.
+- Companion Dell procedure `docs/STAGE6B_DELL_CONCURRENCY_RUNNER.md` uses a local Jue-only Supabase SQL URI in a hidden PowerShell prompt; never request connection secrets in chat or save them in GitHub. Script static readback 10/10 assertions PASS.
+- **Only source/static tests verified.** No actual Python self-test or real Dell concurrent session test executed. Stage 6B genuine concurrency remains OPEN despite earlier sequential SQL successes. No production checkout, real merchandise movement, customer data or payments.
 
 ## 7. Testing vocabulary
 
