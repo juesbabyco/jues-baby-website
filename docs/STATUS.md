@@ -1,5 +1,5 @@
 # Jue's Baby Co. — Current State (SINGLE-PAGE HANDOFF)
-**As of:** 2026-10-25
+**As of:** 2026-11-01
 **Overall:** V8 DEMO INTACT. S5B STAGING OWNER LOGIN, DRAFT CREATE, PUBLISH, PRICE EDIT, iPHONE-TO-DELL UNPUBLISH, AND UNAPPROVED SIGN-IN DENIAL ACCEPTED. DB READ/WRITE NEGATIVE TESTS PASSED. S5 OVERALL STILL OPEN.
 **Current focus:** Stage 6A design and fictional in-memory order/stock simulator BUILT, 22/22 isolated safety tests PASS. Database product-level stock requires per-size variants before any real ordering. No order tables, endpoints, checkout, customer PII or payments deployed. Stage 5E iPhone 11/11 and manual 3-mode sorting, Dell offline/reconnect ACCEPTED as scoped tests; broader failure cases open. Original V8 untouched; one private TEST product, zero published.
 
@@ -254,6 +254,14 @@
 - Scoped iPhone tests passed: reserve, replay, confirm and cancel. Fulfil, one-time physical deduction and rejection of cancel after fulfil are not shown and remain open for device testing.
 - This is an in-browser simulator, not an actual concurrent database order system. Dedicated Jue Supabase still has one unpublished stock4 TEST product; no order tables or real payments exist.
 - The supporting evidence is recorded as JBC-E061 in GitHub and private Supabase events. The separate Supabase current-stage registry update was blocked and remains at its previous stage value.
+
+## Stage 6B — Private Postgres reservations / genuine concurrency still OPEN (JBC-E063–E065; 2026-11-01)
+- User replied **“Done”** after Stage 6A post-fulfil cancellation instruction; no result screenshot, so exact terminal-state rejection USER-REPORTED rather than independently proven (JBC-E063).
+- Stage 6B source-controlled `supabase/stage6b_private_fixture_sandbox.sql` applied to the **Jue-only Supabase project** as migration `jues_stage6b_private_fixture_reservation_sandbox`. Private schema `jues_stage6b`: 2 RLS tables, fictional fixture variants/orders, non-public SECURITY INVOKER reservation function. Anonymous/signed-in access denied by explicit schema/table/function grants. No product, Storage, owner login or real checkout changed.
+- Dedicated PostgreSQL sequential tests **PASS**: first last-unit reservation, same-key replay same order ID, changed-payload idempotency conflict, second key out-of-stock, independent size reservation. Four private fictitious orders and four fiction-only size SKUs, each 1 on-hand and 1 held. Real product remains one **unpublished US$15 stock4 TEST** with image.
+- Attempted parallel connector calls did not overlap at the database: same-key trial first backend session 12:31:40–41 UTC, next 12:31:59 UTC. **Real overlapping-session concurrency NOT PROVEN. Stage 6B remains OPEN.** No public order endpoint or payment/customer PII.
+- Supabase advisors after new DDL: WARN existing leaked-password protection disabled (see https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection); INFO intended no-policy RLS for private tables, INFO private fixture order FK lacks covering index. No Auth change made.
+- Full reproducible notes: `docs/STAGE6B_PRIVATE_DATABASE_TESTS.md`. Next needs independent overlapping connections and multi-line atomic transaction tests before any live checkout stage. Original V8 and MindCare untouched.
 
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
