@@ -263,6 +263,13 @@
 - Supabase advisors after new DDL: WARN existing leaked-password protection disabled (see https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection); INFO intended no-policy RLS for private tables, INFO private fixture order FK lacks covering index. No Auth change made.
 - Full reproducible notes: `docs/STAGE6B_PRIVATE_DATABASE_TESTS.md`. Next needs independent overlapping connections and multi-line atomic transaction tests before any live checkout stage. Original V8 and MindCare untouched.
 
+## Stage 6B — Private multi-line atomicity tests (JBC-E066–E068; 2026-11-01)
+- Applied source-controlled Jue-only private migration `supabase/stage6b_private_multiline_cart_harness.sql` (commit `23e244ab4f0369e15156e6fc94c0ca5229af7f36`), adding `fixture_cart_orders`, `fixture_cart_items` and `reserve_cart_fixture` in inaccessible `jues_stage6b` schema. RLS and explicit REVOKE for `anon`/`authenticated` verified; no public customer order API.
+- Actual PostgreSQL **multi-line tests PASSED**: A1+B2 fails with neither hold changed; A1+B1 reserves both as US$25 fictional order, reordered same-key request replays same order, changed quantity conflicts, exhausted one item rejects whole subsequent cart, invalid/duplicate entries rejected. Explicit BEGIN/ROLLBACK after a successful A1+C1 invocation left zero persisted new orders and prior inventory counts unchanged; changed fixture price did not alter existing order snapshots. No real product/stock changes.
+- Private fictitious cart count **one**, items **two**; existing single-variant fictitious order count four. Real `public.jues_products`: one unpublished US$15 stock4 TEST item; zero publicly visible; original V8 `index.html` untouched.
+- **Concurrent client overlap NOT YET PROVEN.** Existing GitHub `docs/STAGE6B_TWO_SESSION_RACE_PROTOCOL.md` prepares independent session test using seeded fake `S6B-RACE_MANUAL_01` (stock1). Connector dispatches were serialized; no extension/paid branch enabled. No claim of closed Stage 6B.
+- Still missing: overlapping Postgres sessions, exactly-once database cancel/expire/confirm/fulfil ledger, real stock signoff, privacy and order/payments. Supabase Auth leaked-password protection warning remains open; no Auth change.
+
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
 - Unexpected bill/cost -> STOP and ask.
