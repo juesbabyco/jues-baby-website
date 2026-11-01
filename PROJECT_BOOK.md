@@ -1,6 +1,6 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 4.4
+**Version:** 4.5
 **Last evidence review:** 2026-11-01
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
@@ -259,6 +259,14 @@ Screenshot evidence: reset stock 2, reserve 1, confirm then fulfil leaves stock 
 - **Genuine concurrent race remains NOT PROVEN.** Connected SQL calls scheduled in parallel were serialized in real database timestamps (first 12:31:40–41 UTC; second 12:31:59 UTC). Do not extrapolate sequential behavior to two simultaneous customers. Multi-item atomic rollback, owner transitions and real checkout remain unimplemented.
 - Post-migration Supabase security advisor WARNING: leaked-password protection is disabled in Jue Auth, unrelated to test schema creation; INFO private tables with no RLS policy (intentional) and lab FK index missing. Fix/assess before launch.
 - Definitive test record: `docs/STAGE6B_PRIVATE_DATABASE_TESTS.md`. Do not promote lab function or products into public API, enable payments or modify V8 `index.html` without separate evidence and approval. MindCare remains isolated.
+
+### Stage 6B — Private multi-line cart test and race protocol (JBC-E066–E068, 2026-11-01)
+
+- GitHub `supabase/stage6b_private_multiline_cart_harness.sql` deployed by named Jue migration, creating only private RLS test cart tables and non-public invoker SQL function. No real product/owner/auth/cost changes or public order endpoints.
+- PostgreSQL SQL outcomes: failed two-size shortage reserved nothing, valid two-size cart reserved both with US$25 immutable snapshots, reordered same-key payload replayed one order, changed quantity returned idempotency conflict, unavailable second cart reserved nothing, duplicate variants/zero quantity rejected. One real SQL transaction was explicitly ROLLED BACK and no cart/stock effect persisted; a changed fake price did not rewrite existing order snapshots.
+- One fictional cart with two lines is persisted, alongside four earlier private single-line test orders, all unrelated to real merchandise. Anonymous and ordinary signed-in roles have no access to test schema or reserve function. Real catalog remains one unpublished US$15 TEST with stock4.
+- **Genuine simultaneous two-session overselling race is still UNPROVEN**. `docs/STAGE6B_TWO_SESSION_RACE_PROTOCOL.md` defines two independent Postgres SQL connections, lock-hold timing, result assertions, and documentation requirements. One fake stock1 SKU is prepared; test not run. `pg_cron` / `dblink` not enabled. Do not close Stage 6B or enable public checkout.
+- Remaining: true parallel Postgres contention and idempotency race, database cancel/expiry/confirm/fulfil transactions + audit ledger, privacy/delivery/real product signoff, Auth password-protection warning and eventual payment integration.
 
 ## 7. Testing vocabulary
 
