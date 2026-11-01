@@ -58,6 +58,11 @@ A new fake last-unit SKU `S6B-RACE_MANUAL_01` (on_hand1, reserved0) is prepared 
 - Database CANCEL / EXPIRE / CONFIRM / FULFIL exactly-once effects, protected audit ledger, expiry cleanup: **NOT IMPLEMENTED in the new private cart harness**.
 - Actual owner-verified merchandise stock, customer data privacy/delivery policies, rate limits, payment settlement and public order API: **NOT IMPLEMENTED**.
 
+## Lifecycle lab follow-on (JBC-E069/E070, 2026-11-01)
+- A separate private migration added transaction-protected fictional cart transitions, stock movement ledger and expiry timestamps; actual sequential Postgres transition/rollback tests PASSED.
+- Test details and distinct limits: `docs/STAGE6B_ORDER_LIFECYCLE_SQL_TESTS.md`. The earlier single-variant and multi-item test evidence above is retained for chronology.
+- Genuine parallel SQL-session contention, automatic expiry worker, real customer authorization and payments remain untested.
+
 ## What must pass before Stage 6B can be closed
 
 1. Execute same-stock different-key and same-key repeat tests using **two independently connected PostgreSQL sessions with overlapping database timestamps**, ideally through a secure staging-only harness with no exposed DB password. Do not use a new paid database branch without consent.
