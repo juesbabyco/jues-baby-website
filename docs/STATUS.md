@@ -278,6 +278,13 @@
 - **Stage 6B STILL OPEN:** genuinely overlapping PostgreSQL client sessions, repeatable idempotency race proof, autonomous expiry worker, real actor authorization, stock reconciliations and settlement/consumer rules not proven. A fictitious 15-minute hold is not an approved business policy. Private admin ledger is not tamperproof production accounting.
 - Supabase advisor WARN Auth leaked-password protection disabled; private no-policy RLS and missing fictional FK indexes INFO. Source detail `docs/STAGE6B_ORDER_LIFECYCLE_SQL_TESTS.md`; concurrency protocol `docs/STAGE6B_TWO_SESSION_RACE_PROTOCOL.md`. No V8/MindCare changes.
 
+## Stage 6B — independent-session race runner source built (JBC-E071; 2026-11-01)
+- GitHub `scripts/stage6b_concurrency_probe.py` provides an optional, local Dell runner using **two distinct psycopg connections + barrier**, private Jue-only schema and fresh fictional one-unit SKUs; tests distinct keys and same-key contention, prints DB PIDs/timestamps, verifies final holdings and matching one-order identity; real overlapping intervals are mandatory for PASS.
+- `docs/STAGE6B_DELL_CONCURRENCY_RUNNER.md` contains Dell PowerShell steps with local hidden database URI input and cleanup. Secrets must **never** be sent through ChatGPT, screenshots or GitHub, and no additional Supabase grants/extensions/paid branches are needed.
+- GitHub source readback checks: 10/10 static safety anchors PASS. **Actual Python syntax/self-test, Dell CLI run and live two-session overlap remain UNTESTED**. No new Jue SQL inventory rows were inserted by this source-only step; existing private fake historical tests remain separate.
+- Stage 6B NOT CLOSED. Previously passed sequential reserve/fulfil/expiry/release/ledger/rollback SQL evidence stands, but genuinely parallel last-item and duplicate-key races must be user-run and backed by distinct DB PIDs and overlapping timestamps.
+- Original V8, public store, real product, MindCare, payments and customer personal information remain untouched.
+
 ## Stop conditions
 - Wrong Supabase link, project, or org -> STOP.
 - Unexpected bill/cost -> STOP and ask.
