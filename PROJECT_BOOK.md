@@ -1,7 +1,7 @@
 # Jue's Baby Co. — Master Development Book
 **Project identifier:** JUES_BABY_CO
-**Version:** 4.3
-**Last evidence review:** 2026-10-25
+**Version:** 4.4
+**Last evidence review:** 2026-11-01
 **Canonical source:** This GitHub repository and the `docs/` evidence files.
 **Public-facing scope:** Zimbabwe-based babywear storefront. Initial delivery/collection messaging is Harare-oriented.
 **Founder/operator intent:** Store owner should manage babywear products, prices, photos, sizes and stock without code changes.
@@ -251,6 +251,14 @@ Four iPhone screenshots verify simulated reserve (2 on hand, 1 held), same-key r
 
 ### JBC-E062: Stage 6A iPhone fulfilment
 Screenshot evidence: reset stock 2, reserve 1, confirm then fulfil leaves stock 1, zero reserved, state FULFILLED. Post-fulfil cancel has not been shown. Fictional only; no database order or stock movement.
+
+### Stage 6B — Jue-only private transaction testing (JBC-E063–E065; 2026-11-01)
+- User said “Done” on final Stage 6A simulated Cancel-after-Fulfil, but exact rejection outcome was not supplied. Do not claim browser terminal-case proof.
+- Created source-controlled `supabase/stage6b_private_fixture_sandbox.sql` and **applied** private `jues_stage6b` schema via dedicated Jue migration. Anonymous and regular Auth users have no schema/table/function grants; both fictional tables have RLS enabled. This is not a public order system, and `public.jues_products` remains unchanged, single TEST item unpublished.
+- Four fictional variant rows and four fictional database order rows exist only inside this private lab. Sequential PostgreSQL reserve, replay, payload conflict, out-of-stock and independent size validations PASS. Exactly one test hold per one-unit variant; positive stock constraints held.
+- **Genuine concurrent race remains NOT PROVEN.** Connected SQL calls scheduled in parallel were serialized in real database timestamps (first 12:31:40–41 UTC; second 12:31:59 UTC). Do not extrapolate sequential behavior to two simultaneous customers. Multi-item atomic rollback, owner transitions and real checkout remain unimplemented.
+- Post-migration Supabase security advisor WARNING: leaked-password protection is disabled in Jue Auth, unrelated to test schema creation; INFO private tables with no RLS policy (intentional) and lab FK index missing. Fix/assess before launch.
+- Definitive test record: `docs/STAGE6B_PRIVATE_DATABASE_TESTS.md`. Do not promote lab function or products into public API, enable payments or modify V8 `index.html` without separate evidence and approval. MindCare remains isolated.
 
 ## 7. Testing vocabulary
 
