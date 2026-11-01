@@ -63,6 +63,11 @@ A new fake last-unit SKU `S6B-RACE_MANUAL_01` (on_hand1, reserved0) is prepared 
 - Test details and distinct limits: `docs/STAGE6B_ORDER_LIFECYCLE_SQL_TESTS.md`. The earlier single-variant and multi-item test evidence above is retained for chronology.
 - Genuine parallel SQL-session contention, automatic expiry worker, real customer authorization and payments remain untested.
 
+## Independent two-connection runner preparation (JBC-E071, 2026-11-01)
+- Added `scripts/stage6b_concurrency_probe.py` and `docs/STAGE6B_DELL_CONCURRENCY_RUNNER.md` to support a genuinely overlapping database race from a Dell using two independent local psycopg connections.
+- Source verified in GitHub with static safety checks, **not** executed: offline `--self-test`, real `--execute`, true overlap and any end-to-end stock race results all OPEN.
+- No additional SQL fixtures or real products changed during the runner-source step.
+
 ## What must pass before Stage 6B can be closed
 
 1. Execute same-stock different-key and same-key repeat tests using **two independently connected PostgreSQL sessions with overlapping database timestamps**, ideally through a secure staging-only harness with no exposed DB password. Do not use a new paid database branch without consent.
