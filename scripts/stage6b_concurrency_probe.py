@@ -188,10 +188,42 @@ def preflight(conninfo: str, psycopg) -> None:
             raise ValueError("Private test access was expanded unexpectedly: STOP")
 
 
+def self_test() -> bool:
+    """Validate the pure verdict logic without DB credentials or network."""
+    good = [
+        {"accepted": True, "result_code": "RESERVED", "fixture_order_id": 12,
+         "backend_pid": 101, "started_at": "2026-11-01T15:00:00+00:00",
+         "completed_at": "2026-11-01T15:00:02+00:00"},
+        {"accepted": False, "result_code": "OUT_OF_STOCK", "fixture_order_id": None,
+         "backend_pid": 102, "started_at": "2026-11-01T15:00:01+00:00",
+         "completed_at": "2026-11-01T15:00:03+00:00"},
+    ]
+    stock = {"on_hand": 1, "reserved": 1}
+    orders = [{"id": 12}]
+    same = [dict(good[0]), dict(good[1])]
+    same[1].update({"accepted": True, "result_code": "REPLAYED", "fixture_order_id": 12})
+    separated = [dict(good[0]), dict(good[1])]
+    separated[1].update({"started_at": "2026-11-01T15:00:04+00:00",
+                         "completed_at": "2026-11-01T15:00:05+00:00"})
+    failed = {"on_hand": 1, "reserved": 2}
+    cases = [
+        ("distinct last-unit race", verdict_for("different_keys", good, stock, orders)[0], "PASS"),
+        ("same-key contention", verdict_for("same_key", same, stock, orders)[0], "PASS"),
+        ("sequential timing must not pass", verdict_for("different_keys", separated, stock, orders)[0], "INCONCLUSIVE"),
+        ("oversold stock must fail", verdict_for("different_keys", good, failed, orders)[0], "FAIL"),
+    ]
+    for label, actual, expected in cases:
+        print(("PASS" if actual == expected else "FAIL") + ": " + label)
+    return all(actual == expected for _, actual, expected in cases)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--execute", action="store_true", help="Run two genuine private database race scenarios")
+    parser.add_argument("--self-test", action="store_true", help="Run four offline verdict checks; no connection or credentials")
     args = parser.parse_args()
+    if args.self_test:
+        return 0 if self_test() else 1
     if not args.execute:
         print("DRY RUN. To execute, use --execute after setting the JUE-ONLY database URL in the environment.")
         print("No database access, real orders, stock or payment actions occurred.")
